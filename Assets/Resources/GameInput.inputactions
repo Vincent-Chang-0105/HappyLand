@@ -1,4 +1,5 @@
 {
+    "version": 1,
     "name": "GameInput",
     "maps": [
         {
@@ -45,6 +46,15 @@
                     "name": "SpaceBarKey",
                     "type": "PassThrough",
                     "id": "e2f23a1a-a739-4119-836c-4a757f82a67a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "EKey",
+                    "type": "PassThrough",
+                    "id": "3653e928-7136-43a4-a5cd-ca5af53e66a7",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -225,6 +235,17 @@
                     "processors": "",
                     "groups": "KeyboardMouse",
                     "action": "SpaceBarKey",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3fd11ed1-008e-4215-a717-7db43027a864",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "EKey",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

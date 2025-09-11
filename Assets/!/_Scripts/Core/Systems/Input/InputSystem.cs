@@ -19,6 +19,7 @@ public class InputSystem : PersistentSingleton<InputSystem> {
     public event UnityAction SpaceBarKeyEvent;        // Keep this for backward compatibility if needed
     public event UnityAction SpaceBarKeyDownEvent;    // New event for key press down
     public event UnityAction SpaceBarKeyUpEvent;      // New event for key release
+    public event UnityAction EKeyEvent;
 
     private ActionMap _currentActionMap = ActionMap.Player;
     public ActionMap CurrentActionMap => _currentActionMap;
@@ -85,6 +86,14 @@ public class InputSystem : PersistentSingleton<InputSystem> {
         {
             // Spacebar was released
             SpaceBarKeyUpEvent?.Invoke();      // New up event
+        }
+    }
+
+    public void OnEKey(InputValue value)
+    {
+        if(value.isPressed)
+        {
+            EKeyEvent?.Invoke();
         }
     }
 

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 
-public class DialogueManager : StaticInstance<DialogueManager>
+public class DialogueManager : PersistentSingleton<DialogueManager>
 {
 
     public TextMeshProUGUI characterName;
