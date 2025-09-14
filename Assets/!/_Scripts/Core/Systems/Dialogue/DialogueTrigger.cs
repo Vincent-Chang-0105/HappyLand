@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -7,7 +8,21 @@ using UnityEngine.Events;
 [System.Serializable]
 public class DialogueCharacter
 {
-    public string name;
+    [SerializeField] private CharacterID characterID;
+    
+    private static CharacterDatabase database;
+    
+    private CharacterDatabase GetDatabase()
+    {
+        if (database == null)
+            database = Resources.Load<CharacterDatabase>("CharacterDatabase");
+        return database;
+    }
+    
+    public CharacterData GetCharacterData()
+    {
+        return GetDatabase()?.GetCharacterData(characterID);
+    }
 }
 
 [System.Serializable]
@@ -78,4 +93,12 @@ public class DialogueTrigger : MonoBehaviour
         }
         Debug.Log("DialogueTrigger has been reset.");
     }
+}
+
+public enum CharacterType
+{
+    Carol,
+    PJ,
+    Primo,
+    // Add more characters as needed
 }

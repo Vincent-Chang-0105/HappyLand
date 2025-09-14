@@ -42,13 +42,18 @@ public class CharacterController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+
+    void FixedUpdate()
     {
         HandleGroundAlignment();
         HandleMovement();
-        HandleSpriteFlipping();
+        HandleSpriteFlipping(); 
     }
-    
+    void Update()
+    {
+
+    }
+        
     private void HandleGroundAlignment()
     {
         Vector3 raycastOrigin = transform.position + Vector3.up;

@@ -58,7 +58,12 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
         DialogueLine currentLine = lines.Dequeue();
 
-        characterName.text = currentLine.character.name;
+        Image dialogueCharacterImage = dialogueBox.GetComponent<Image>();
+        if (dialogueCharacterImage != null && currentLine.character != null)
+        {
+            dialogueCharacterImage.sprite = currentLine.character.GetCharacterData().characterSprite;
+        }
+        //characterName.text = currentLine.character.GetName();
 
         StopAllCoroutines();
 

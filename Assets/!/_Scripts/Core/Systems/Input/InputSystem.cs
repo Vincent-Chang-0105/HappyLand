@@ -31,7 +31,7 @@ public class InputSystem : PersistentSingleton<InputSystem> {
     // Other settings
     [Header("Settings")]
     public bool enableLookInput = true;
-    public bool enableMoveInput = true; 
+    public bool enablePlayerInput = true; 
 
     private void Start()
     {
@@ -47,7 +47,7 @@ public class InputSystem : PersistentSingleton<InputSystem> {
 
     public void OnMove(InputValue value)
 	{
-        if (enableMoveInput)
+        if (enablePlayerInput)
         {
             MoveEvent?.Invoke(value.Get<Vector2>());
         }
@@ -68,7 +68,7 @@ public class InputSystem : PersistentSingleton<InputSystem> {
 
     public void OnEscapeKey(InputValue value)
     {
-        if(value.isPressed)
+        if(value.isPressed && enablePlayerInput)
         {
             EscapeKeyEvent?.Invoke();
         }
@@ -76,7 +76,7 @@ public class InputSystem : PersistentSingleton<InputSystem> {
 
     public void OnSpaceBarKey(InputValue value)
     {
-        if (value.isPressed)
+        if (value.isPressed && enablePlayerInput)
         {
             // Spacebar was pressed down
             SpaceBarKeyEvent?.Invoke();        // Keep existing functionality
@@ -91,7 +91,7 @@ public class InputSystem : PersistentSingleton<InputSystem> {
 
     public void OnEKey(InputValue value)
     {
-        if(value.isPressed)
+        if(value.isPressed && enablePlayerInput)
         {
             EKeyEvent?.Invoke();
         }
@@ -101,7 +101,7 @@ public class InputSystem : PersistentSingleton<InputSystem> {
     {
         SetCursorState(value);
         enableLookInput = value;
-        enableMoveInput = value;
+        enablePlayerInput = value;
 
         // Reset look input to zero when disabling input
         if (!value)
@@ -116,15 +116,15 @@ public class InputSystem : PersistentSingleton<InputSystem> {
         }
     }
 
-    public void DisableMovementInputs()
+    public void DisablePlayerInputs()
     {
-        enableMoveInput = false;
+        enablePlayerInput = false;
         MoveEvent?.Invoke(Vector2.zero);
     }
 
-    public void EnableMovementInputs()
+    public void EnablePlayerInputs()
     {
-        enableMoveInput = true;
+        enablePlayerInput = true;
     }
 
     public void DisableLookInputs()
