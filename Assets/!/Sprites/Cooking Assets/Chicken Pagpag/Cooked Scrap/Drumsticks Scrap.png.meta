@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 98c8760316c985b4cbf5db6666da838d
+guid: f8523b9a4c74d9e4eb6ffdb9daee8ab3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2920106051176630883
-    second: ServingScreen_0
+      213: 4421488830477449659
+    second: Drumsticks Scrap_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ServingScreen_0
+      name: Drumsticks Scrap_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1920
-        height: 1080
+        x: 9
+        y: 26
+        width: 515
+        height: 597
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d95f5219403b977d0800000000000000
-      internalID: -2920106051176630883
+      spriteID: bb937fe4aa84c5d30800000000000000
+      internalID: 4421488830477449659
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 68e2b74cc92a81846a428b4624d8dd13
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ServingScreen_0: -2920106051176630883
+      Drumsticks Scrap_0: 4421488830477449659
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

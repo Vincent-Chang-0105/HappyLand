@@ -41,6 +41,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Background
+    uniqueID: 3695897585
+    locked: 0
+  - name: Cookware
+    uniqueID: 3138902581
+    locked: 0
+  - name: Utensils
+    uniqueID: 2851729733
+    locked: 0
   m_RenderingLayers:
   - Default
   - Light Layer 1
