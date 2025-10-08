@@ -29,7 +29,7 @@ public class NavigationButton
 public class ScreenData
 {
     public string screenName;
-    public RectTransform screenTransform;
+    public Transform screenTransform;
     public Vector2 gridPosition; // Grid coordinates (x, y)
     public Vector2 worldPosition; // Actual UI position
     
@@ -67,18 +67,17 @@ public class ScreenTransitionManager : MonoBehaviour
     }
     
     private void SetupButtonListeners()
-    {
-        // Setup global navigation buttons (optional)
-        if (upButton != null)
-            upButton.onClick.AddListener(() => MoveToScreen(Vector2.up));
-        if (downButton != null)
-            downButton.onClick.AddListener(() => MoveToScreen(Vector2.down));
-        if (leftButton != null)
-            leftButton.onClick.AddListener(() => MoveToScreen(Vector2.left));
-        if (rightButton != null)
-            rightButton.onClick.AddListener(() => MoveToScreen(Vector2.right));
-            
-    }
+{
+    // Setup global navigation buttons (optional)
+    if (upButton != null)
+        upButton.onClick.AddListener(() => MoveToScreen(Vector2.up));
+    if (downButton != null)
+        downButton.onClick.AddListener(() => MoveToScreenDirect(new Vector2(currentGridPosition.x, currentGridPosition.y - 1))); // Fixed down button
+    if (leftButton != null)
+        leftButton.onClick.AddListener(() => MoveToScreen(Vector2.left));
+    if (rightButton != null)
+        rightButton.onClick.AddListener(() => MoveToScreen(Vector2.right));
+}
     
     private void InitializeScreenPositions()
     {
@@ -87,10 +86,10 @@ public class ScreenTransitionManager : MonoBehaviour
             // Calculate world position based on grid position
             screen.worldPosition = screen.gridPosition * screenSpacing;
             
-            // Set initial screen positions
+            // Set initial screen positions using Transform
             if (screen.screenTransform != null)
             {
-                screen.screenTransform.anchoredPosition = screen.worldPosition;
+                screen.screenTransform.position = new Vector3(screen.worldPosition.x, screen.worldPosition.y, screen.screenTransform.position.z);
             }
         }
     }
@@ -146,14 +145,18 @@ public class ScreenTransitionManager : MonoBehaviour
         {
             if (screen.screenTransform != null)
             {
-                Vector2 newPosition = screen.screenTransform.anchoredPosition + offset;
-                Tween moveTween = screen.screenTransform.DOAnchorPos(newPosition, animationDuration).SetEase(slideEase);
+                Vector3 currentPos = screen.screenTransform.position;
+                Vector3 newPosition = new Vector3(currentPos.x + offset.x, currentPos.y + offset.y, currentPos.z);
+                Tween moveTween = screen.screenTransform.DOMove(newPosition, animationDuration).SetEase(slideEase);
                 moveTweens.Add(moveTween);
             }
         }
         
         // Wait for all tweens to complete
-        yield return DOTween.Sequence().Append(moveTweens[0]).WaitForCompletion();
+        if (moveTweens.Count > 0)
+        {
+            yield return moveTweens[0].WaitForCompletion();
+        }
         
         currentGridPosition = targetScreen.gridPosition;
         currentScreen = targetScreen;

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 98c8760316c985b4cbf5db6666da838d
+guid: dfb4d8c5f2d4aa446bba272141ef003e
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2920106051176630883
-    second: ServingScreen_0
+      213: 8692313496474212989
+    second: Thighs Scrap_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ServingScreen_0
+      name: Thighs Scrap_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1920
-        height: 1080
+        x: 35
+        y: 14
+        width: 144
+        height: 567
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d95f5219403b977d0800000000000000
-      internalID: -2920106051176630883
+      spriteID: d7adda9321d41a870800000000000000
+      internalID: 8692313496474212989
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 68e2b74cc92a81846a428b4624d8dd13
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ServingScreen_0: -2920106051176630883
+      Thighs Scrap_0: 8692313496474212989
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

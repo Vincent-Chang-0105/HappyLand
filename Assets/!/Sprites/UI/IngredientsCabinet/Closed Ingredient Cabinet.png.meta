@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 98c8760316c985b4cbf5db6666da838d
+guid: 2cf5f326be52ea04898889d5ad148abb
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2920106051176630883
-    second: ServingScreen_0
+      213: 31419034774840735
+    second: Closed Ingredient Cabinet_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ServingScreen_0
+      name: Closed Ingredient Cabinet_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1920
-        height: 1080
+        x: 6
+        y: 14
+        width: 726
+        height: 161
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d95f5219403b977d0800000000000000
-      internalID: -2920106051176630883
+      spriteID: f95a0f6127f9f6000800000000000000
+      internalID: 31419034774840735
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 68e2b74cc92a81846a428b4624d8dd13
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ServingScreen_0: -2920106051176630883
+      Closed Ingredient Cabinet_0: 31419034774840735
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
