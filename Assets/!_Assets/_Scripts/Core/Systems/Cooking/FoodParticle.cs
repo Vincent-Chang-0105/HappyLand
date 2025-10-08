@@ -19,7 +19,7 @@ public class FoodParticle : MonoBehaviour
     [SerializeField] private LayerMask bowlLayer = -1;
     [SerializeField] private float bowlDetectionRadius = 1f;
     
-    private Vector2 velocity;
+    private Vector3 velocity;
     private Vector2 previousPosition;
     private float angularVelocity; // Rotation speed in degrees per second
     private bool isInBowl = false;
@@ -32,7 +32,7 @@ public class FoodParticle : MonoBehaviour
         previousPosition = transform.position;
         
         // Add some initial random velocity for realistic movement
-        velocity = new Vector2(Random.Range(-2f, 2f), Random.Range(-1f, 1f));
+        velocity = new Vector3(Random.Range(-2f, 2f), 0f, Random.Range(-1f, 1f));
         
         // Add initial random rotation
         if (enableRotation)
@@ -147,16 +147,16 @@ public class FoodParticle : MonoBehaviour
     
     private void ApplyBowlPhysics()
     {
-        Vector2 bowlCenter = currentBowl.GetCenter();
-        Vector2 currentPos = transform.position;
+        Vector3 bowlCenter = currentBowl.GetCenter();
+        Vector3 currentPos = transform.position;
         float bowlRadius = currentBowl.GetRadius();
         
         // Calculate distance from bowl center
-        Vector2 directionFromCenter = currentPos - bowlCenter;
+        Vector3 directionFromCenter = currentPos - bowlCenter;
         float distanceFromCenter = directionFromCenter.magnitude;
         
         // Apply gravity towards bowl bottom
-        Vector2 gravityForce = Vector2.down * gravity * Time.deltaTime;
+        Vector3 gravityForce = Vector3.forward * gravity * Time.deltaTime;
         velocity += gravityForce;
         
         // Bowl collision detection and response
@@ -166,7 +166,7 @@ public class FoodParticle : MonoBehaviour
             Vector2 collisionNormal = -directionFromCenter.normalized;
             
             // Reflect velocity off bowl wall
-            velocity = Vector2.Reflect(velocity, collisionNormal) * bounce;
+            velocity = Vector3.Reflect(velocity, collisionNormal) * bounce;
             
             // Add rotation from collision
             if (enableRotation)
@@ -190,20 +190,20 @@ public class FoodParticle : MonoBehaviour
         // Stop very slow particles
         if (velocity.magnitude < minVelocity)
         {
-            velocity = Vector2.zero;
+            velocity = Vector3.zero;
         }
     }
     
     private void ApplyNormalPhysics()
     {
         // Simple gravity when not in bowl
-        velocity += Vector2.down * gravity * Time.deltaTime;
+        velocity += Vector3.forward * gravity * Time.deltaTime;
         
         // Simple ground collision (you can adjust this based on your scene)
-        if (transform.position.y < -5f)
+        if (transform.position.z < -5f)
         {
-            velocity.y = Mathf.Abs(velocity.y) * bounce;
-            transform.position = new Vector2(transform.position.x, -5f);
+            velocity.z = Mathf.Abs(velocity.z) * bounce;
+            transform.position = new Vector3(transform.position.x, transform.position.x, 5f);
             
             // Add rotation from ground bounce
             if (enableRotation)
@@ -219,7 +219,7 @@ public class FoodParticle : MonoBehaviour
         transform.position += (Vector3)(velocity * Time.deltaTime);
     }
     
-    public void AddForce(Vector2 force)
+    public void AddForce(Vector3 force)
     {
         velocity += force;
         
@@ -241,7 +241,7 @@ public class FoodParticle : MonoBehaviour
         }
     }
     
-    public void SetVelocity(Vector2 newVelocity)
+    public void SetVelocity(Vector3 newVelocity)
     {
         velocity = newVelocity;
     }
@@ -251,7 +251,7 @@ public class FoodParticle : MonoBehaviour
         angularVelocity = newAngularVelocity;
     }
     
-    public Vector2 GetVelocity()
+    public Vector3 GetVelocity()
     {
         return velocity;
     }
@@ -276,7 +276,7 @@ public class FoodParticle : MonoBehaviour
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, bowlDetectionRadius);
         
-        if (velocity != Vector2.zero)
+        if (velocity != Vector3.zero)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawRay(transform.position, velocity);
