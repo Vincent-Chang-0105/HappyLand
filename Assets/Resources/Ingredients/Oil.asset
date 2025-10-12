@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3eef437ae844b4b478bbaf51f966a5dc, type: 3}
   m_Name: Oil
   m_EditorClassIdentifier: Assembly-CSharp::Ingredient
-  ingredientName: 
-  ingredientIcon: {fileID: 0}
-  description: 
+  ingredientName: Oil
+  ingredientIcon: {fileID: 21300000, guid: 3b4abe46140e72843bae683ac956c4dd, type: 3}
+  description: langis
   isStackable: 1
   maxStackSize: 99
   ingredientType: 0

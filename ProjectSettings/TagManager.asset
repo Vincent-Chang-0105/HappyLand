@@ -12,8 +12,8 @@ TagManager:
   - Water
   - UI
   - Terrain
-  - 
-  - 
+  - Bowl
+  - Food
   - 
   - 
   - 
@@ -47,8 +47,11 @@ TagManager:
   - name: Cookware
     uniqueID: 3138902581
     locked: 0
-  - name: Utensils
+  - name: Food
     uniqueID: 2851729733
+    locked: 0
+  - name: Utensils
+    uniqueID: 167737415
     locked: 0
   m_RenderingLayers:
   - Default

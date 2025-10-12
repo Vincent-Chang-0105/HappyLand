@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
+using System;
 
 [System.Serializable]
 public enum DirectionButton
@@ -32,9 +34,17 @@ public class ScreenData
     public Transform screenTransform;
     public Vector2 gridPosition; // Grid coordinates (x, y)
     public Vector2 worldPosition; // Actual UI position
-    
+
     [Header("Screen-Specific Navigation")]
     public List<NavigationButton> navigationButtons = new List<NavigationButton>();
+    
+    [Header("List of UI Objects to show/hide")]
+    public List<GameObject> uiElements = new List<GameObject>();
+    
+    [Header("UI Animation Settings")]
+    public bool animateUIElements = true;
+    public float uiAnimationDuration = 0.3f;
+    public Ease uiAnimationEase = Ease.OutQuart;
 }
 
 public class ScreenTransitionManager : MonoBehaviour
@@ -50,11 +60,18 @@ public class ScreenTransitionManager : MonoBehaviour
     [SerializeField] private float animationDuration = 0.7f;
     [SerializeField] private Ease slideEase = Ease.OutCubic;
 
+    [Header("UI Management")]
+    [SerializeField] private bool animateUITransitions = true;
+    [SerializeField] private float uiTransitionDelay = 0.1f; // Delay before showing new UI
+
     [Header("Optional Global Navigation Buttons")]
     [SerializeField] private Button upButton;
     [SerializeField] private Button downButton;
     [SerializeField] private Button leftButton;
     [SerializeField] private Button rightButton;
+    
+    [Header("Camera")]
+    [SerializeField] private CinemachineCamera mainCamera;
     
     private bool isTransitioning = false;
     private ScreenData currentScreen;
@@ -63,21 +80,46 @@ public class ScreenTransitionManager : MonoBehaviour
     {
         SetupButtonListeners();
         InitializeScreenPositions();
+        InitializeUIElements();
         SetActiveScreen(currentGridPosition);
+        
+        // Move camera to initial screen
+        if (currentScreen != null && mainCamera != null)
+        {
+            mainCamera.Follow = currentScreen.screenTransform;
+        }
+        
+        // Show initial screen UI
+        ShowCurrentScreenUI();
     }
-    
+
+    private void InitializeUIElements()
+    {
+        // Hide all UI elements initially
+        foreach (ScreenData screen in screens)
+        {
+            foreach (GameObject uiElement in screen.uiElements)
+            {
+                if (uiElement != null)
+                {
+                    uiElement.SetActive(false);
+                }
+            }
+        }
+    }
+
     private void SetupButtonListeners()
-{
-    // Setup global navigation buttons (optional)
-    if (upButton != null)
-        upButton.onClick.AddListener(() => MoveToScreen(Vector2.up));
-    if (downButton != null)
-        downButton.onClick.AddListener(() => MoveToScreenDirect(new Vector2(currentGridPosition.x, currentGridPosition.y - 1))); // Fixed down button
-    if (leftButton != null)
-        leftButton.onClick.AddListener(() => MoveToScreen(Vector2.left));
-    if (rightButton != null)
-        rightButton.onClick.AddListener(() => MoveToScreen(Vector2.right));
-}
+    {
+        // Setup global navigation buttons (optional)
+        if (upButton != null)
+            upButton.onClick.AddListener(() => MoveToScreen(Vector2.up));
+        if (downButton != null)
+            downButton.onClick.AddListener(() => MoveToScreenDirect(new Vector2(currentGridPosition.x, currentGridPosition.y - 1))); // Fixed down button
+        if (leftButton != null)
+            leftButton.onClick.AddListener(() => MoveToScreen(Vector2.left));
+        if (rightButton != null)
+            rightButton.onClick.AddListener(() => MoveToScreen(Vector2.right));
+    }
     
     private void InitializeScreenPositions()
     {
@@ -133,37 +175,158 @@ public class ScreenTransitionManager : MonoBehaviour
     {
         isTransitioning = true;
 
+        // Hide current screen UI first
+        if (currentScreen != null)
+        {
+            yield return StartCoroutine(HideScreenUI(currentScreen));
+        }
+
         // Hide all navigation buttons during transition
         HideAllNavigationButtons();
-        
+
         Vector2 offset = currentGridPosition * screenSpacing - targetScreen.gridPosition * screenSpacing;
-        
-        // Move all screens simultaneously
-        List<Tween> moveTweens = new List<Tween>();
-        
-        foreach (ScreenData screen in screens)
-        {
-            if (screen.screenTransform != null)
-            {
-                Vector3 currentPos = screen.screenTransform.position;
-                Vector3 newPosition = new Vector3(currentPos.x + offset.x, currentPos.y + offset.y, currentPos.z);
-                Tween moveTween = screen.screenTransform.DOMove(newPosition, animationDuration).SetEase(slideEase);
-                moveTweens.Add(moveTween);
-            }
-        }
-        
-        // Wait for all tweens to complete
-        if (moveTweens.Count > 0)
-        {
-            yield return moveTweens[0].WaitForCompletion();
-        }
+
+        mainCamera.Follow = targetScreen.screenTransform;
+
+        yield return new WaitForSeconds(animationDuration);
         
         currentGridPosition = targetScreen.gridPosition;
         currentScreen = targetScreen;
 
+        // Show new screen UI after a small delay
+        yield return new WaitForSeconds(uiTransitionDelay);
+        yield return StartCoroutine(ShowScreenUI(currentScreen));
+
         UpdateButtonStates();
 
         isTransitioning = false;
+    }
+
+    private IEnumerator ShowScreenUI(ScreenData screen)
+    {
+        if (screen == null || screen.uiElements.Count == 0) yield break;
+
+        List<Coroutine> animationCoroutines = new List<Coroutine>();
+
+        foreach (GameObject uiElement in screen.uiElements)
+        {
+            if (uiElement != null)
+            {
+                if (animateUITransitions && screen.animateUIElements)
+                {
+                    // Start animation coroutine for each UI element
+                    Coroutine animCoroutine = StartCoroutine(AnimateUIElementIn(uiElement, screen));
+                    animationCoroutines.Add(animCoroutine);
+                }
+                else
+                {
+                    // Instantly show UI element
+                    uiElement.SetActive(true);
+                }
+            }
+        }
+
+        // Wait for all animations to complete if using animations
+        if (animationCoroutines.Count > 0)
+        {
+            foreach (Coroutine coroutine in animationCoroutines)
+            {
+                yield return coroutine;
+            }
+        }
+
+        Debug.Log($"Showed UI elements for screen: {screen.screenName}");
+    }
+
+    private IEnumerator HideScreenUI(ScreenData screen)
+    {
+        if (screen == null || screen.uiElements.Count == 0) yield break;
+
+        List<Coroutine> animationCoroutines = new List<Coroutine>();
+
+        foreach (GameObject uiElement in screen.uiElements)
+        {
+            if (uiElement != null && uiElement.activeInHierarchy)
+            {
+                if (animateUITransitions && screen.animateUIElements)
+                {
+                    // Start animation coroutine for each UI element
+                    Coroutine animCoroutine = StartCoroutine(AnimateUIElementOut(uiElement, screen));
+                    animationCoroutines.Add(animCoroutine);
+                }
+                else
+                {
+                    // Instantly hide UI element
+                    uiElement.SetActive(false);
+                }
+            }
+        }
+
+        // Wait for all animations to complete if using animations
+        if (animationCoroutines.Count > 0)
+        {
+            foreach (Coroutine coroutine in animationCoroutines)
+            {
+                yield return coroutine;
+            }
+        }
+
+        Debug.Log($"Hid UI elements for screen: {screen.screenName}");
+    }
+
+    private IEnumerator AnimateUIElementIn(GameObject uiElement, ScreenData screen)
+    {
+        // Activate the UI element
+        uiElement.SetActive(true);
+
+        // Get or add CanvasGroup for fade animation
+        CanvasGroup canvasGroup = uiElement.GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+        {
+            canvasGroup = uiElement.AddComponent<CanvasGroup>();
+        }
+
+        // Start with transparent and small scale
+        canvasGroup.alpha = 0f;
+        uiElement.transform.localScale = Vector3.zero;
+
+        // Animate fade and scale in
+        Sequence animSequence = DOTween.Sequence();
+        animSequence.Append(canvasGroup.DOFade(1f, screen.uiAnimationDuration).SetEase(screen.uiAnimationEase));
+        animSequence.Join(uiElement.transform.DOScale(1f, screen.uiAnimationDuration).SetEase(screen.uiAnimationEase));
+
+        yield return animSequence.WaitForCompletion();
+    }
+
+    private IEnumerator AnimateUIElementOut(GameObject uiElement, ScreenData screen)
+    {
+        // Get or add CanvasGroup for fade animation
+        CanvasGroup canvasGroup = uiElement.GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+        {
+            canvasGroup = uiElement.AddComponent<CanvasGroup>();
+        }
+
+        // Animate fade and scale out
+        Sequence animSequence = DOTween.Sequence();
+        animSequence.Append(canvasGroup.DOFade(0f, screen.uiAnimationDuration).SetEase(screen.uiAnimationEase));
+        animSequence.Join(uiElement.transform.DOScale(0f, screen.uiAnimationDuration).SetEase(screen.uiAnimationEase));
+
+        yield return animSequence.WaitForCompletion();
+
+        // Deactivate after animation
+        uiElement.SetActive(false);
+        
+        // Reset scale for next time
+        uiElement.transform.localScale = Vector3.one;
+    }
+
+    private void ShowCurrentScreenUI()
+    {
+        if (currentScreen != null)
+        {
+            StartCoroutine(ShowScreenUI(currentScreen));
+        }
     }
     
     private void SetActiveScreen(Vector2 gridPosition)
@@ -240,30 +403,79 @@ public class ScreenTransitionManager : MonoBehaviour
         }
     }
 
-private Button GetDirectionalButton(DirectionButton direction)
-{
-    switch (direction)
+    private Button GetDirectionalButton(DirectionButton direction)
     {
-        case DirectionButton.Up:
-            return upButton;
-        case DirectionButton.Down:
-            return downButton;
-        case DirectionButton.Left:
-            return leftButton;
-        case DirectionButton.Right:
-            return rightButton;
-        default:
-            return null;
+        switch (direction)
+        {
+            case DirectionButton.Up:
+                return upButton;
+            case DirectionButton.Down:
+                return downButton;
+            case DirectionButton.Left:
+                return leftButton;
+            case DirectionButton.Right:
+                return rightButton;
+            default:
+                return null;
+        }
     }
-}
 
-private void HideAllNavigationButtons()
-{
-    if (upButton != null) upButton.gameObject.SetActive(false);
-    if (downButton != null) downButton.gameObject.SetActive(false);
-    if (leftButton != null) leftButton.gameObject.SetActive(false);
-    if (rightButton != null) rightButton.gameObject.SetActive(false);
-}
+    private void HideAllNavigationButtons()
+    {
+        if (upButton != null) upButton.gameObject.SetActive(false);
+        if (downButton != null) downButton.gameObject.SetActive(false);
+        if (leftButton != null) leftButton.gameObject.SetActive(false);
+        if (rightButton != null) rightButton.gameObject.SetActive(false);
+    }
+
+    #region Public Methods for UI Management
+    
+    public void ShowUIElementByName(string elementName)
+    {
+        foreach (ScreenData screen in screens)
+        {
+            GameObject uiElement = screen.uiElements.Find(ui => ui.name == elementName);
+            if (uiElement != null)
+            {
+                uiElement.SetActive(true);
+                Debug.Log($"Manually showed UI element: {elementName}");
+                return;
+            }
+        }
+        Debug.LogWarning($"UI element '{elementName}' not found in any screen!");
+    }
+
+    public void HideUIElementByName(string elementName)
+    {
+        foreach (ScreenData screen in screens)
+        {
+            GameObject uiElement = screen.uiElements.Find(ui => ui.name == elementName);
+            if (uiElement != null)
+            {
+                uiElement.SetActive(false);
+                Debug.Log($"Manually hid UI element: {elementName}");
+                return;
+            }
+        }
+        Debug.LogWarning($"UI element '{elementName}' not found in any screen!");
+    }
+
+    public void RefreshCurrentScreenUI()
+    {
+        if (currentScreen != null)
+        {
+            StartCoroutine(RefreshUI());
+        }
+    }
+
+    private IEnumerator RefreshUI()
+    {
+        yield return StartCoroutine(HideScreenUI(currentScreen));
+        yield return new WaitForSeconds(0.1f);
+        yield return StartCoroutine(ShowScreenUI(currentScreen));
+    }
+
+    #endregion
     
     // Public methods for external scripts
     public string GetCurrentScreenName()
@@ -284,5 +496,10 @@ private void HideAllNavigationButtons()
             names.Add(screen.screenName);
         }
         return names;
+    }
+    
+    public ScreenData GetCurrentScreen()
+    {
+        return currentScreen;
     }
 }
