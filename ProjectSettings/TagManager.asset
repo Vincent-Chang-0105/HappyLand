@@ -53,6 +53,12 @@ TagManager:
   - name: Utensils
     uniqueID: 167737415
     locked: 0
+  - name: Customers
+    uniqueID: 2677743127
+    locked: 0
+  - name: Foreground
+    uniqueID: 1420385007
+    locked: 0
   m_RenderingLayers:
   - Default
   - Light Layer 1
