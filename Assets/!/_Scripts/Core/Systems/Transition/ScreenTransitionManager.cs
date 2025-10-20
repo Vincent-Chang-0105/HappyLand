@@ -38,7 +38,7 @@ public class ScreenData
     [Header("Screen-Specific Navigation")]
     public List<NavigationButton> navigationButtons = new List<NavigationButton>();
     
-    [Header("List of UI Objects to show/hide")]
+    [Header("List of UI Objects to show")]
     public List<GameObject> uiElements = new List<GameObject>();
     
     [Header("UI Animation Settings")]
