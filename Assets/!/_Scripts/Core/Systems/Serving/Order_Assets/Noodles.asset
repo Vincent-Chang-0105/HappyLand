@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 67edd63c4d5270a48a6706926df6a318, type: 3}
-  m_Name: FriedChicken
+  m_Name: Noodles
   m_EditorClassIdentifier: Assembly-CSharp::Order
-  orderName: FriedChicken
+  orderName: Noodles
   orderDescription: 
   requiredIngredients: []
   requiredSteps: []
   correctOrderReward: 50
   incorrectOrderPenalty: -10
   timeLimit: 60
-  orderSprite: {fileID: -2143896544087705624, guid: 24c81e63a49289149aeeebc09accd015, type: 3}
+  orderSprite: {fileID: 21300000, guid: 838e90dc369608a468c29df290e062bc, type: 3}
   orderColor: {r: 1, g: 1, b: 1, a: 1}

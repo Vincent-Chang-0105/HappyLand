@@ -12,7 +12,7 @@ public class Order : ScriptableObject
 
     [Header("Rewards")]
     public int correctOrderReward = 50;
-    public int incorrectOrderPenalty = 10;
+    public int incorrectOrderPenalty = -10;
     public float timeLimit = 60f; // Time limit in seconds
 
     [Header("Visuals")]

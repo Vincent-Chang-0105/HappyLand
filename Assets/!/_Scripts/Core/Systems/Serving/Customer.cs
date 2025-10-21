@@ -42,6 +42,7 @@ public class Customer : MonoBehaviour
     public Order CurrentOrder => currentOrder;
     public CustomerState CurrentState => currentState;
     public float PatiencePercentage => currentPatience / maxPatienceTime;
+    private Transform assignedOrderingPoint;
     
     void Awake()
     {
@@ -69,15 +70,21 @@ public class Customer : MonoBehaviour
         // Set name on GameObject for easy identification
         gameObject.name = customerName;
     }
-    
+
     public void SetMovementPoints(Transform spawn, Transform ordering, Transform exit)
     {
         spawnPoint = spawn;
         orderingPoint = ordering;
         exitPoint = exit;
-        
+        assignedOrderingPoint = ordering;
+
         // Start moving to ordering point
         StartCoroutine(MoveToOrderingPoint());
+    }
+    
+    public Transform GetAssignedOrderingPoint()
+    {
+        return assignedOrderingPoint;
     }
     
     #endregion
@@ -220,6 +227,7 @@ public class Customer : MonoBehaviour
     private void StartLeaving()
     {
         currentState = CustomerState.Leaving;
+        generator.OnCustomerLeaving(this);
         StartCoroutine(LeaveRestaurant());
     }
     
@@ -228,7 +236,7 @@ public class Customer : MonoBehaviour
         yield return StartCoroutine(MoveToPoint(exitPoint));
         
         // Notify generator
-        generator.OnCustomerLeaving(this);
+        //generator.OnCustomerLeaving(this);
         
         // Destroy customer
         Destroy(gameObject);

@@ -8,11 +8,15 @@ public class CustomerGenerator : MonoBehaviour
     [Header("Customer Management")]
     [SerializeField] private List<GameObject> customerPrefabs = new List<GameObject>();
     [SerializeField] private Transform spawnPoint;
-    [SerializeField] private Transform orderingPoint;
+    [SerializeField] private List<Transform> orderingPoints = new List<Transform>(3);
     [SerializeField] private Transform exitPoint;
+
+    //List of all active customers
+    private Dictionary<Transform, Customer> occupiedOrderingPoints = new Dictionary<Transform, Customer>();
+    private List<Customer> activeCustomers = new List<Customer>();
     
     [Header("Generation Settings")]
-    [SerializeField] private float spawnInterval = 10f;
+    [SerializeField] private float spawnInterval;
     [SerializeField] private int maxCustomers = 3;
     [SerializeField] private bool autoGenerate = true;
     
@@ -22,7 +26,6 @@ public class CustomerGenerator : MonoBehaviour
     [SerializeField] private int maxOrdersPerCustomer = 3;
     
     // Runtime tracking
-    private List<Customer> activeCustomers = new List<Customer>();
     private Queue<int> customerNameQueue = new Queue<int>();
     private int totalCustomersServed = 0;
     private bool isGenerating = false;
@@ -34,6 +37,7 @@ public class CustomerGenerator : MonoBehaviour
     
     void Start()
     {
+        InitializeOrderPoints();
         InitializeCustomerQueue();
         
         if (autoGenerate)
@@ -41,13 +45,78 @@ public class CustomerGenerator : MonoBehaviour
             StartCustomerGeneration();
         }
     }
-    
+
     void Update()
     {
         // Clean up customers who have left
         activeCustomers.RemoveAll(customer => customer == null);
+
+        List<Transform> pointsToFree = new List<Transform>();
+        foreach (var kvp in occupiedOrderingPoints)
+        {
+            if (kvp.Value != null && kvp.Value.gameObject == null)
+            {
+                pointsToFree.Add(kvp.Key);
+            }
+        }
+        
+        foreach (Transform point in pointsToFree)
+        {
+            occupiedOrderingPoints[point] = null;
+        }
     }
-    
+    #region Spawn Point Setup
+    private void InitializeOrderPoints()
+    {
+        occupiedOrderingPoints.Clear();
+        foreach (Transform orderingPoint in orderingPoints)
+        {
+            if (orderingPoint != null)
+            {
+                occupiedOrderingPoints[orderingPoint] = null;
+            }
+        }
+
+        Debug.Log($"Initialized {occupiedOrderingPoints.Count} ordering points");
+    }
+
+    private bool HasAvailableOrderingPoint()
+    {
+        foreach (var kvp in occupiedOrderingPoints)
+        {
+            if (kvp.Value == null) // Point is available
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Transform GetAvailableOrderingPoint()
+    {
+        foreach (var kvp in occupiedOrderingPoints)
+        {
+            if (kvp.Value == null) // Point is available
+            {
+                return kvp.Key;
+            }
+        }
+        return null; // No available points
+    }
+
+    private Transform GetCustomerOrderingPoint(Customer customer)
+    {
+        foreach (var kvp in occupiedOrderingPoints)
+        {
+            if (kvp.Value == customer)
+            {
+                return kvp.Key;
+            }
+        }
+        return null;
+    }
+            
+    #endregion
     #region Customer Queue Management
     
     private void InitializeCustomerQueue()
@@ -75,7 +144,6 @@ public class CustomerGenerator : MonoBehaviour
     }
     
     #endregion
-    
     #region Customer Generation
     
     public void StartCustomerGeneration()
@@ -99,7 +167,7 @@ public class CustomerGenerator : MonoBehaviour
         {
             yield return new WaitForSeconds(spawnInterval);
             
-            if (activeCustomers.Count < maxCustomers)
+            if (HasAvailableOrderingPoint())
             {
                 SpawnCustomer();
             }
@@ -111,6 +179,13 @@ public class CustomerGenerator : MonoBehaviour
         if (customerPrefabs.Count == 0)
         {
             Debug.LogError("No customer prefabs assigned!");
+            return;
+        }
+
+        Transform availablePoint = GetAvailableOrderingPoint();
+        if(availablePoint == null)
+        {
+            Debug.LogWarning("No available ordering points for new customer.");
             return;
         }
         
@@ -128,9 +203,12 @@ public class CustomerGenerator : MonoBehaviour
         // Assign name and setup
         int customerNumber = GetNextCustomerNumber();
         customer.SetupCustomer($"NPC_{customerNumber}", GenerateRandomOrder(), this);
-        
+
         // Set movement points
-        customer.SetMovementPoints(spawnPoint, orderingPoint, exitPoint);
+        customer.SetMovementPoints(spawnPoint, availablePoint, exitPoint);
+        
+        // Mark ordering point as occupied
+        occupiedOrderingPoints[availablePoint] = customer;
         
         // Track customer
         activeCustomers.Add(customer);
@@ -139,7 +217,7 @@ public class CustomerGenerator : MonoBehaviour
         // Notify listeners
         OnCustomerSpawned?.Invoke(customer);
         
-        Debug.Log($"Spawned customer: NPC_{customerNumber} with order: {customer.CurrentOrder.orderName}");
+        Debug.Log($"Spawned {customerNumber} at ordering point: {availablePoint.name}");
     }
     
     #endregion
@@ -154,8 +232,6 @@ public class CustomerGenerator : MonoBehaviour
             return null;
         }
         
-        // For now, generate single random order
-        // You can extend this to generate multiple orders per customer
         Order selectedOrder = availableOrders[Random.Range(0, availableOrders.Count)];
         
         // Create a copy so each customer has their own instance
@@ -198,6 +274,13 @@ public class CustomerGenerator : MonoBehaviour
     
     public void OnCustomerLeaving(Customer customer)
     {
+        Transform customerPoint = GetCustomerOrderingPoint(customer);
+        if (customerPoint != null)
+        {
+            occupiedOrderingPoints[customerPoint] = null; // Free up ordering point
+            Debug.Log($"Freed ordering point: {customerPoint.name}");
+        }
+        
         activeCustomers.Remove(customer);
         OnCustomerLeft?.Invoke(customer);
         
@@ -217,7 +300,7 @@ public class CustomerGenerator : MonoBehaviour
     {
         return totalCustomersServed;
     }
-    
+
     public void ForceSpawnCustomer()
     {
         if (activeCustomers.Count < maxCustomers)
@@ -227,4 +310,16 @@ public class CustomerGenerator : MonoBehaviour
     }
     
     #endregion
+
+    public int GetOrderingPointIndex(Transform orderingPoint)
+{
+    for (int i = 0; i < orderingPoints.Count; i++)
+    {
+        if (orderingPoints[i] == orderingPoint)
+        {
+            return i;
+        }
+    }
+    return -1; // Not found
+}
 }
