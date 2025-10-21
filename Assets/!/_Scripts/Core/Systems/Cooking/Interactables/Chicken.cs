@@ -1,40 +1,63 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 
-public class Chicken : MonoBehaviour, IDraggable, IWashable, IDragHandler
+public class Chicken : MonoBehaviour, IDraggable, IWashable, IDragHandler, IBoilable, IFryable
 {
     [Header("Chicken Settings")]
     [SerializeField] private Sprite washedVersionSprite;
+    [SerializeField] private Sprite boiledVersionSprite;
+    [SerializeField] private Sprite friedVersionSprite;
     [SerializeField] private float washDuration = 2f;
     [SerializeField] private ParticleSystem washEffect;
     
     [Header("Drag Settings")]
     [SerializeField] private float dragSmoothness = 0.01f;
-    [SerializeField] private LayerMask faucetLayer = -1;
+    [SerializeField] private LayerMask bowlLayer = -1;
+    [SerializeField] private float bowlDropRadius = 1f;
+    
+    [Header("Auto Bowl Settings")]
+    [SerializeField] private bool autoTeleportToBowl = true;
+    [SerializeField] private float teleportDelay = 0.5f; // Delay before teleporting to bowl
+    [SerializeField] private string boilBowlTag = "BoilBowl";
+    [SerializeField] private string fryBowlTag = "FryBowl";
     
     private bool isDragging = false;
     private bool isWashed = false;
     private bool isBeingWashed = false;
+    private bool isInBowl = false;
+    private bool isBoiled = false;
+    private bool isBeingBoiled = false;
+    private bool isFried = false;
+    private bool isBeingFried = false;
     private Vector3 dragOffset;
     private Camera mainCamera;
     private Collider2D col2D;
     private SpriteRenderer spriteRenderer;
-    private Vector3 originalPosition;
     
     // Washing state
     private float washTimer = 0f;
-    private Faucet currentFaucet = null;
+    
+    // Bowl state
+    private Bowl currentBowl = null;
     
     private void Start()
     {
         mainCamera = Camera.main;
         col2D = GetComponent<Collider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        originalPosition = transform.position;
         
         if (col2D == null)
         {
             col2D = gameObject.AddComponent<CircleCollider2D>();
+        }
+        
+        // Make sure it has a trigger collider for bowl detection
+        if (col2D.isTrigger == false)
+        {
+            CircleCollider2D triggerCollider = gameObject.AddComponent<CircleCollider2D>();
+            triggerCollider.isTrigger = true;
+            triggerCollider.radius = 0.6f;
         }
     }
     
@@ -49,55 +72,70 @@ public class Chicken : MonoBehaviour, IDraggable, IWashable, IDragHandler
     #region IDraggable Implementation
     public void OnDragStart()
     {
+        if (isInBowl) return;
+        
         isDragging = true;
-        Debug.Log($"Started dragging chicken: {gameObject.name}");
     }
     
     public void OnDrag(Vector3 worldPosition)
     {
-        if (!isDragging) return;
+        if (!isDragging || isInBowl) return;
         
         Vector3 targetPosition = worldPosition + dragOffset;
         transform.position = Vector3.Lerp(transform.position, targetPosition, 1f - Mathf.Pow(dragSmoothness, Time.deltaTime));
-        
-        // Check if over faucet
-        CheckFaucetProximity();
     }
     
     public void OnDragEnd()
     {
+        if (!isDragging) return;
+        
         isDragging = false;
         
-        // Check if dropped on faucet for washing
-        if (currentFaucet != null && currentFaucet.IsOn() && !isWashed)
+        // Only check for bowl drop if not already in bowl
+        if (!isInBowl)
         {
-            StartWashing();
+            CheckForBowlDrop();
         }
-        
-        Debug.Log($"Stopped dragging chicken: {gameObject.name}");
     }
     
     public bool IsDraggable()
     {
-        return !isBeingWashed;
+        return !isBeingWashed && !isInBowl;
     }
     #endregion
     
     #region IWashable Implementation
     public void StartWashing()
     {
-        if (isWashed || isBeingWashed) return;
+        if (isWashed || isBeingWashed || isInBowl) return;
         
         isBeingWashed = true;
         washTimer = 0f;
         
-        // Start wash effect
         if (washEffect != null)
         {
             washEffect.Play();
         }
+    }
+    
+    public void StopWashing()
+    {
+        if (!isBeingWashed) return;
         
-        Debug.Log($"Started washing chicken: {gameObject.name}");
+        isBeingWashed = false;
+        washTimer = 0f;
+        
+        if (washEffect != null)
+        {
+            washEffect.Stop();
+        }
+        
+        if (spriteRenderer != null)
+        {
+            Color color = spriteRenderer.color;
+            color.a = 1f;
+            spriteRenderer.color = color;
+        }
     }
     
     public void CompleteWashing()
@@ -107,19 +145,31 @@ public class Chicken : MonoBehaviour, IDraggable, IWashable, IDragHandler
         isBeingWashed = false;
         isWashed = true;
         
-        // Stop wash effect
         if (washEffect != null)
         {
             washEffect.Stop();
         }
         
-        // Spawn washed version
         if (washedVersionSprite != null)
         {
             spriteRenderer.sprite = washedVersionSprite;    
         }
         
-        Debug.Log($"Completed washing chicken: {gameObject.name}");
+        if (spriteRenderer != null)
+        {
+            Color color = spriteRenderer.color;
+            color.a = 1f;
+            spriteRenderer.color = color;
+        }
+
+        if (autoTeleportToBowl)
+        {
+            Bowl boilBowl = FindBowl(boilBowlTag);
+            if (boilBowl != null && boilBowl.CanAcceptIngredient(gameObject))
+            {
+                EnterBowl(boilBowl);
+            }
+        }
     }
     
     public bool IsWashed()
@@ -129,7 +179,7 @@ public class Chicken : MonoBehaviour, IDraggable, IWashable, IDragHandler
     
     public bool CanBeWashed()
     {
-        return !isWashed && !isBeingWashed;
+        return !isWashed && !isBeingWashed && !isInBowl;
     }
     #endregion
     
@@ -155,20 +205,18 @@ public class Chicken : MonoBehaviour, IDraggable, IWashable, IDragHandler
     
     private void OnMouseDrag()
     {
-        if (!isDragging) return;
+        if (!isDragging || isInBowl) return;
         
         Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPos.z = transform.position.z;
         
         Vector3 targetPosition = mouseWorldPos + dragOffset;
         transform.position = Vector3.Lerp(transform.position, targetPosition, 1f - Mathf.Pow(dragSmoothness, Time.deltaTime));
-        
-        CheckFaucetProximity();
     }
     
     public void OnDrag(PointerEventData eventData)
     {
-        if (!isDragging) return;
+        if (!isDragging || isInBowl) return;
         
         Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(eventData.position);
         mouseWorldPos.z = transform.position.z;
@@ -177,50 +225,117 @@ public class Chicken : MonoBehaviour, IDraggable, IWashable, IDragHandler
     }
     #endregion
     
-    private void CheckFaucetProximity()
+    #region Bowl Interaction
+    private void TeleportToNearestBowl()
     {
-        // Check for nearby faucets
-        Collider2D[] faucets = Physics2D.OverlapCircleAll(transform.position, 1f, faucetLayer);
+        // Don't teleport if already in bowl or being dragged
+        if (isInBowl || isDragging) return;
         
-        if (faucets.Length > 0)
+        // Find all bowls in the scene
+        Bowl[] allBowls = FindObjectsOfType<Bowl>();
+        
+        Bowl nearestBowl = null;
+        float nearestDistance = float.MaxValue;
+        
+        foreach (Bowl bowl in allBowls)
         {
-            // Get the Faucet component instead of just the Transform
-            Faucet faucetComponent = faucets[0].GetComponent<Faucet>();
-            if (faucetComponent != null)
+            if (bowl.CanAcceptIngredient(gameObject))
             {
-                currentFaucet = faucetComponent;
-                
-                // Visual feedback based on faucet state
-                if (faucetComponent.IsOn())
+                float distance = Vector3.Distance(transform.position, bowl.transform.position);
+                if (distance < nearestDistance)
                 {
-                    Debug.Log("Near faucet - ready to wash!");
-                }
-                else
-                {
-                    Debug.Log("Near faucet - but it's turned off");
+                    nearestDistance = distance;
+                    nearestBowl = bowl;
                 }
             }
-            else
-            {
-                currentFaucet = null;
-            }
+        }
+        
+        if (nearestBowl != null)
+        {
+            Debug.Log($"🏃‍♂️ Auto-teleporting washed chicken to bowl: {nearestBowl.name}");
+            EnterBowl(nearestBowl);
         }
         else
         {
-            currentFaucet = null;
+            Debug.Log("⚠️ No available bowl found for auto-teleport");
         }
     }
     
-    private void UpdateWashing()
+    private void CheckForBowlDrop()
     {
+        if (isInBowl || !isWashed) return;
+        
+        Collider2D[] bowls = Physics2D.OverlapCircleAll(transform.position, bowlDropRadius, bowlLayer);
+        
+        Bowl closestBowl = null;
+        float closestDistance = float.MaxValue;
+        
+        foreach (Collider2D bowlCollider in bowls)
+        {
+            Bowl bowlComponent = bowlCollider.GetComponent<Bowl>();
+            if (bowlComponent != null && bowlComponent.CanAcceptIngredient(gameObject))
+            {
+                float distance = Vector3.Distance(transform.position, bowlCollider.transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestBowl = bowlComponent;
+                }
+            }
+        }
+        
+        if (closestBowl != null)
+        {
+            EnterBowl(closestBowl);
+        }
+    }
+    
+    public void EnterBowl(Bowl bowl)
+    {
+        if (isInBowl || !isWashed) return;
+        
+        // Cancel any pending teleport
+        CancelInvoke(nameof(TeleportToNearestBowl));
+        
+        // Stop dragging immediately when entering bowl
+        isDragging = false;
+        
+        currentBowl = bowl;
+        isInBowl = true;
+        
+        bowl.AddIngredient(gameObject);
+        
+        Debug.Log($"🥣 Chicken entered bowl: {bowl.name}");
+    }
+    
+    public void ExitBowl()
+    {
+        if (!isInBowl || currentBowl == null) return;
+        
+        currentBowl.RemoveIngredient(gameObject);
+        currentBowl = null;
+        isInBowl = false;
+        
+        Debug.Log($"🥣 Chicken exited bowl");
+    }
+    
+    public bool IsInBowl()
+    {
+        return isInBowl;
+    }
+    #endregion
+    
+    private void UpdateWashing()
+    {    
         washTimer += Time.deltaTime;
         
         if (washTimer >= washDuration)
         {
             CompleteWashing();
+            return;
         }
         
-        // Visual feedback - could add washing animation here
+        // Visual feedback - washing animation
         if (spriteRenderer != null)
         {
             float alpha = Mathf.Lerp(0.7f, 1f, Mathf.PingPong(washTimer * 3f, 1f));
@@ -228,5 +343,153 @@ public class Chicken : MonoBehaviour, IDraggable, IWashable, IDragHandler
             color.a = alpha;
             spriteRenderer.color = color;
         }
+    }
+    
+    #region IBoilable Implementation
+    public void StartBoiling()
+    {
+        if (isBoiled || isBeingBoiled || !isWashed) return;
+        
+        isBeingBoiled = true;
+    }
+    
+    public void StopBoiling()
+    {
+        if (!isBeingBoiled) return;
+        
+        isBeingBoiled = false;
+    }
+    
+    public void CompleteBoiling()
+    {
+        if (!isBeingBoiled) return;
+        
+        isBeingBoiled = false;
+        isBoiled = true;
+
+        if (boiledVersionSprite != null && spriteRenderer != null)
+        {
+            spriteRenderer.sprite = boiledVersionSprite;
+        }
+        
+        if (autoTeleportToBowl)
+        {
+            Debug.Log("🍲 Auto-teleporting boiled chicken to fry bowl");
+            
+            // First, exit the current bowl state (from pot cooking)
+            if (isInBowl && currentBowl != null)
+            {
+                ExitBowl();
+            }
+            
+            // Unparent from pot's ingredient container
+            if (transform.parent != null)
+            {
+                transform.SetParent(null);
+                Debug.Log("🔓 Unparented chicken from pot container");
+            }
+            
+            // Find and enter fry bowl
+            Bowl fryBowl = FindBowl(fryBowlTag);
+            if (fryBowl != null && fryBowl.CanAcceptIngredient(gameObject))
+            {
+                Debug.Log($"🍳 Found fry bowl: {fryBowl.name}, teleporting...");
+                EnterBowl(fryBowl);
+            }
+            else
+            {
+                Debug.Log("⚠️ No fry bowl found or can't accept ingredient");
+                // Try nearest bowl as fallback
+                TeleportToNearestBowl();
+            }
+        }
+    }
+    
+    public bool CanBeBoiled()
+    {
+        return isWashed && !isBoiled && !isBeingBoiled && isInBowl;
+    }
+
+    public bool IsBoiled()
+    {
+        return isBoiled;
+    }
+    #endregion
+    
+    #region IFryable Implementation
+    public void StartFrying()
+    {
+        if (isFried || isBeingFried || !isWashed) return;
+        
+        isBeingFried = true;
+        Debug.Log($"🍳 Started frying chicken: {gameObject.name}");
+    }
+
+    public void StopFrying()
+    {
+        if (!isBeingFried) return;
+        
+        isBeingFried = false;
+        Debug.Log($"⏹️ Stopped frying chicken: {gameObject.name}");
+    }
+
+    public void CompleteFrying()
+    {
+        if (!isBeingFried) return;
+        
+        isBeingFried = false;
+        isFried = true;
+        
+        // Change to fried version
+        if (friedVersionSprite != null && spriteRenderer != null)
+        {
+            spriteRenderer.sprite = friedVersionSprite;
+        }
+        
+        Debug.Log($"✅ Completed frying chicken: {gameObject.name}");
+    }
+
+    public bool CanBeFried()
+    {
+        bool canFry = isWashed && isBoiled && !isFried && !isBeingFried && isInBowl;
+        Debug.Log($"🍳 CanBeFried check for {gameObject.name}: washed={isWashed}, boiled={isBoiled}, fried={isFried}, beingFried={isBeingFried}, inBowl={isInBowl}, result={canFry}");
+        return canFry;
+    }
+
+    public bool IsFried()
+    {
+        return isFried;
+    }
+    #endregion
+    
+    #region Cleanup
+    private void OnDestroy()
+    {
+        // Cancel any pending teleport when object is destroyed
+        CancelInvoke(nameof(TeleportToNearestBowl));
+    }
+    #endregion
+
+    #region Gizmos for Debugging
+    private void OnDrawGizmosSelected()
+    {
+        // Draw bowl drop radius
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, bowlDropRadius);
+
+        // Draw line to current bowl
+        if (currentBowl != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(transform.position, currentBowl.transform.position);
+        }
+    }
+    #endregion
+    
+    private Bowl FindBowl(string bowlTag)
+    {
+        GameObject bowlObj = GameObject.FindGameObjectWithTag(bowlTag);
+        Debug.Log(bowlObj != null ? $"🔍 Found bowl with tag '{bowlTag}': {bowlObj.name}" : $"⚠️ No bowl found with tag '{bowlTag}'");
+        return bowlObj != null ? bowlObj.GetComponent<Bowl>() : null;
     }
 }

@@ -43,7 +43,7 @@ public class PanChickenSpawner : MonoBehaviour
             SpawnChicken();
         }
         
-        Debug.Log($"Spawned {initialChickenCount} chickens on start");
+        //Debug.Log($"Spawned {initialChickenCount} chickens on start");
     }
     
     private void StartMonitoring()
@@ -91,7 +91,7 @@ public class PanChickenSpawner : MonoBehaviour
             // Update spawned chickens list to only include chickens in pan
             spawnedChickens = chickensInPan;
             
-            Debug.Log($"{chickensRemovedFromPan} chicken(s) removed from pan. Chickens in pan: {chickensInPan.Count}");
+            //Debug.Log($"{chickensRemovedFromPan} chicken(s) removed from pan. Chickens in pan: {chickensInPan.Count}");
             
             // Spawn replacements with delay
             StartCoroutine(RefillChickensWithDelay(chickensRemovedFromPan));
@@ -149,7 +149,7 @@ public class PanChickenSpawner : MonoBehaviour
         // Add to spawned list
         spawnedChickens.Add(newChicken);
         
-        Debug.Log($"Spawned chicken at {randomPosition}. Total in pan: {spawnedChickens.Count}");
+        //Debug.Log($"Spawned chicken at {randomPosition}. Total in pan: {spawnedChickens.Count}");
     }
     
     private Vector3 GetRandomSpawnPosition()
@@ -189,7 +189,7 @@ public class PanChickenSpawner : MonoBehaviour
             }
         }
         
-        Debug.Log($"Max chickens set to: {maxChickens}");
+        //Debug.Log($"Max chickens set to: {maxChickens}");
     }
     
     public void ForceRefill()
@@ -208,14 +208,14 @@ public class PanChickenSpawner : MonoBehaviour
             }
         }
         spawnedChickens.Clear();
-        Debug.Log("Cleared all chickens from pan");
+        //Debug.Log("Cleared all chickens from pan");
     }
     
     public void RestockPan()
     {
         ClearAllChickens();
         InitializeChickens();
-        Debug.Log("Restocked pan with fresh chickens");
+        //Debug.Log("Restocked pan with fresh chickens");
     }
     
     public int GetChickenCount()

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6929772368939249422}
   - component: {fileID: -8164619472774482965}
   - component: {fileID: -6421711301351147091}
+  - component: {fileID: -223158624721286527}
   m_Layer: 8
   m_Name: Wings
   m_TagString: Untagged
@@ -27,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5634358213962635253}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -4.8, y: -0.70000005, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
@@ -104,13 +105,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6e10197d6b1a074bb9911aa3f6b63a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chicken
-  washedVersionSprite: {fileID: -2377550397395604471, guid: bf2b22f1f716ff2489a350f18bd0a57f, type: 3}
+  washedVersionSprite: {fileID: 21300000, guid: bf2b22f1f716ff2489a350f18bd0a57f, type: 3}
+  boiledVersionSprite: {fileID: 2205652116797148312, guid: bf54a0f6be687864a88a6e623d0454bb, type: 3}
+  friedVersionSprite: {fileID: 21300000, guid: 3a2eda7168057cc448afae84f369727e, type: 3}
   washDuration: 2
   washEffect: {fileID: 0}
   dragSmoothness: 0.1
-  faucetLayer:
+  bowlLayer:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 4294967295
+  bowlDropRadius: 1
+  autoTeleportToBowl: 1
+  teleportDelay: 0.5
 --- !u!58 &-6421711301351147091
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -147,3 +153,30 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 3.59
+--- !u!50 &-223158624721286527
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5634358213962635253}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: bf2b22f1f716ff2489a350f18bd0a57f
+guid: f8c4624956e07e9408b45a9332641b12
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -2377550397395604471
-    second: Wings Washed_0
+      213: -4241523897610650763
+    second: gas stove_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Wings Washed_0
+      name: gas stove_0
       rect:
         serializedVersion: 2
-        x: 13
-        y: 5
-        width: 723
-        height: 396
+        x: 0
+        y: 0
+        width: 1004
+        height: 878
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 90c65a7a28e310fd0800000000000000
-      internalID: -2377550397395604471
+      spriteID: 57b3698dc741325c0800000000000000
+      internalID: -4241523897610650763
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Wings Washed_0: -2377550397395604471
+      gas stove_0: -4241523897610650763
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

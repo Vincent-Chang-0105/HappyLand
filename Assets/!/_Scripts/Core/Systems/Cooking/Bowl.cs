@@ -1,196 +1,334 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using DG.Tweening;
 
-public class Bowl : CookWare
+public class Bowl : MonoBehaviour, IDraggable, IDragHandler
 {
-    [Header("Bowl Properties")]
-    [SerializeField] private float radius = 1.5f;
-    [SerializeField] private Vector2 centerOffset = Vector2.zero;
-    [SerializeField] private float depth = 0.5f;
+    [Header("Bowl Settings")]
+    [SerializeField] private float dragSmoothness = 0.01f;
+    [SerializeField] private float dropZoneRadius = 1f;
+    [SerializeField] private Transform ingredientContainer; // Where ingredients go inside the bowl
+    [SerializeField] private LayerMask ingredientLayer = -1;
     
-    [Header("Food Management")]
-    [SerializeField] private List<FoodParticle> containedFood = new List<FoodParticle>();
-    [SerializeField] private int maxFoodCapacity = 50;
+    [Header("Animation Settings")]
+    [SerializeField] private float moveToBowlDuration = 0.8f;
+    [SerializeField] private Ease moveToBowlEase = Ease.OutQuart;
     
-    [Header("Shake Settings")]
-    [SerializeField] private float shakeThreshold = 0.05f;
-    [SerializeField] private float shakeMultiplier = 5f;
+    [Header("Visual Feedback")]
+    [SerializeField] private Color normalColor = Color.white;
+    [SerializeField] private Color canDropColor = Color.green;
+    [SerializeField] private ParticleSystem dropEffect;
     
-    [Header("Visual")]
-    [SerializeField] private bool showBowlBounds = true;
-    [SerializeField] private Color bowlBoundsColor = Color.cyan;
+    private bool isDragging = false;
+    private Vector3 dragOffset;
+    private Camera mainCamera;
+    private Collider2D col2D;
+    private SpriteRenderer spriteRenderer;
+    private Vector3 originalPosition;
     
-    private CircleCollider2D bowlCollider;
-    private Vector3 lastPosition;
+    // Container management
+    private List<GameObject> containedIngredients = new List<GameObject>();
+    private bool isHighlighted = false;
     
-    protected override void Start() // Override Start from CookWare
+    private void Start()
     {
-        base.Start(); // Call parent Start first
-        SetupBowlCollider();
-        lastPosition = transform.position;
-    }
-    
-    private void SetupBowlCollider()
-    {
-        bowlCollider = GetComponent<CircleCollider2D>();
-        if (bowlCollider == null)
+        mainCamera = Camera.main;
+        col2D = GetComponent<Collider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        originalPosition = transform.position;
+        
+        if (col2D == null)
         {
-            bowlCollider = gameObject.AddComponent<CircleCollider2D>();
+            col2D = gameObject.AddComponent<CircleCollider2D>();
         }
         
-        bowlCollider.radius = radius;
-        bowlCollider.offset = centerOffset;
-        bowlCollider.isTrigger = true;
+        // Create ingredient container if not assigned
+        if (ingredientContainer == null)
+        {
+            GameObject container = new GameObject("IngredientContainer");
+            container.transform.parent = transform;
+            container.transform.localPosition = Vector3.zero;
+            ingredientContainer = container.transform;
+        }
+    }
+    
+    private void Update()
+    {
+        CheckForNearbyIngredients();
+    }
+    
+    #region IDraggable Implementation
+    public void OnDragStart()
+    {
+        isDragging = true;
+        Debug.Log($"Started dragging bowl: {gameObject.name}");
+    }
+    
+    public void OnDrag(Vector3 worldPosition)
+    {
+        if (!isDragging) return;
         
-        // Set layer for bowl detection
-        if (gameObject.layer == 0) // If no layer set
-        {
-            gameObject.layer = LayerMask.NameToLayer("Bowl");
-        }
+        Vector3 targetPosition = worldPosition + dragOffset;
+        transform.position = Vector3.Lerp(transform.position, targetPosition, 1f - Mathf.Pow(dragSmoothness, Time.deltaTime));
     }
-    
-    protected virtual void Update() // Make it virtual in case we want to override later
-    {
-        base.Update(); // Call CookWare update for dragging
-        
-        // Check for movement and shake bowl contents
-        CheckForMovement();
-        
-        // Clean up null references
-        containedFood.RemoveAll(food => food == null);
-    }
-    
-    private void CheckForMovement()
-    {
-        Vector3 deltaPosition = transform.position - lastPosition;
-        
-        if (deltaPosition.magnitude > shakeThreshold)
-        {
-            float shakeIntensity = deltaPosition.magnitude * shakeMultiplier;
-            ShakeBowl(shakeIntensity);
-        }
-        
-        lastPosition = transform.position;
-    }
-    
-    public Vector2 GetCenter()
-    {
-        return (Vector2)transform.position + centerOffset;
-    }
-    
-    public float GetRadius()
-    {
-        return radius * transform.localScale.x;
-    }
-    
-    public void AddFood(FoodParticle food)
-    {
-        if (!containedFood.Contains(food) && containedFood.Count < maxFoodCapacity)
-        {
-            containedFood.Add(food);
-            OnFoodAdded(food);
-        }
-    }
-    
-    public void RemoveFood(FoodParticle food)
-    {
-        if (containedFood.Contains(food))
-        {
-            containedFood.Remove(food);
-            OnFoodRemoved(food);
-        }
-    }
-    
-    public List<FoodParticle> GetContainedFood()
-    {
-        return new List<FoodParticle>(containedFood);
-    }
-    
-    public int GetFoodCount()
-    {
-        return containedFood.Count;
-    }
-    
-    public bool IsFull()
-    {
-        return containedFood.Count >= maxFoodCapacity;
-    }
-    
-    public void ShakeBowl(float intensity)
-    {
-        foreach (FoodParticle food in containedFood)
-        {
-            if (food != null)
-            {
-                Vector2 shakeForce = new Vector2(
-                    Random.Range(-intensity, intensity),
-                    Random.Range(0, intensity * 0.5f)
-                );
-                food.AddForce(shakeForce);
-                
-                // Add rotational shake
-                float torque = Random.Range(-intensity * 100f, intensity * 100f);
-                food.AddTorque(torque);
-            }
-        }
-    }
-    
-    public void PourContents(Vector2 direction, float force)
-    {
-        foreach (FoodParticle food in containedFood)
-        {
-            if (food != null)
-            {
-                food.AddForce(direction.normalized * force);
-            }
-        }
-    }
-    
-    private void OnFoodAdded(FoodParticle food)
-    {
-        Debug.Log($"Food {food.name} added to bowl {gameObject.name}. Total: {containedFood.Count}");
-    }
-    
-    private void OnFoodRemoved(FoodParticle food)
-    {
-        Debug.Log($"Food {food.name} removed from bowl {gameObject.name}. Total: {containedFood.Count}");
-    }
-    
-    private void OnDrawGizmos()
-    {
-        if (showBowlBounds)
-        {
-            Gizmos.color = bowlBoundsColor;
-            Vector2 center = GetCenter();
-            DrawWireCircle(center, GetRadius(), 64);
 
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(center, 0.1f);
+    public void OnDragEnd()
+    {
+        isDragging = false;
+        SetHighlight(false);
+
+        //LERP the bowl back to its original position
+        Invoke(nameof(ReturnToOriginalPosition), 0.1f);
+        Debug.Log($"Stopped dragging bowl: {gameObject.name}");
+    }
+
+    private void ReturnToOriginalPosition()
+    {
+        transform.DOMove(originalPosition, 0.2f).SetEase(Ease.OutQuad);
+    }
+    
+    public bool IsDraggable()
+    {
+        return true; // Bowl is always draggable
+    }
+    #endregion
+    
+    #region Event System Handlers
+    private void OnMouseDown()
+    {
+        if (!IsDraggable()) return;
+        
+        Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        mouseWorldPos.z = transform.position.z;
+        dragOffset = transform.position - mouseWorldPos;
+        
+        OnDragStart();
+    }
+
+    private void OnMouseUp()
+    {
+        if (isDragging)
+        {
+            OnDragEnd();
         }
     }
     
+    private void OnMouseDrag()
+    {
+        if (!isDragging) return;
+        
+        Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        mouseWorldPos.z = transform.position.z;
+        
+        Vector3 targetPosition = mouseWorldPos + dragOffset;
+        transform.position = Vector3.Lerp(transform.position, targetPosition, 1f - Mathf.Pow(dragSmoothness, Time.deltaTime));
+    }
+    
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (!isDragging) return;
+        
+        Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(eventData.position);
+        mouseWorldPos.z = transform.position.z;
+        
+        OnDrag(mouseWorldPos);
+    }
+    #endregion
+    
+    #region Ingredient Management
+    public bool CanAcceptIngredient(GameObject ingredient)
+    {
+        if (ingredient.GetComponent<Chicken>() != null)
+        {
+            Chicken chicken = ingredient.GetComponent<Chicken>();
+            
+            // For fry bowls, accept boiled chicken
+            if (gameObject.CompareTag("FryBowl"))
+            {
+                return chicken.IsWashed() && chicken.IsBoiled() && !chicken.IsFried();
+            }
+            
+            // For boil bowls, accept washed chicken
+            if (gameObject.CompareTag("BoilBowl"))
+            {
+                return chicken.IsWashed() && !chicken.IsBoiled();
+            }
+            
+            // Default: accept washed chicken
+            return chicken.IsWashed();
+        }
+        
+        return false;
+    }
+    
+    public void AddIngredient(GameObject ingredient)
+    {
+        if (!CanAcceptIngredient(ingredient)) return;
+        
+        if (!containedIngredients.Contains(ingredient))
+        {
+            containedIngredients.Add(ingredient);
+            
+            // Stop any dragging on the ingredient first
+            IDraggable draggable = ingredient.GetComponent<IDraggable>();
+            if (draggable != null)
+            {
+                draggable.OnDragEnd(); // Force end dragging
+            }
+            
+            // Start DOTween animation to move ingredient to bowl
+            MoveIngredientToBowlWithDOTween(ingredient);
+            
+            Debug.Log($"🥣 Added {ingredient.name} to bowl!");
+        }
+    }
+    
+    private void MoveIngredientToBowlWithDOTween(GameObject ingredient)
+    {
+        // Calculate target position (world space)
+        Vector3 targetWorldPosition = ingredientContainer.position;
+        targetWorldPosition.y -= 0.2f; // Slightly lower than bowl center
+        
+        // Kill any existing tweens on this ingredient
+        ingredient.transform.DOKill();
+        
+        // Animate the movement using DOTween
+        ingredient.transform.DOMove(targetWorldPosition, moveToBowlDuration)
+            .SetEase(moveToBowlEase)
+            .OnComplete(() => {
+                // Called when animation completes
+                OnIngredientMoveComplete(ingredient);
+            });
+    }
+    
+    private void OnIngredientMoveComplete(GameObject ingredient)
+    {
+        // Parent it to the container after animation completes
+        ingredient.transform.SetParent(ingredientContainer);
+        
+        // Convert to local position for proper parenting
+        Vector3 localPos = Vector3.zero;
+        localPos.y = -0.2f;
+        ingredient.transform.localPosition = localPos;
+        
+        // Play drop effect when animation completes
+        if (dropEffect != null)
+        {
+            dropEffect.Play();
+        }
+        
+        Debug.Log($"✅ Ingredient {ingredient.name} animation completed!");
+    }
+    
+    public void RemoveIngredient(GameObject ingredient)
+    {
+        if (containedIngredients.Contains(ingredient))
+        {
+            containedIngredients.Remove(ingredient);
+            
+            // Kill any ongoing tweens
+            ingredient.transform.DOKill();
+            
+            // Unparent the ingredient
+            ingredient.transform.SetParent(null);
+            
+            Debug.Log($"🥣 Removed {ingredient.name} from bowl!");
+        }
+    }
+    
+    public List<GameObject> GetContainedIngredients()
+    {
+        return new List<GameObject>(containedIngredients);
+    }
+    
+    public bool IsEmpty()
+    {
+        return containedIngredients.Count == 0;
+    }
+    #endregion
+    
+    private void CheckForNearbyIngredients()
+    {
+        // Check for nearby ingredients that could be dropped
+        Collider2D[] nearbyObjects = Physics2D.OverlapCircleAll(transform.position, dropZoneRadius, ingredientLayer);
+        
+        bool shouldHighlight = false;
+        
+        foreach (Collider2D obj in nearbyObjects)
+        {
+            if (obj.gameObject == gameObject) continue; // Skip self
+            
+            // Skip ingredients that are already in this bowl
+            if (containedIngredients.Contains(obj.gameObject)) continue;
+            
+            // Check if it's a draggable ingredient
+            IDraggable draggable = obj.GetComponent<IDraggable>();
+            if (draggable != null && CanAcceptIngredient(obj.gameObject))
+            {
+                shouldHighlight = true;
+                break;
+            }
+        }
+        
+        SetHighlight(shouldHighlight);
+    }
+    
+    private void SetHighlight(bool highlight)
+    {
+        if (isHighlighted == highlight) return;
+        
+        isHighlighted = highlight;
+        
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = highlight ? canDropColor : normalColor;
+        }
+    }
+    
+    // Called when an ingredient is dropped nearby
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        // Only add if not already contained
+        if (!containedIngredients.Contains(other.gameObject) && CanAcceptIngredient(other.gameObject))
+        {
+            AddIngredient(other.gameObject);
+        }
+    }
+    
+    private void OnDestroy()
+    {
+        // Clean up any ongoing tweens when the bowl is destroyed
+        foreach (GameObject ingredient in containedIngredients)
+        {
+            if (ingredient != null)
+            {
+                ingredient.transform.DOKill();
+            }
+        }
+    }
+    
+    #region Gizmos for Debugging
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.white;
-        Vector2 center = GetCenter();
+        // Draw drop zone radius
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, dropZoneRadius);
         
-        #if UNITY_EDITOR
-        UnityEditor.Handles.Label(center + Vector2.up * (GetRadius() + 0.5f), 
-            $"Food: {containedFood.Count}/{maxFoodCapacity}");
-        #endif
-    }
-
-    // Helper method to draw a wire circle using Gizmos
-    private void DrawWireCircle(Vector2 center, float radius, int segments = 32)
-    {
-        float angleStep = 360f / segments;
-        Vector3 prevPoint = center + new Vector2(Mathf.Cos(0), Mathf.Sin(0)) * radius;
-        for (int i = 1; i <= segments; i++)
+        // Draw lines to contained ingredients
+        Gizmos.color = Color.green;
+        foreach (GameObject ingredient in containedIngredients)
         {
-            float angle = angleStep * i * Mathf.Deg2Rad;
-            Vector3 nextPoint = center + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
-            Gizmos.DrawLine(prevPoint, nextPoint);
-            prevPoint = nextPoint;
+            if (ingredient != null)
+            {
+                Gizmos.DrawLine(transform.position, ingredient.transform.position);
+            }
         }
+    }
+    #endregion
+
+    public bool IsDragging()
+    {
+        return isDragging;
     }
 }

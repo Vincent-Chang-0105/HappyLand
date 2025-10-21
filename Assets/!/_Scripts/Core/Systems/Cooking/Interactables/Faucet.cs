@@ -6,6 +6,7 @@ public class Faucet : MonoBehaviour, IInteractable
 {
     [Header("Faucet Settings")]
     [SerializeField] private Transform faucetHandle;
+    [SerializeField] private BoxCollider2D cleaningAreaCollider;
     [SerializeField] private float handleRotationAngle = 90f;
     [SerializeField] private float rotationDuration = 0.5f;
     [SerializeField] private Ease rotationEase = Ease.OutQuart;
@@ -33,6 +34,11 @@ public class Faucet : MonoBehaviour, IInteractable
     public void ToggleFaucet()
     {
         isOn = !isOn;
+
+        if (cleaningAreaCollider != null)
+        {
+            cleaningAreaCollider.enabled = isOn;
+        }
         
         // Rotate handle
         RotateHandle();
