@@ -49,6 +49,12 @@ TagManager:
   - name: Cookware
     uniqueID: 3138902581
     locked: 0
+  - name: Seasoning
+    uniqueID: 902668205
+    locked: 0
+  - name: Bowl
+    uniqueID: 2128764687
+    locked: 0
   - name: Food
     uniqueID: 2851729733
     locked: 0
@@ -60,6 +66,9 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 1420385007
+    locked: 0
+  - name: New Layer 7
+    uniqueID: 2996751339
     locked: 0
   m_RenderingLayers:
   - Default

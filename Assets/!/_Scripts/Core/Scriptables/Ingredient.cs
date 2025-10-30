@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "New Ingredient", menuName = "Cooking/Ingredient")]
 public class Ingredient : ScriptableObject
@@ -17,6 +18,13 @@ public class Ingredient : ScriptableObject
     public float cookingTime = 1f;
     public bool requiresCutting = false;
     public bool requiresWashing = false;
+
+    [Header("Animation")]
+    public Sprite[] animationFrames;
+    
+    [Header("Drag Properties")]
+    public Sprite draggableIcon;
+    public IngredientUsageType usageType = IngredientUsageType.Seasoning;
     
     [Header("Visual")]
     public Color backgroundColor = Color.white;
@@ -27,5 +35,13 @@ public enum IngredientType
     Vegetable,
     Seasoning,
     Liquid,
-    Spice
+    Spice,
+    Oil
+}
+
+public enum IngredientUsageType
+{
+    Seasoning,  // For salt, spices - can be added to pan/pot
+    Oil,        // For cooking oil - only for pan
+    Liquid      // For water, broth - only for pot
 }

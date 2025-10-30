@@ -13,6 +13,9 @@ GameObject:
   - component: {fileID: -7339928946317711638}
   - component: {fileID: 2641088626977132748}
   - component: {fileID: 5566064535670350466}
+  - component: {fileID: 6845108664587896438}
+  - component: {fileID: 869585240531629728}
+  - component: {fileID: 7505819421374671866}
   m_Layer: 8
   m_Name: Thighs
   m_TagString: Untagged
@@ -80,7 +83,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1443237563
-  m_SortingLayer: 3
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 8692313496474212989, guid: dfb4d8c5f2d4aa446bba272141ef003e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -105,18 +108,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6e10197d6b1a074bb9911aa3f6b63a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chicken
-  washedVersionSprite: {fileID: 21300000, guid: d7472afa158b20941b5597c7b2d16114, type: 3}
-  boiledVersionSprite: {fileID: 8692313496474212989, guid: dfb4d8c5f2d4aa446bba272141ef003e, type: 3}
-  friedVersionSprite: {fileID: 21300000, guid: ff0fc92a31af6b9478548fbaac3e0a62, type: 3}
-  washDuration: 2
-  washEffect: {fileID: 0}
-  dragSmoothness: 0.1
-  bowlLayer:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  bowlDropRadius: 1
-  autoTeleportToBowl: 1
-  teleportDelay: 0.5
 --- !u!58 &2641088626977132748
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -180,3 +171,52 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &6845108664587896438
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6246167465104345030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b3debd4deba3374da94b153d74392c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChickenBowlInteraction
+  bowlLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  bowlDropRadius: 1
+--- !u!114 &869585240531629728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6246167465104345030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57a0367e84e58444dbf9fc81def4639c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChickenCookingState
+  washedVersionSprite: {fileID: 21300000, guid: d7472afa158b20941b5597c7b2d16114, type: 3}
+  boiledVersionSprite: {fileID: 8692313496474212989, guid: dfb4d8c5f2d4aa446bba272141ef003e, type: 3}
+  friedVersionSprite: {fileID: 21300000, guid: ff0fc92a31af6b9478548fbaac3e0a62, type: 3}
+  washDuration: 2
+  washEffect: {fileID: 0}
+  autoTeleportToBowl: 1
+  boilBowlTag: BoilBowl
+  fryBowlTag: FryBowl
+--- !u!114 &7505819421374671866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6246167465104345030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6465d9829e8934c4fb4547b7b45b3524, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChickenDragBehavior
+  dragSmoothness: 0.01
