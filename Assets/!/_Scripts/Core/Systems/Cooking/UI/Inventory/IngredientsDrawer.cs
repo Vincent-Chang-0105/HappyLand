@@ -61,8 +61,6 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
         }
         
         InitializeInventory();
-        
-        Debug.Log($"IngredientsDrawer initialized - Handle: {(HandleImage != null ? "Found" : "Missing")}");
     }
 
     private void InitializeInventory()

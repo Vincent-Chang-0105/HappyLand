@@ -42,6 +42,7 @@ public class Customer : MonoBehaviour
     public Order CurrentOrder => currentOrder;
     public CustomerState CurrentState => currentState;
     public float PatiencePercentage => currentPatience / maxPatienceTime;
+    private Transform assignedOrderingPoint;
     
     void Awake()
     {
@@ -69,15 +70,21 @@ public class Customer : MonoBehaviour
         // Set name on GameObject for easy identification
         gameObject.name = customerName;
     }
-    
+
     public void SetMovementPoints(Transform spawn, Transform ordering, Transform exit)
     {
         spawnPoint = spawn;
         orderingPoint = ordering;
         exitPoint = exit;
-        
+        assignedOrderingPoint = ordering;
+
         // Start moving to ordering point
         StartCoroutine(MoveToOrderingPoint());
+    }
+    
+    public Transform GetAssignedOrderingPoint()
+    {
+        return assignedOrderingPoint;
     }
     
     #endregion
@@ -145,27 +152,69 @@ public class Customer : MonoBehaviour
     
     #region Order Handling
     
-    public void ReceiveOrder(GameObject deliveredFood)
+    public bool ReceiveOrder(GameObject deliveredFood)
     {
-        if (currentState != CustomerState.Waiting) return;
-        
+        if (currentState != CustomerState.Waiting)
+        {
+            Debug.LogWarning($"Customer {name} is not waiting for order (current state: {currentState})");
+            return false;
+        }
+
         currentState = CustomerState.Receiving;
-        
+
         // Check if order is correct
         bool isCorrect = ValidateOrder(deliveredFood);
-        
+
         // Notify generator
         generator.OnCustomerOrderReceived(this, isCorrect);
-        
+
         // Show satisfaction/dissatisfaction
         StartCoroutine(ReactToOrder(isCorrect));
+
+        return isCorrect;
     }
-    
+
     private bool ValidateOrder(GameObject deliveredFood)
     {
-        // Implement your order validation logic here
-        // This is a simple name-based check, you can make it more sophisticated
-        return deliveredFood.name.Contains(currentOrder.orderName);
+        if (deliveredFood == null)
+        {
+            Debug.LogWarning("Customer received null food!");
+            return false;
+        }
+
+        // Check if it's a plated dish
+        PlatedDish plate = deliveredFood.GetComponent<PlatedDish>();
+        if (plate != null)
+        {
+            // Validate the plated dish
+            Debug.Log($"Customer received plated dish with {plate.ChickenCount} chickens");
+
+            // Check if plate is complete and valid
+            if (!plate.ValidateDish())
+            {
+                Debug.LogWarning("Customer rejected incomplete or invalid plate!");
+                return false;
+            }
+
+            // Check if dish name matches order
+            if (plate.DishName.Contains(currentOrder.orderName) ||
+                currentOrder.orderName.Contains("Chicken") ||
+                currentOrder.orderName.Contains("Fried"))
+            {
+                Debug.Log($"✅ Customer accepted plated dish: {plate.DishName}");
+                return true;
+            }
+            else
+            {
+                Debug.LogWarning($"❌ Dish name '{plate.DishName}' doesn't match order '{currentOrder.orderName}'");
+                return false;
+            }
+        }
+
+        // Fallback: Original name-based check for other food items
+        bool matches = deliveredFood.name.Contains(currentOrder.orderName);
+        Debug.Log($"Customer validation (name check): {deliveredFood.name} vs {currentOrder.orderName} = {matches}");
+        return matches;
     }
     
     private IEnumerator ReactToOrder(bool wasCorrect)
@@ -188,8 +237,16 @@ public class Customer : MonoBehaviour
         StartLeaving();
     }
     
+    /// <summary>
+    /// Check if customer is currently waiting for their order
+    /// </summary>
+    public bool IsWaitingForOrder()
+    {
+        return currentState == CustomerState.Waiting;
+    }
+
     #endregion
-    
+
     #region Patience System
     
     private void UpdatePatience()
@@ -220,6 +277,7 @@ public class Customer : MonoBehaviour
     private void StartLeaving()
     {
         currentState = CustomerState.Leaving;
+        generator.OnCustomerLeaving(this);
         StartCoroutine(LeaveRestaurant());
     }
     
@@ -228,7 +286,7 @@ public class Customer : MonoBehaviour
         yield return StartCoroutine(MoveToPoint(exitPoint));
         
         // Notify generator
-        generator.OnCustomerLeaving(this);
+        //generator.OnCustomerLeaving(this);
         
         // Destroy customer
         Destroy(gameObject);

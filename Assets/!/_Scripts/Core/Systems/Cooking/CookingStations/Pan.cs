@@ -1,7 +1,9 @@
 using UnityEngine;
+using DG.Tweening;
 
 /// <summary>
 /// Pan cooking station - specialized for frying ingredients
+/// Features gesture-based tossing where players must make fast upward drag motions
 /// Requires oil before accepting ingredients
 /// </summary>
 public class Pan : CookingStation
@@ -10,6 +12,33 @@ public class Pan : CookingStation
     [SerializeField] private bool hasOil = false;
     [SerializeField] private GameObject oilVisual;
     [SerializeField] private ParticleSystem oilEffect;
+
+    [Header("Gesture-Based Tossing")]
+    [SerializeField] private bool useGestureTossing = true;
+    [SerializeField] private int requiredTosses = 3;
+    [SerializeField] private float fryingDurationBetweenTosses = 2f;
+    [SerializeField] private TossGestureDetector tossGestureDetector;
+    [SerializeField] private TossPrompt tossPrompt;
+
+    [Header("Toss Animation")]
+    [SerializeField] private float tossHeight = 0.5f; // How high the pan moves during toss
+    [SerializeField] private float tossDuration = 0.4f; // Duration of toss animation
+    [SerializeField] private float tossRotation = 15f; // Slight rotation during toss
+
+    // Tossing state
+    private enum TossingState
+    {
+        NotStarted,
+        WaitingForToss,
+        TossAnimating,
+        Frying
+    }
+
+    private TossingState currentTossState = TossingState.NotStarted;
+    private int completedTosses = 0;
+    private float fryingTimer = 0f;
+    private Vector3 originalPanPosition;
+    private Quaternion originalPanRotation;
 
     #region Abstract Method Implementations
 
@@ -60,6 +89,294 @@ public class Pan : CookingStation
     protected override string GetCookingProcessName()
     {
         return "frying";
+    }
+
+    #endregion
+
+    #region Unity Lifecycle
+
+    protected override void Start()
+    {
+        base.Start();
+
+        // Store original position and rotation for toss animation
+        originalPanPosition = transform.localPosition;
+        originalPanRotation = transform.localRotation;
+
+        // Setup gesture detector if not assigned
+        if (useGestureTossing && tossGestureDetector == null)
+        {
+            tossGestureDetector = gameObject.AddComponent<TossGestureDetector>();
+        }
+
+        if (tossGestureDetector != null)
+        {
+            tossGestureDetector.SetTossOrigin(transform);
+            tossGestureDetector.SetActive(false);
+            tossGestureDetector.OnTossComplete += OnTossGestureComplete;
+            tossGestureDetector.OnTossProgress += OnTossGestureProgress;
+        }
+
+        // Find or create toss prompt
+        if (useGestureTossing && tossPrompt == null)
+        {
+            // Try to find existing toss prompt in children
+            tossPrompt = GetComponentInChildren<TossPrompt>(true);
+
+            if (tossPrompt == null)
+            {
+                Debug.LogWarning("Pan: No TossPrompt component found. Please add a TossPrompt UI to the pan.");
+            }
+        }
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        // Unsubscribe from gesture detector events
+        if (tossGestureDetector != null)
+        {
+            tossGestureDetector.OnTossComplete -= OnTossGestureComplete;
+            tossGestureDetector.OnTossProgress -= OnTossGestureProgress;
+        }
+    }
+
+    #endregion
+
+    #region Gesture-Based Tossing Logic
+
+    protected override void StartCooking()
+    {
+        if (isCooking || ingredientsInStation.Count == 0) return;
+
+        // If gesture tossing is disabled, use base behavior
+        if (!useGestureTossing)
+        {
+            base.StartCooking();
+            return;
+        }
+
+        // Initialize gesture-based cooking
+        isCooking = true;
+        completedTosses = 0;
+        currentTossState = TossingState.WaitingForToss;
+
+        // Start cooking each ingredient
+        foreach (GameObject ingredient in ingredientsInStation)
+        {
+            if (ingredient != null)
+            {
+                StartCookingIngredient(ingredient);
+            }
+        }
+
+        // Start effects
+        if (cookingEffect != null)
+        {
+            cookingEffect.Stop(); // Don't start yet, wait for first toss
+        }
+
+        // Show first toss prompt
+        ShowTossPrompt();
+    }
+
+    protected override void UpdateCooking()
+    {
+        // If gesture tossing is disabled, use base timer behavior
+        if (!useGestureTossing)
+        {
+            base.UpdateCooking();
+            return;
+        }
+
+        // Update based on current tossing state
+        switch (currentTossState)
+        {
+            case TossingState.WaitingForToss:
+                // Just waiting for player to toss, no timer
+                break;
+
+            case TossingState.TossAnimating:
+                // Animation is playing, no timer
+                break;
+
+            case TossingState.Frying:
+                // Frying between tosses - increment timer
+                fryingTimer += Time.deltaTime;
+
+                // Update progress bar to show frying progress
+                if (cookingProgressBar != null)
+                {
+                    float progress = fryingTimer / fryingDurationBetweenTosses;
+                    cookingProgressBar.fillAmount = progress;
+                    cookingProgressBar.color = Color.Lerp(Color.yellow, Color.orange, progress);
+                }
+
+                // After frying time is up, request next toss or complete
+                if (fryingTimer >= fryingDurationBetweenTosses)
+                {
+                    if (completedTosses < requiredTosses)
+                    {
+                        // Request another toss
+                        currentTossState = TossingState.WaitingForToss;
+                        fryingTimer = 0f;
+                        ShowTossPrompt();
+                    }
+                    else
+                    {
+                        // All tosses complete, finish cooking
+                        CompleteCooking();
+                    }
+                }
+                break;
+        }
+
+        // Update UI position (follow station)
+        if (cookingMeterUI != null && cookingMeterUI.activeInHierarchy)
+        {
+            cookingMeterUI.transform.position = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * 2f);
+        }
+    }
+
+    private void ShowTossPrompt()
+    {
+        if (tossPrompt != null)
+        {
+            tossPrompt.ShowPrompt(completedTosses, requiredTosses);
+        }
+
+        // Enable gesture detection
+        if (tossGestureDetector != null)
+        {
+            tossGestureDetector.SetActive(true);
+        }
+
+        // Show UI
+        if (cookingMeterUI != null)
+        {
+            cookingMeterUI.SetActive(true);
+        }
+    }
+
+    private void HideTossPrompt()
+    {
+        if (tossPrompt != null)
+        {
+            tossPrompt.HidePrompt();
+        }
+
+        // Disable gesture detection
+        if (tossGestureDetector != null)
+        {
+            tossGestureDetector.SetActive(false);
+        }
+    }
+
+    private void OnTossGestureComplete()
+    {
+        // Ignore if not waiting for a toss
+        if (currentTossState != TossingState.WaitingForToss)
+            return;
+
+        completedTosses++;
+
+        Debug.Log($"Toss {completedTosses}/{requiredTosses} completed!");
+
+        // Show success feedback
+        if (tossPrompt != null)
+        {
+            tossPrompt.ShowTossSuccess();
+        }
+
+        // Hide prompt
+        HideTossPrompt();
+
+        // Play toss animation
+        currentTossState = TossingState.TossAnimating;
+        PlayTossAnimation();
+    }
+
+    private void OnTossGestureProgress(float velocityProgress)
+    {
+        // Update the toss prompt with current velocity
+        if (tossPrompt != null && currentTossState == TossingState.WaitingForToss)
+        {
+            tossPrompt.UpdateVelocity(velocityProgress);
+        }
+    }
+
+    private void PlayTossAnimation()
+    {
+        // Kill any existing tweens
+        transform.DOKill();
+
+        // Store original position
+        Vector3 startPos = transform.localPosition;
+        Quaternion startRot = transform.localRotation;
+
+        // Create animation sequence
+        Sequence tossSequence = DOTween.Sequence();
+
+        // Move up and rotate slightly
+        tossSequence.Append(transform.DOLocalMoveY(originalPanPosition.y + tossHeight, tossDuration * 0.5f).SetEase(Ease.OutQuad));
+        tossSequence.Join(transform.DOLocalRotate(new Vector3(0, 0, tossRotation), tossDuration * 0.5f).SetEase(Ease.OutQuad));
+
+        // Move back down and rotate back
+        tossSequence.Append(transform.DOLocalMoveY(originalPanPosition.y, tossDuration * 0.5f).SetEase(Ease.InQuad));
+        tossSequence.Join(transform.DOLocalRotate(originalPanRotation.eulerAngles, tossDuration * 0.5f).SetEase(Ease.InQuad));
+
+        // When animation completes, start frying
+        tossSequence.OnComplete(() =>
+        {
+            OnTossAnimationComplete();
+        });
+    }
+
+    private void OnTossAnimationComplete()
+    {
+        // Start frying
+        currentTossState = TossingState.Frying;
+        fryingTimer = 0f;
+
+        // Start/restart cooking effects
+        if (cookingEffect != null)
+        {
+            cookingEffect.Play();
+        }
+
+        if (steamEffect != null)
+        {
+            steamEffect.Play();
+        }
+
+        // Play some visual feedback
+        if (ingredientDropEffect != null)
+        {
+            ingredientDropEffect.Play();
+        }
+    }
+
+    protected override void CompleteCooking()
+    {
+        // Call base implementation to complete frying for all ingredients
+        base.CompleteCooking();
+
+        // Notify plating manager about fried chickens
+        if (PlatingManager.Instance != null)
+        {
+            foreach (GameObject ingredient in ingredientsInStation)
+            {
+                if (ingredient != null)
+                {
+                    PlatingManager.Instance.RegisterFriedChicken(ingredient);
+                }
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Pan: PlatingManager not found! Cannot register fried chickens.");
+        }
     }
 
     #endregion

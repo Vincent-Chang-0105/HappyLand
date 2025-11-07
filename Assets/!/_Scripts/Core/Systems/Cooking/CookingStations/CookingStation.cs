@@ -338,6 +338,9 @@ public abstract class CookingStation : MonoBehaviour
         StopCooking();
     }
 
+    /// <summary>
+    /// Update cooking progress. Can be overridden by derived classes for custom cooking behavior (e.g., gesture-based)
+    /// </summary>
     protected virtual void UpdateCooking()
     {
         cookTimer += Time.deltaTime;
