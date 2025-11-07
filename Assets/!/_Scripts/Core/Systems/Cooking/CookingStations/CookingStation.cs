@@ -225,6 +225,12 @@ public abstract class CookingStation : MonoBehaviour
             ingredientDropEffect.Play();
         }
 
+        SpriteRenderer ingredientSprite = ingredient.GetComponent<SpriteRenderer>();
+        if (ingredientSprite != null)
+        {
+            ingredientSprite.sortingOrder = spriteRenderer.sortingOrder + 2;
+        }
+
         // Check if all ingredients have arrived, then start cooking
         CheckIfReadyToStartCooking();
     }
