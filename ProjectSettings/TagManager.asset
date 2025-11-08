@@ -16,8 +16,13 @@ TagManager:
   - Terrain
   - Bowl
   - Food
+<<<<<<< HEAD
   - Faucet
   - Customer
+=======
+  - 
+  - 
+>>>>>>> main
   - 
   - 
   - 
@@ -49,6 +54,7 @@ TagManager:
   - name: Cookware
     uniqueID: 3138902581
     locked: 0
+<<<<<<< HEAD
   - name: Seasoning
     uniqueID: 902668205
     locked: 0
@@ -56,6 +62,12 @@ TagManager:
     uniqueID: 2128764687
     locked: 0
   - name: Food
+=======
+  - name: Food
+    uniqueID: 3652661603
+    locked: 0
+  - name: Utensils
+>>>>>>> main
     uniqueID: 2851729733
     locked: 0
   - name: Utensils
