@@ -92,7 +92,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1514472049338282437
 RectTransform:
   m_ObjectHideFlags: 0
@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 5988736591579949044}
   - component: {fileID: 4495803269952752590}
   - component: {fileID: 2602562250315630051}
-  - component: {fileID: 9220507377365334544}
+  - component: {fileID: 4350608110791364618}
   m_Layer: 0
   m_Name: IngredientSlot
   m_TagString: Untagged
@@ -286,7 +286,7 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
---- !u!114 &9220507377365334544
+--- !u!114 &4350608110791364618
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -295,10 +295,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6540856787052897311}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 508078e44b8421d499374d04fa0aab38, type: 3}
+  m_Script: {fileID: 11500000, guid: c2632842819d02343b90fad6a895dcfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InventorySlot
   ingredientIcon: {fileID: 0}
   backgroundImage: {fileID: 0}
   quantityText: {fileID: 0}
-  draggableIngredientPrefab: {fileID: 335851583809507315, guid: 07c416efaff6eaa4ab8fb5429b214103, type: 3}
+  draggableIngredientPrefab: {fileID: 8955503917688110114, guid: b24f924bafbf6884bb9e1d9ea7f1efb5, type: 3}

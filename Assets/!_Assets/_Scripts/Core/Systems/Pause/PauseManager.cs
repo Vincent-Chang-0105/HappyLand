@@ -389,7 +389,19 @@ public class PauseManager : StaticInstance<PauseManager>
     {
         if (volume <= 0)
             return -80f;
-        
+
         return Mathf.Log10(volume) * 20f;
+    }
+    
+    //Debug
+    public void EndDay()
+    {
+        DayManager.Instance.EndDay();
+
+
+        if (Time.timeScale == 0f)
+        {
+            ResumeGame();
+        }
     }
 }

@@ -4,28 +4,34 @@ using System.Linq;
 using System;
 
 /// <summary>
-/// Manages automatic plating of fried chickens.
-/// Monitors frying completion and creates plated dishes when enough chickens are ready.
+/// Manages automatic plating of cooked dishes.
+/// Monitors cooking completion and creates plated dishes when enough ingredients are ready.
+/// Supports multiple dish types (fried chicken, sinigang, etc.)
 /// </summary>
 public class PlatingManager : Singleton<PlatingManager>
 {
-    [Header("Plate Settings")]
-    [SerializeField] private GameObject platedDishPrefab;
-    [SerializeField] private Transform servingArea; // Where plates spawn in UI
-    [SerializeField] private int chickensPerPlate = 3;
+    [System.Serializable]
+    public class DishType
+    {
+        public string dishName;
+        public GameObject platedDishPrefab;
+        public int ingredientsPerPlate = 3;
+        [HideInInspector] public List<GameObject> waitingIngredients = new List<GameObject>();
+    }
 
-    [Header("Chicken Tracking")]
-    [SerializeField] private List<GameObject> friedChickensWaitingToPlate = new List<GameObject>();
+    [Header("Supported Dishes")]
+    [SerializeField] private List<DishType> supportedDishes = new List<DishType>();
 
     [Header("Plate Spawning")]
+    [SerializeField] private Transform servingArea;
     [SerializeField] private float plateSpawnDelay = 0.5f;
     [SerializeField] private Vector2 plateSpawnOffset = Vector2.zero;
 
     private void Start()
     {
-        if (platedDishPrefab == null)
+        if (supportedDishes == null || supportedDishes.Count == 0)
         {
-            Debug.LogError("PlatingManager: No plated dish prefab assigned!", this);
+            Debug.LogError("PlatingManager: No supported dishes configured!", this);
         }
 
         if (servingArea == null)
@@ -39,106 +45,111 @@ public class PlatingManager : Singleton<PlatingManager>
     /// </summary>
     public void RegisterFriedChicken(GameObject chicken)
     {
-        if (chicken == null) return;
-
-        // Verify it's actually fried
-        IFryable fryable = chicken.GetComponent<IFryable>();
-        if (fryable == null || !fryable.IsFried())
-        {
-            Debug.LogWarning($"Attempted to register unfried chicken: {chicken.name}");
-            return;
-        }
-
-        // Add to waiting list if not already there
-        if (!friedChickensWaitingToPlate.Contains(chicken))
-        {
-            friedChickensWaitingToPlate.Add(chicken);
-            Debug.Log($"Chicken registered for plating. Waiting chickens: {friedChickensWaitingToPlate.Count}/{chickensPerPlate}");
-
-            // Check if we have enough for a plate
-            CheckAndCreatePlate();
-        }
+        RegisterIngredientForDish("FriedChicken", chicken,
+            c => c.GetComponent<IFryable>()?.IsFried() ?? false);
     }
 
     /// <summary>
-    /// Check if we have enough fried chickens to create a plate
+    /// Register a sinigang chicken as ready for plating
     /// </summary>
-    private void CheckAndCreatePlate()
+    public void RegisterSinigangChicken(GameObject chicken)
     {
-        // Remove any null references first
-        friedChickensWaitingToPlate.RemoveAll(c => c == null);
-
-        // Check if we have enough chickens
-        if (friedChickensWaitingToPlate.Count >= chickensPerPlate)
-        {
-            Debug.Log($"Creating plate with {chickensPerPlate} fried chickens!");
-            CreatePlate();
-        }
+        RegisterIngredientForDish("Sinigang", chicken,
+            c => c.GetComponent<ISinigangable>()?.IsSiniganged() ?? false);
     }
 
-    /// <summary>
-    /// Create a plated dish with the available fried chickens
-    /// </summary>
-    private void CreatePlate()
+    private void RegisterIngredientForDish(string dishName, GameObject ingredient, System.Func<GameObject, bool> validator)
     {
-        if (platedDishPrefab == null || servingArea == null)
+        if (ingredient == null) return;
+
+        // Find dish type
+        DishType dish = supportedDishes.Find(d => d.dishName == dishName);
+        if (dish == null)
         {
-            Debug.LogError("Cannot create plate: missing prefab or serving area");
+            Debug.LogError($"Dish type '{dishName}' not configured in PlatingManager!");
             return;
         }
 
-        // Take the first N chickens from the waiting list
-        List<GameObject> chickensForPlate = friedChickensWaitingToPlate
-            .Take(chickensPerPlate)
+        // Validate ingredient state
+        if (!validator(ingredient))
+        {
+            Debug.LogWarning($"Attempted to register invalid ingredient for {dishName}: {ingredient.name}");
+            return;
+        }
+
+        // Add to waiting list
+        if (!dish.waitingIngredients.Contains(ingredient))
+        {
+            dish.waitingIngredients.Add(ingredient);
+            Debug.Log($"{dishName} ingredient registered. Waiting: {dish.waitingIngredients.Count}/{dish.ingredientsPerPlate}");
+
+            CheckAndCreatePlate(dish);
+        }
+    }
+
+    private void CheckAndCreatePlate(DishType dish)
+    {
+        dish.waitingIngredients.RemoveAll(i => i == null);
+
+        if (dish.waitingIngredients.Count >= dish.ingredientsPerPlate)
+        {
+            Debug.Log($"Creating {dish.dishName} plate with {dish.ingredientsPerPlate} ingredients!");
+            CreatePlate(dish);
+        }
+    }
+
+    private void CreatePlate(DishType dish)
+    {
+        if (dish.platedDishPrefab == null || servingArea == null)
+        {
+            Debug.LogError($"Cannot create {dish.dishName} plate: missing prefab or serving area");
+            return;
+        }
+
+        // Take ingredients for this plate
+        List<GameObject> ingredientsForPlate = dish.waitingIngredients
+            .Take(dish.ingredientsPerPlate)
             .ToList();
 
-        if (chickensForPlate.Count < chickensPerPlate)
+        if (ingredientsForPlate.Count < dish.ingredientsPerPlate)
         {
-            Debug.LogWarning($"Not enough chickens for plate: {chickensForPlate.Count}/{chickensPerPlate}");
+            Debug.LogWarning($"Not enough ingredients for {dish.dishName}: {ingredientsForPlate.Count}/{dish.ingredientsPerPlate}");
             return;
         }
 
-        // Spawn the plated dish
-        GameObject plateObject = Instantiate(platedDishPrefab, servingArea);
+        // Spawn plated dish
+        GameObject plateObject = Instantiate(dish.platedDishPrefab, servingArea);
         PlatedDish plate = plateObject.GetComponent<PlatedDish>();
 
         if (plate == null)
         {
-            Debug.LogError("Plated dish prefab doesn't have PlatedDish component!");
+            Debug.LogError($"{dish.dishName} prefab missing PlatedDish component!");
             Destroy(plateObject);
             return;
         }
 
-        // Apply spawn offset and ensure proper scale
+        // Apply spawn settings
         RectTransform plateRect = plateObject.GetComponent<RectTransform>();
         if (plateRect != null)
         {
             plateRect.anchoredPosition = plateSpawnOffset;
-            plateRect.localScale = Vector3.one; // Ensure plate has proper scale
+            plateRect.localScale = Vector3.one;
         }
 
-        // Add chickens to the plate
-        foreach (GameObject chicken in chickensForPlate)
+        // Add ingredients to plate
+        foreach (GameObject ingredient in ingredientsForPlate)
         {
-            plate.AddChicken(chicken);
-
-            // Hide or destroy the individual chicken objects
-            // Option 1: Destroy them
-            Destroy(chicken);
-
-            // Option 2: Hide them (uncomment if you prefer)
-            // chicken.SetActive(false);
+            plate.AddChicken(ingredient); // Method name is generic despite name
+            Destroy(ingredient);
         }
 
-        // Remove these chickens from the waiting list
-        foreach (GameObject chicken in chickensForPlate)
+        // Remove from waiting list
+        foreach (GameObject ingredient in ingredientsForPlate)
         {
-            friedChickensWaitingToPlate.Remove(chicken);
+            dish.waitingIngredients.Remove(ingredient);
         }
 
-        Debug.Log($"✅ Plate created! Remaining chickens waiting: {friedChickensWaitingToPlate.Count}");
-
-        // Play plate creation effect (optional)
+        Debug.Log($"✅ {dish.dishName} plate created! Remaining: {dish.waitingIngredients.Count}");
         PlayPlateCreationEffect(plateObject);
     }
 
@@ -155,27 +166,14 @@ public class PlatingManager : Singleton<PlatingManager>
     }
 
     /// <summary>
-    /// Manually trigger plate creation (for testing/debugging)
+    /// Clear all waiting ingredients (for cleanup/reset)
     /// </summary>
-    [ContextMenu("Force Create Plate")]
-    public void ForceCreatePlate()
+    public void ClearWaitingIngredients()
     {
-        if (friedChickensWaitingToPlate.Count >= chickensPerPlate)
+        foreach (DishType dish in supportedDishes)
         {
-            CreatePlate();
+            dish.waitingIngredients.Clear();
         }
-        else
-        {
-            Debug.LogWarning($"Not enough chickens to force create plate: {friedChickensWaitingToPlate.Count}/{chickensPerPlate}");
-        }
-    }
-
-    /// <summary>
-    /// Clear all waiting chickens (for cleanup/reset)
-    /// </summary>
-    public void ClearWaitingChickens()
-    {
-        friedChickensWaitingToPlate.Clear();
-        Debug.Log("Cleared all waiting chickens");
+        Debug.Log("Cleared all waiting ingredients");
     }
 }

@@ -73,26 +73,35 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
 
         // Convert UI position to world position for detecting Pan/Pot
         Vector3 worldPos = GetWorldPosition();
+        Debug.Log($"🔍 Checking for cooking stations at world pos: {worldPos}, radius: {dropRadius}");
 
         // Check for pans and pots in range
         Collider2D[] nearbyColliders = Physics2D.OverlapCircleAll(worldPos, dropRadius);
+        Debug.Log($"🔍 Found {nearbyColliders.Length} colliders nearby");
 
         foreach (Collider2D collider in nearbyColliders)
         {
+            Debug.Log($"🔍 Checking collider: {collider.gameObject.name}");
+
             // Try to use on Pan
             Pan pan = collider.GetComponent<Pan>();
             if (pan != null && CanUseOnPan())
             {
+                Debug.Log($"🔍 Found Pan, attempting to use {ingredientData.ingredientName}");
                 wasUsed = UseOnPan(pan);
                 if (wasUsed) break;
             }
 
             // Try to use on Pot
             Pot pot = collider.GetComponent<Pot>();
-            if (pot != null && CanUseOnPot())
+            if (pot != null)
             {
-                wasUsed = UseOnPot(pot);
-                if (wasUsed) break;
+                Debug.Log($"🔍 Found Pot! Can use on pot: {CanUseOnPot()}, Ingredient: {ingredientData.ingredientName}");
+                if (CanUseOnPot())
+                {
+                    wasUsed = UseOnPot(pot);
+                    if (wasUsed) break;
+                }
             }
         }
 
@@ -131,6 +140,12 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
     
     private bool CanUseOnPan()
     {
+        // Sinigang mix can only be used on pots, not pans
+        if (ingredientData.ingredientName.Contains("Sinigang"))
+        {
+            return false;
+        }
+
         switch (ingredientData.usageType)
         {
             case IngredientUsageType.Oil:
@@ -185,6 +200,32 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
     
     private bool UseOnPot(Pot pot)
     {
+        Debug.Log($"🍲 UseOnPot called for: {ingredientData.ingredientName}");
+
+        // Special handling for sinigang mix
+        if (ingredientData.ingredientName.Contains("Sinigang"))
+        {
+            Debug.Log($"🍲 Detected Sinigang in name! Checking if pot can accept...");
+            if (pot.CanAcceptSinigangMix())
+            {
+                Debug.Log($"🍲 Pot accepts sinigang mix! Adding...");
+                pot.AddSinigangMix(ingredientData);
+                hasBeenUsed = true;
+                Debug.Log($"✅ Used sinigang mix on pot!");
+                AnimateUse();
+                return true;
+            }
+            else
+            {
+                Debug.LogWarning("⚠️ Pot cannot accept sinigang mix (already has one)!");
+                // Don't consume the ingredient
+                return false;
+            }
+        }
+
+        Debug.Log($"🍲 Not sinigang, trying regular usage type: {ingredientData.usageType}");
+
+        // Regular seasoning/liquid handling
         switch (ingredientData.usageType)
         {
             case IngredientUsageType.Seasoning:
@@ -210,6 +251,7 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
                 break;
         }
 
+        Debug.Log($"🍲 Pot cannot accept this ingredient");
         return false;
     }
 

@@ -138,6 +138,30 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler
     {
         if (!isEmpty && currentIngredient != null)
         {
+            // Check if player can afford this ingredient
+            int ingredientCost = currentIngredient.cost;
+
+            if (ingredientCost > 0)
+            {
+                if (MoneyManager.Instance == null)
+                {
+                    Debug.LogError("MoneyManager not found! Cannot process ingredient purchase.");
+                    return;
+                }
+
+                if (!MoneyManager.Instance.CanAfford(ingredientCost))
+                {
+                    Debug.Log($"Cannot afford {currentIngredient.ingredientName}. Cost: {ingredientCost} PHP");
+                    return;
+                }
+
+                // Deduct the cost
+                if (!MoneyManager.Instance.TrySpendMoney(ingredientCost))
+                {
+                    Debug.LogWarning("Failed to spend money for ingredient.");
+                    return;
+                }
+            }
 
             // Instantiate as UI element in the canvas
             GameObject dragObject = Instantiate(draggableIngredientPrefab, parentCanvas.transform);

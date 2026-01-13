@@ -187,7 +187,7 @@ public class Customer : MonoBehaviour
         if (plate != null)
         {
             // Validate the plated dish
-            Debug.Log($"Customer received plated dish with {plate.ChickenCount} chickens");
+            Debug.Log($"Customer received plated dish with {plate.ChickenCount} ingredients");
 
             // Check if plate is complete and valid
             if (!plate.ValidateDish())
@@ -196,19 +196,38 @@ public class Customer : MonoBehaviour
                 return false;
             }
 
-            // Check if dish name matches order
-            if (plate.DishName.Contains(currentOrder.orderName) ||
-                currentOrder.orderName.Contains("Chicken") ||
-                currentOrder.orderName.Contains("Fried"))
+            // Flexible order matching
+            string orderLower = currentOrder.orderName.ToLower();
+            string dishLower = plate.DishName.ToLower();
+
+            // Direct match or substring match
+            if (dishLower.Contains(orderLower) || orderLower.Contains(dishLower))
             {
                 Debug.Log($"✅ Customer accepted plated dish: {plate.DishName}");
                 return true;
             }
-            else
+
+            // Specific dish matching
+            if (orderLower.Contains("sinigang") && dishLower.Contains("sinigang"))
             {
-                Debug.LogWarning($"❌ Dish name '{plate.DishName}' doesn't match order '{currentOrder.orderName}'");
-                return false;
+                Debug.Log($"✅ Customer accepted sinigang dish");
+                return true;
             }
+
+            if (orderLower.Contains("fried") && dishLower.Contains("fried"))
+            {
+                Debug.Log($"✅ Customer accepted fried chicken");
+                return true;
+            }
+
+            if (orderLower.Contains("chicken") && dishLower.Contains("chicken"))
+            {
+                Debug.Log($"✅ Customer accepted chicken dish");
+                return true;
+            }
+
+            Debug.LogWarning($"❌ Dish name '{plate.DishName}' doesn't match order '{currentOrder.orderName}'");
+            return false;
         }
 
         // Fallback: Original name-based check for other food items

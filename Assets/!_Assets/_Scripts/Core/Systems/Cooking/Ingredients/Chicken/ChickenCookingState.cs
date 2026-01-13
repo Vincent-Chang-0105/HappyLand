@@ -6,6 +6,7 @@ public class ChickenCookingState : MonoBehaviour
     [SerializeField] private Sprite washedVersionSprite;
     [SerializeField] private Sprite boiledVersionSprite;
     [SerializeField] private Sprite friedVersionSprite;
+    [SerializeField] private Sprite sinigangVersionSprite;
 
     [Header("Washing Settings")]
     [SerializeField] private float washDuration = 2f;
@@ -25,11 +26,14 @@ public class ChickenCookingState : MonoBehaviour
     private bool isBeingBoiled = false;
     private bool isFried = false;
     private bool isBeingFried = false;
+    private bool isSiniganged = false;
+    private bool isBeingSiniganged = false;
 
     // Events
     public System.Action OnWashComplete;
     public System.Action OnBoilComplete;
     public System.Action OnFryComplete;
+    public System.Action OnSinigangComplete;
 
     public bool IsWashed => isWashed;
     public bool IsBoiled => isBoiled;
@@ -37,6 +41,8 @@ public class ChickenCookingState : MonoBehaviour
     public bool IsBeingWashed => isBeingWashed;
     public bool IsBeingBoiled => isBeingBoiled;
     public bool IsBeingFried => isBeingFried;
+    public bool IsSiniganged => isSiniganged;
+    public bool IsBeingSiniganged => isBeingSiniganged;
 
     private void Awake()
     {
@@ -183,6 +189,42 @@ public class ChickenCookingState : MonoBehaviour
     {
         bool canFry = isWashed && isBoiled && !isFried && !isBeingFried;
         return canFry;
+    }
+    #endregion
+
+    #region Siniganging
+    public void StartSiniganging()
+    {
+        if (isSiniganged || isBeingSiniganged || !isWashed || !isBoiled) return;
+
+        isBeingSiniganged = true;
+    }
+
+    public void StopSiniganging()
+    {
+        if (!isBeingSiniganged) return;
+
+        isBeingSiniganged = false;
+    }
+
+    public void CompleteSiniganging()
+    {
+        if (!isBeingSiniganged) return;
+
+        isBeingSiniganged = false;
+        isSiniganged = true;
+
+        if (sinigangVersionSprite != null && spriteRenderer != null)
+        {
+            spriteRenderer.sprite = sinigangVersionSprite;
+        }
+
+        OnSinigangComplete?.Invoke();
+    }
+
+    public bool CanBeSiniganged()
+    {
+        return isWashed && isBoiled && !isSiniganged && !isBeingSiniganged;
     }
     #endregion
 

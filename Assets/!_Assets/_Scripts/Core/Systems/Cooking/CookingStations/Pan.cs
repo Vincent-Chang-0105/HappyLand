@@ -1,5 +1,6 @@
 using UnityEngine;
 using DG.Tweening;
+using AudioSystem;
 
 /// <summary>
 /// Pan cooking station - specialized for frying ingredients
@@ -12,6 +13,9 @@ public class Pan : CookingStation
     [SerializeField] private bool hasOil = false;
     [SerializeField] private GameObject oilVisual;
     [SerializeField] private ParticleSystem oilEffect;
+
+    [Header("Audio")]
+    [SerializeField] private SoundData sizzleSound;
 
     [Header("Gesture-Based Tossing")]
     [SerializeField] private bool useGestureTossing = true;
@@ -39,6 +43,7 @@ public class Pan : CookingStation
     private float fryingTimer = 0f;
     private Vector3 originalPanPosition;
     private Quaternion originalPanRotation;
+    private SoundEmitter currentSizzleEmitter;
 
     #region Abstract Method Implementations
 
@@ -133,6 +138,9 @@ public class Pan : CookingStation
     protected override void OnDestroy()
     {
         base.OnDestroy();
+
+        // Stop sizzle sound
+        StopSizzleSound();
 
         // Unsubscribe from gesture detector events
         if (tossGestureDetector != null)
@@ -241,6 +249,9 @@ public class Pan : CookingStation
 
     private void ShowTossPrompt()
     {
+        // Stop sizzle sound when waiting for toss
+        StopSizzleSound();
+
         if (tossPrompt != null)
         {
             tossPrompt.ShowPrompt(completedTosses, requiredTosses);
@@ -355,10 +366,16 @@ public class Pan : CookingStation
         {
             ingredientDropEffect.Play();
         }
+
+        // Play sizzle sound
+        PlaySizzleSound();
     }
 
     protected override void CompleteCooking()
     {
+        // Stop sizzle sound
+        StopSizzleSound();
+
         // Call base implementation to complete frying for all ingredients
         base.CompleteCooking();
 
@@ -376,6 +393,37 @@ public class Pan : CookingStation
         else
         {
             Debug.LogWarning("Pan: PlatingManager not found! Cannot register fried chickens.");
+        }
+
+        // Remove oil after cooking is complete
+        RemoveOil();
+    }
+
+    #endregion
+
+    #region Audio Management
+
+    private void PlaySizzleSound()
+    {
+        // Stop any existing sizzle sound first
+        StopSizzleSound();
+
+        // Play new sizzle sound if SoundManager is available
+        if (SoundManager.Instance != null && sizzleSound != null)
+        {
+            currentSizzleEmitter = SoundManager.Instance
+                .CreateSoundBuilder()
+                .WithPosition(transform.position)
+                .Play(sizzleSound);
+        }
+    }
+
+    private void StopSizzleSound()
+    {
+        if (currentSizzleEmitter != null && currentSizzleEmitter.IsPlaying())
+        {
+            currentSizzleEmitter.Stop();
+            currentSizzleEmitter = null;
         }
     }
 
@@ -427,6 +475,36 @@ public class Pan : CookingStation
     public bool HasOil()
     {
         return hasOil;
+    }
+
+    /// <summary>
+    /// Remove oil from the pan (called after cooking is complete)
+    /// </summary>
+    private void RemoveOil()
+    {
+        if (!hasOil) return;
+
+        hasOil = false;
+
+        // Hide oil visual
+        if (oilVisual != null)
+        {
+            oilVisual.SetActive(false);
+        }
+
+        // Stop oil effect
+        if (oilEffect != null)
+        {
+            oilEffect.Stop();
+        }
+
+        // Reset sprite color
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = Color.white;
+        }
+
+        Debug.Log("🛢️ Oil consumed! Add more oil to fry again.");
     }
 
     #endregion

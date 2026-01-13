@@ -173,4 +173,37 @@ public class OrderUIManager : MonoBehaviour
     {
         return activeOrderButtons.Keys.ToList();
     }
+
+    /// <summary>
+    /// Clears all active order buttons - called when day ends
+    /// </summary>
+    public void ClearAllOrderButtons()
+    {
+        // Destroy all order button GameObjects
+        foreach (var kvp in activeOrderButtons)
+        {
+            if (kvp.Value != null && kvp.Value.gameObject != null)
+            {
+                Destroy(kvp.Value.gameObject);
+            }
+        }
+
+        // Clear the dictionary
+        activeOrderButtons.Clear();
+
+        // Also clear customer tickets
+        foreach (var kvp in customerTicket)
+        {
+            if (kvp.Value != null && ticketManager != null)
+            {
+                ticketManager.RemoveTicket(kvp.Value);
+            }
+        }
+        customerTicket.Clear();
+
+        // Clear customers with orders set
+        customersWithOrders.Clear();
+
+        Debug.Log("OrderUIManager: Cleared all order buttons and tickets for new day");
+    }
 }

@@ -29,7 +29,10 @@ public class CustomerGenerator : MonoBehaviour
     private Queue<int> customerNameQueue = new Queue<int>();
     private int totalCustomersServed = 0;
     private bool isGenerating = false;
-    
+
+    [Header("Daily Sales Tracking")]
+    [SerializeField] private int todaySalesIncome = 0;
+
     // Events
     public System.Action<Customer> OnCustomerSpawned;
     public System.Action<Customer> OnCustomerLeft;
@@ -158,7 +161,7 @@ public class CustomerGenerator : MonoBehaviour
     public void StopCustomerGeneration()
     {
         isGenerating = false;
-        StopCoroutine(GenerateCustomersRoutine());
+        StopAllCoroutines();
     }
     
     private IEnumerator GenerateCustomersRoutine()
@@ -266,10 +269,19 @@ public class CustomerGenerator : MonoBehaviour
         // Handle rewards/penalties
         int reward = customer.CurrentOrder.GetReward();
 
-        // TODO: Add to game score/money system here
+        // Add money to player's balance
         if (wasCorrect)
         {
-            Debug.Log($"MONEY EARNED! Customer {customer.CustomerName} paid ${reward} for correct order!");
+            if (MoneyManager.Instance != null)
+            {
+                MoneyManager.Instance.AddMoney(reward);
+                todaySalesIncome += reward; // Track daily sales
+                Debug.Log($"MONEY EARNED! Customer {customer.CustomerName} paid {reward} PHP for correct order!");
+            }
+            else
+            {
+                Debug.LogError("MoneyManager not found! Cannot award money.");
+            }
         }
         else
         {
@@ -321,14 +333,31 @@ public class CustomerGenerator : MonoBehaviour
     #endregion
 
     public int GetOrderingPointIndex(Transform orderingPoint)
-{
-    for (int i = 0; i < orderingPoints.Count; i++)
     {
-        if (orderingPoints[i] == orderingPoint)
+        for (int i = 0; i < orderingPoints.Count; i++)
         {
-            return i;
+            if (orderingPoints[i] == orderingPoint)
+            {
+                return i;
+            }
         }
+        return -1; // Not found
     }
-    return -1; // Not found
-}
+
+    /// <summary>
+    /// Gets total sales income for today
+    /// </summary>
+    public int GetTodaySales()
+    {
+        return todaySalesIncome;
+    }
+
+    /// <summary>
+    /// Resets daily sales tracking (called at start of new day)
+    /// </summary>
+    public void ResetDailySales()
+    {
+        todaySalesIncome = 0;
+        Debug.Log("Daily sales tracking reset.");
+    }
 }

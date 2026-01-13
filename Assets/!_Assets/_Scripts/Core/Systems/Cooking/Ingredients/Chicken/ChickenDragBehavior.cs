@@ -56,7 +56,16 @@ public class ChickenDragBehavior : MonoBehaviour, IDragHandler
         mouseWorldPos.z = transform.position.z;
         dragOffset = transform.position - mouseWorldPos;
 
-        StartDrag();
+        // Call IDraggable interface if available (for payment check)
+        IDraggable draggable = GetComponent<IDraggable>();
+        if (draggable != null)
+        {
+            draggable.OnDragStart();
+        }
+        else
+        {
+            StartDrag();
+        }
     }
 
     private void OnMouseUp()

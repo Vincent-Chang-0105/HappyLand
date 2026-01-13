@@ -9,6 +9,7 @@ using System.Collections.Generic;
 public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [Header("Dish Contents")]
+    [SerializeField] private string dishType = ""; // Will auto-detect if empty
     [SerializeField] private List<GameObject> containedChickens = new List<GameObject>();
     [SerializeField] private int requiredChickenCount = 3;
 
@@ -27,7 +28,7 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     private bool isDragging = false;
 
     // Dish information
-    public string DishName => gameObject.name;
+    public string DishName => dishType;
     public int ChickenCount => containedChickens.Count;
     public bool IsComplete => containedChickens.Count >= requiredChickenCount;
 
@@ -65,26 +66,52 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     }
 
     /// <summary>
-    /// Check if this dish contains all required chickens and they're properly fried
+    /// Check if this dish contains all required ingredients and they're properly cooked
     /// </summary>
     public bool ValidateDish()
     {
         if (containedChickens.Count < requiredChickenCount)
         {
-            Debug.LogWarning($"Plate incomplete: {containedChickens.Count}/{requiredChickenCount} chickens");
+            Debug.LogWarning($"Plate incomplete: {containedChickens.Count}/{requiredChickenCount} ingredients");
             return false;
         }
 
-        // Verify all chickens are fried
+        // Verify all ingredients based on dish type
         foreach (GameObject chicken in containedChickens)
         {
             if (chicken == null) continue;
 
+            // Check what type of cooked ingredient this is
             IFryable fryable = chicken.GetComponent<IFryable>();
-            if (fryable == null || !fryable.IsFried())
+            ISinigangable sinigang = chicken.GetComponent<ISinigangable>();
+
+            // Validate based on dish type
+            if (dishType == "Sinigang")
             {
-                Debug.LogWarning("Plate contains unfried chicken!");
-                return false;
+                if (sinigang == null || !sinigang.IsSiniganged())
+                {
+                    Debug.LogWarning($"Invalid sinigang chicken in plate: {chicken.name}");
+                    return false;
+                }
+            }
+            else if (dishType == "FriedChicken")
+            {
+                if (fryable == null || !fryable.IsFried())
+                {
+                    Debug.LogWarning($"Invalid fried chicken in plate: {chicken.name}");
+                    return false;
+                }
+            }
+            else
+            {
+                // Fallback: If dishType is not set or unknown, check if chicken is cooked in any way
+                bool isCooked = (fryable != null && fryable.IsFried()) ||
+                                (sinigang != null && sinigang.IsSiniganged());
+                if (!isCooked)
+                {
+                    Debug.LogWarning($"Plate contains uncooked chicken: {chicken.name}");
+                    return false;
+                }
             }
         }
 
@@ -170,8 +197,22 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         Vector3 worldPos = mainCamera.ScreenToWorldPoint(screenPos);
         worldPos.z = 0;
 
-        // Find all customers in range
-        Collider2D[] hits = Physics2D.OverlapCircleAll(worldPos, customerDetectionRadius, customerLayer);
+        Debug.Log($"Checking for customers at world position: {worldPos}, radius: {customerDetectionRadius}");
+
+        // Find all customers in range (ignore layer mask if it's set to Nothing)
+        Collider2D[] hits;
+        if (customerLayer.value == 0)
+        {
+            // Layer mask not set, search all layers
+            Debug.Log("Customer layer not set, searching all layers");
+            hits = Physics2D.OverlapCircleAll(worldPos, customerDetectionRadius);
+        }
+        else
+        {
+            hits = Physics2D.OverlapCircleAll(worldPos, customerDetectionRadius, customerLayer);
+        }
+
+        Debug.Log($"Found {hits.Length} colliders in range");
 
         Customer nearestCustomer = null;
         float nearestDistance = float.MaxValue;

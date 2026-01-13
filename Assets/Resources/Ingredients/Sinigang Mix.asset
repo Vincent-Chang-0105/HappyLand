@@ -12,13 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3eef437ae844b4b478bbaf51f966a5dc, type: 3}
   m_Name: Sinigang Mix
   m_EditorClassIdentifier: Assembly-CSharp::Ingredient
-  ingredientName: Sinigang Mix
+  ingredientName: Sinigang
   ingredientIcon: {fileID: 21300000, guid: 2562c4e522c472b449a89698463d0431, type: 3}
   description: Asim kilig
   isStackable: 1
   maxStackSize: 99
-  ingredientType: 0
+  ingredientType: 1
   cookingTime: 1
   requiresCutting: 0
   requiresWashing: 0
+  animationFrames: []
+  draggableIcon: {fileID: -2176819975122337423, guid: f581051a0bd157243960361631c8fd8e, type: 3}
+  usageType: 0
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  cost: 10

@@ -28,6 +28,10 @@ public class Ingredient : ScriptableObject
     
     [Header("Visual")]
     public Color backgroundColor = Color.white;
+
+    [Header("Economy")]
+    [Tooltip("Cost in PHP to use this ingredient")]
+    public int cost = 0;
 }
 
 public enum IngredientType
@@ -36,12 +40,12 @@ public enum IngredientType
     Seasoning,
     Liquid,
     Spice,
-    Oil
+    Oil,
 }
 
 public enum IngredientUsageType
 {
     Seasoning,  // For salt, spices - can be added to pan/pot
     Oil,        // For cooking oil - only for pan
-    Liquid      // For water, broth - only for pot
+    Liquid,      // For water, broth - only for pot
 }

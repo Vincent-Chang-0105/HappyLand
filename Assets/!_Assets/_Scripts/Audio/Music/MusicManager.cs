@@ -55,9 +55,14 @@ namespace AudioSystem {
             source.playOnAwake = false;
         }
 
-        void Start() { 
+        void Start() {
             foreach (var clip in initialPlaylist) {
                 AddToPlaylist(clip);
+            }
+
+            // Auto-start playing the first track
+            if (playlist.Count > 0) {
+                PlayNextTrack();
             }
         }
 

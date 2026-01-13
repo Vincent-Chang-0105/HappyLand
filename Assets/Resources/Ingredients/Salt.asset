@@ -21,4 +21,8 @@ MonoBehaviour:
   cookingTime: 1
   requiresCutting: 0
   requiresWashing: 0
+  animationFrames: []
+  draggableIcon: {fileID: -2653825612140457106, guid: 596a722cb92daf54dad31d05493615b0, type: 3}
+  usageType: 0
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  cost: 5

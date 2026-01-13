@@ -52,14 +52,9 @@ public class MainMenuEventHandler : ColorChangeMenuHandler
     // Add game functionality methods
     public void StartGame()
     {
-        Debug.Log("Starting game...");
+        SceneManager.LoadScene("Level1");
     }
-    
-    public void LevelSelect()
-    {
-        
-    }
-    
+
     public void OpenSettings()
     {
         Debug.Log("Opening settings...");

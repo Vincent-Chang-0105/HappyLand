@@ -1,8 +1,10 @@
 using UnityEngine;
+using System.Linq;
 
 /// <summary>
 /// Pot cooking station - specialized for boiling ingredients
 /// Features gesture-based stirring where players must make circular motions 3 times during cooking
+/// Supports two-phase cooking for sinigang dishes
 /// </summary>
 public class Pot : CookingStation
 {
@@ -13,6 +15,11 @@ public class Pot : CookingStation
     [SerializeField] private GestureDetector gestureDetector;
     [SerializeField] private StirPrompt stirPrompt;
 
+    [Header("Sinigang Cooking")]
+    [SerializeField] private int sinigangRequiredStirs = 3;
+    [SerializeField] private float sinigangBoilingDurationBetweenStirs = 2.5f;
+    [SerializeField] private Color sinigangBrothColor = new Color(0.8f, 1f, 0.8f);
+
     // Stirring state
     private enum StirringState
     {
@@ -22,9 +29,20 @@ public class Pot : CookingStation
         Boiling
     }
 
+    // Cooking phase
+    private enum PotCookingPhase
+    {
+        Initial,         // No cooking
+        Boiling,         // Regular boiling
+        BoilingComplete, // Waiting for sinigang mix
+        SinigangCooking  // Sinigang phase active
+    }
+
     private StirringState currentStirState = StirringState.NotStarted;
+    private PotCookingPhase currentCookingPhase = PotCookingPhase.Initial;
     private int completedStirs = 0;
     private float boilingTimer = 0f;
+    private bool hasSinigangMix = false;
 
     #region Unity Lifecycle
 
@@ -138,6 +156,7 @@ public class Pot : CookingStation
         isCooking = true;
         completedStirs = 0;
         currentStirState = StirringState.WaitingForStir;
+        currentCookingPhase = PotCookingPhase.Boiling;
 
         // Start cooking each ingredient
         foreach (GameObject ingredient in ingredientsInStation)
@@ -167,6 +186,15 @@ public class Pot : CookingStation
             return;
         }
 
+        // Determine which stir counts to use based on cooking phase
+        int requiredStirCount = (currentCookingPhase == PotCookingPhase.SinigangCooking)
+            ? sinigangRequiredStirs
+            : requiredStirs;
+
+        float boilDuration = (currentCookingPhase == PotCookingPhase.SinigangCooking)
+            ? sinigangBoilingDurationBetweenStirs
+            : boilingDurationBetweenStirs;
+
         // Update based on current stirring state
         switch (currentStirState)
         {
@@ -181,15 +209,15 @@ public class Pot : CookingStation
                 // Update progress bar to show boiling progress
                 if (cookingProgressBar != null)
                 {
-                    float progress = boilingTimer / boilingDurationBetweenStirs;
+                    float progress = boilingTimer / boilDuration;
                     cookingProgressBar.fillAmount = progress;
                     cookingProgressBar.color = Color.Lerp(Color.yellow, Color.orange, progress);
                 }
 
                 // After boiling time is up, request next stir or complete
-                if (boilingTimer >= boilingDurationBetweenStirs)
+                if (boilingTimer >= boilDuration)
                 {
-                    if (completedStirs < requiredStirs)
+                    if (completedStirs < requiredStirCount)
                     {
                         // Request another stir
                         currentStirState = StirringState.WaitingForStir;
@@ -214,9 +242,13 @@ public class Pot : CookingStation
 
     private void ShowStirPrompt()
     {
+        int requiredStirCount = (currentCookingPhase == PotCookingPhase.SinigangCooking)
+            ? sinigangRequiredStirs
+            : requiredStirs;
+
         if (stirPrompt != null)
         {
-            stirPrompt.ShowPrompt(completedStirs, requiredStirs);
+            stirPrompt.ShowPrompt(completedStirs, requiredStirCount);
         }
 
         // Enable gesture detection
@@ -294,6 +326,189 @@ public class Pot : CookingStation
         {
             stirPrompt.UpdateProgress(progress);
         }
+    }
+
+    #endregion
+
+    #region Two-Phase Cooking (Sinigang)
+
+    protected override void CompleteCooking()
+    {
+        // If sinigang mix was added, we're in sinigang mode
+        if (hasSinigangMix && currentCookingPhase == PotCookingPhase.Boiling)
+        {
+            // Just finished first boiling phase with sinigang mix already added
+            // Need to continue with sinigang cooking
+            CompleteBoilingPhase();
+        }
+        else if (currentCookingPhase == PotCookingPhase.SinigangCooking)
+        {
+            // Complete sinigang cooking
+            CompleteSinigangCooking();
+        }
+        else
+        {
+            // Regular completion (for non-sinigang ingredients)
+            base.CompleteCooking();
+        }
+    }
+
+    private void CompleteBoilingPhase()
+    {
+        // Complete boiling for all ingredients
+        foreach (GameObject ingredient in ingredientsInStation)
+        {
+            if (ingredient != null)
+            {
+                CompleteCookingIngredient(ingredient); // Completes boiling
+            }
+        }
+
+        // If sinigang mix already added, start sinigang cooking phase
+        if (hasSinigangMix)
+        {
+            Debug.Log("Boiling complete! Starting sinigang cooking phase...");
+            currentCookingPhase = PotCookingPhase.SinigangCooking;
+            StartSinigangCooking();
+        }
+        else
+        {
+            Debug.Log("Boiling complete! Waiting for sinigang mix...");
+            currentCookingPhase = PotCookingPhase.BoilingComplete;
+            isCooking = false;
+
+            // Hide UI temporarily
+            if (cookingMeterUI != null)
+                cookingMeterUI.SetActive(false);
+
+            HideStirPrompt();
+
+            // Stop effects
+            if (cookingEffect != null)
+                cookingEffect.Stop();
+        }
+    }
+
+    private void CompleteSinigangCooking()
+    {
+        Debug.Log("Sinigang cooking complete!");
+
+        // Complete sinigang cooking for all ingredients
+        foreach (GameObject ingredient in ingredientsInStation)
+        {
+            if (ingredient != null)
+            {
+                ISinigangable sinigang = ingredient.GetComponent<ISinigangable>();
+                if (sinigang != null)
+                {
+                    sinigang.CompleteSiniganging();
+                }
+            }
+        }
+
+        // Register with plating manager
+        if (PlatingManager.Instance != null)
+        {
+            foreach (GameObject ingredient in ingredientsInStation)
+            {
+                if (ingredient != null)
+                {
+                    PlatingManager.Instance.RegisterSinigangChicken(ingredient);
+                }
+            }
+        }
+
+        // Clear pot for next use
+        ClearPot();
+    }
+
+    private void ClearPot()
+    {
+        base.CompleteCooking(); // Calls base to clean up
+
+        ingredientsInStation.Clear();
+        hasSinigangMix = false;
+        currentCookingPhase = PotCookingPhase.Initial;
+        isCooking = false;
+
+        // Reset visual to normal
+        if (spriteRenderer != null)
+            spriteRenderer.color = Color.white;
+
+        HideStirPrompt();
+
+        if (cookingMeterUI != null)
+            cookingMeterUI.SetActive(false);
+
+        Debug.Log("Pot cleared and ready for next use");
+    }
+
+    public bool CanAcceptSinigangMix()
+    {
+        // Can accept sinigang mix BEFORE cooking starts (to mark it as sinigang mode)
+        // OR after boiling is complete
+        return !hasSinigangMix;
+    }
+
+    public bool IsSinigangMode()
+    {
+        return hasSinigangMix;
+    }
+
+    public void AddSinigangMix(Ingredient mix)
+    {
+        if (!CanAcceptSinigangMix())
+        {
+            Debug.LogWarning("Pot already has sinigang mix!");
+            return;
+        }
+
+        Debug.Log($"Adding sinigang mix: {mix.ingredientName}");
+
+        hasSinigangMix = true;
+
+        // Change pot color to indicate sinigang broth
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.color = sinigangBrothColor;
+        }
+
+        // If we're already done with initial boiling, start sinigang cooking
+        if (currentCookingPhase == PotCookingPhase.BoilingComplete)
+        {
+            currentCookingPhase = PotCookingPhase.SinigangCooking;
+            StartSinigangCooking();
+        }
+        else
+        {
+            Debug.Log("Sinigang mix added - pot is now in sinigang mode!");
+            // Pot will start in sinigang mode when ingredients are added
+        }
+    }
+
+    private void StartSinigangCooking()
+    {
+        Debug.Log("Starting sinigang cooking phase...");
+
+        isCooking = true;
+        completedStirs = 0;
+        currentStirState = StirringState.WaitingForStir;
+
+        // Start sinigang cooking on ingredients
+        foreach (GameObject ingredient in ingredientsInStation)
+        {
+            if (ingredient != null)
+            {
+                ISinigangable sinigang = ingredient.GetComponent<ISinigangable>();
+                if (sinigang != null)
+                {
+                    sinigang.StartSiniganging();
+                }
+            }
+        }
+
+        // Show stir prompt
+        ShowStirPrompt();
     }
 
     #endregion
