@@ -45,6 +45,9 @@ public class Faucet : MonoBehaviour, IInteractable
         
         // Toggle water effects
         ToggleWaterEffects();
+
+        // Tutorial Event
+        TutorialEvents.FaucetOpened();
         
         Debug.Log($"Faucet {(isOn ? "turned ON" : "turned OFF")}");
     }

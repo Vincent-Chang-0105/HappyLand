@@ -100,6 +100,9 @@ public class OrderButton : MonoBehaviour
         {
             uiManager.OnOrderButtonClicked(assignedCustomer);
             //button.enabled = false;
+
+            // Tutorial event
+            TutorialEvents.OrderSlotClicked();
         }
     }
     

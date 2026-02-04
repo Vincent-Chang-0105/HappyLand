@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Chicken : MonoBehaviour, IDraggable, IWashable, IBoilable, IFryable, ISinigangable
+public class Chicken : MonoBehaviour, IWashable, IBoilable, IFryable, ISinigangable
 {
     [Header("Economy")]
     [SerializeField] private int chickenCost = 5;
@@ -52,8 +52,9 @@ public class Chicken : MonoBehaviour, IDraggable, IWashable, IBoilable, IFryable
 
     private void SetupEvents()
     {
-        // Configure drag behavior - use IsDraggable which includes money check
-        dragBehavior.CanDrag = IsDraggable;
+        // Configure drag behavior
+        dragBehavior.CanDrag = CanBeDragged;
+        dragBehavior.OnBeforeDragStart = TryPayForChicken;
         dragBehavior.OnDragEnded = () => bowlInteraction.CheckForBowlDrop(cookingState.IsWashed);
 
         // Configure cooking state events
@@ -120,59 +121,37 @@ public class Chicken : MonoBehaviour, IDraggable, IWashable, IBoilable, IFryable
     }
     #endregion
 
-    #region IDraggable Implementation
-    public void OnDragStart()
+    #region Drag Logic
+    private bool TryPayForChicken()
     {
-        // Check if player needs to pay for this chicken (only charge once per chicken)
-        if (!hasPaidForChicken && chickenCost > 0)
+        // If already paid or free, allow drag
+        if (hasPaidForChicken || chickenCost <= 0)
+            return true;
+
+        if (MoneyManager.Instance == null)
         {
-            if (MoneyManager.Instance == null)
-            {
-                Debug.LogError("MoneyManager not found! Cannot process chicken purchase.");
-                return;
-            }
-
-            if (!MoneyManager.Instance.CanAfford(chickenCost))
-            {
-                Debug.Log($"Cannot afford chicken. Cost: {chickenCost} PHP");
-                return;
-            }
-
-            // Deduct the cost
-            if (!MoneyManager.Instance.TrySpendMoney(chickenCost))
-            {
-                Debug.LogWarning("Failed to spend money for chicken.");
-                return;
-            }
-
-            hasPaidForChicken = true; // Mark as paid
+            Debug.LogError("MoneyManager not found! Cannot process chicken purchase.");
+            return false;
         }
 
-        dragBehavior.StartDrag();
+        if (!MoneyManager.Instance.TrySpendMoney(chickenCost))
+        {
+            Debug.Log($"Cannot afford chicken. Cost: {chickenCost} PHP");
+            return false;
+        }
+
+        hasPaidForChicken = true;
+        return true;
     }
 
-    public void OnDrag(Vector3 worldPosition)
+    private bool CanBeDragged()
     {
-        dragBehavior.DragToPosition(worldPosition);
-    }
-
-    public void OnDragEnd()
-    {
-        dragBehavior.EndDrag();
-    }
-
-    public bool IsDraggable()
-    {
-        // Check cooking state first
+        // Can't drag while being washed or in a bowl
         if (cookingState.IsBeingWashed || bowlInteraction.IsInBowl)
             return false;
 
-        // If already paid for this chicken, allow dragging
-        if (hasPaidForChicken)
-            return true;
-
-        // If free (cost is 0), allow dragging
-        if (chickenCost <= 0)
+        // If already paid, allow dragging
+        if (hasPaidForChicken || chickenCost <= 0)
             return true;
 
         // Check if player can afford it

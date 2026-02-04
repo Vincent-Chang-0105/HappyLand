@@ -2,17 +2,8 @@ using UnityEngine;
 
 public class CleaningArea : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    [Header("VFX")]
+    [SerializeField] private ParticleSystem splashVFX;
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -21,6 +12,15 @@ public class CleaningArea : MonoBehaviour
         if (washable != null && washable.CanBeWashed())
         {
             Debug.Log($"Object {other.gameObject.name} entered cleaning area and can be washed.");
+
+            // Play splash VFX at object position
+            if (splashVFX != null)
+            {
+                splashVFX.transform.position = other.transform.position;
+                splashVFX.Stop();
+                splashVFX.Play();
+            }
+
             washable.StartWashing();
         }
     }

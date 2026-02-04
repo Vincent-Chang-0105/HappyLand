@@ -151,6 +151,9 @@ public class PlatingManager : Singleton<PlatingManager>
 
         Debug.Log($"✅ {dish.dishName} plate created! Remaining: {dish.waitingIngredients.Count}");
         PlayPlateCreationEffect(plateObject);
+
+        // Tutorial event
+        TutorialEvents.DishPlated();
     }
 
     /// <summary>

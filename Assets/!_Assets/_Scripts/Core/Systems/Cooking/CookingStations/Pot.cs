@@ -12,7 +12,7 @@ public class Pot : CookingStation
     [SerializeField] private bool useGestureStirring = true;
     [SerializeField] private int requiredStirs = 3;
     [SerializeField] private float boilingDurationBetweenStirs = 2.5f;
-    [SerializeField] private GestureDetector gestureDetector;
+    [SerializeField] private StirGestureDetector gestureDetector;
     [SerializeField] private StirPrompt stirPrompt;
 
     [Header("Sinigang Cooking")]
@@ -53,7 +53,7 @@ public class Pot : CookingStation
         // Setup gesture detector if not assigned
         if (useGestureStirring && gestureDetector == null)
         {
-            gestureDetector = gameObject.AddComponent<GestureDetector>();
+            gestureDetector = gameObject.AddComponent<StirGestureDetector>();
         }
 
         if (gestureDetector != null)
@@ -288,6 +288,9 @@ public class Pot : CookingStation
 
         Debug.Log($"Stir {completedStirs}/{requiredStirs} completed!");
 
+        // Tutorial event
+        TutorialEvents.StirCompleted();
+
         // Show success feedback
         if (stirPrompt != null)
         {
@@ -364,6 +367,9 @@ public class Pot : CookingStation
             }
         }
 
+        // Tutorial event
+        TutorialEvents.AllStirsCompleted();
+
         // If sinigang mix already added, start sinigang cooking phase
         if (hasSinigangMix)
         {
@@ -392,6 +398,9 @@ public class Pot : CookingStation
     private void CompleteSinigangCooking()
     {
         Debug.Log("Sinigang cooking complete!");
+
+        // Tutorial event
+        TutorialEvents.SinigangCompleted();
 
         // Complete sinigang cooking for all ingredients
         foreach (GameObject ingredient in ingredientsInStation)
@@ -466,6 +475,9 @@ public class Pot : CookingStation
         Debug.Log($"Adding sinigang mix: {mix.ingredientName}");
 
         hasSinigangMix = true;
+
+        // Tutorial event
+        TutorialEvents.SinigangMixAdded();
 
         // Change pot color to indicate sinigang broth
         if (spriteRenderer != null)

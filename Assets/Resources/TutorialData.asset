@@ -1,0 +1,359 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f66639d7f55a5384fb5c487ed6a0c884, type: 3}
+  m_Name: TutorialData
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialData
+  tutorialName: Tutorial Main
+  steps:
+  - stepId: 0
+    stepName: Welcome
+    instructionText: Welcome to HappyLand Kitchen! Let's learn how to cook delicious
+      Filipino dishes.
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 0
+    autoCompleteDelay: 0
+    showDelay: 0
+    branch: 0
+    nextStepId: 1
+    showArrow: 0
+    arrowOffset: {x: 0, y: 0, z: 0}
+    actionOnComplete: 0
+    actionParameter: 
+    isCompleted: 1
+  - stepId: 1
+    stepName: Customer
+    instructionText: A customer will arrive and order food
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 0
+    autoCompleteDelay: 0
+    showDelay: 0
+    branch: 0
+    nextStepId: 2
+    showArrow: 0
+    arrowOffset: {x: 0, y: 0, z: 0}
+    actionOnComplete: 1
+    actionParameter: FriedChicken
+    isCompleted: 1
+  - stepId: 2
+    stepName: wait for customer to wait
+    instructionText: 
+    showUI: 0
+    targetType: 10
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 17
+    autoCompleteDelay: 0
+    showDelay: 0
+    branch: 0
+    nextStepId: 3
+    showArrow: 1
+    arrowOffset: {x: 0, y: 0, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    isCompleted: 1
+  - stepId: 3
+    stepName: Take Order 2
+    instructionText: Click on the order slot to take the customer's order!
+    showUI: 1
+    targetType: 10
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 18
+    autoCompleteDelay: 0
+    showDelay: 0
+    branch: 0
+    nextStepId: 4
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    isCompleted: 1
+  - stepId: 4
+    stepName: Start Cooking
+    instructionText: Lets start cooking! click on the washing button to start!
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 19
+    autoCompleteDelay: 0
+    showDelay: 2
+    branch: 0
+    nextStepId: 5
+    showArrow: 0
+    arrowOffset: {x: -8.2, y: -18.3, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    isCompleted: 1
+  - stepId: 5
+    stepName: Intro Cleaning
+    instructionText: Now we need to clean the chicken!
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 0
+    autoCompleteDelay: 0
+    showDelay: 2
+    branch: 0
+    nextStepId: 6
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    isCompleted: 1
+  - stepId: 6
+    stepName: Opening the faucet
+    instructionText: Start by opening the faucet!
+    showUI: 1
+    targetType: 2
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 20
+    autoCompleteDelay: 0
+    showDelay: 0
+    branch: 0
+    nextStepId: 7
+    showArrow: 1
+    arrowOffset: {x: 0, y: 0, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    isCompleted: 1
+  - stepId: 7
+    stepName: Drag the Chicken
+    instructionText: Drag the chicken into the sink to clean! start by dragging 3
+    showUI: 1
+    targetType: 1
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 25
+    autoCompleteDelay: 0
+    showDelay: 1
+    branch: 0
+    nextStepId: 8
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    isCompleted: 1
+  - stepId: 8
+    stepName: Go to Boil
+    instructionText: Time to Boil
+    showUI: 1
+    targetType: 1
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 23
+    autoCompleteDelay: 0
+    showDelay: 1
+    branch: 0
+    nextStepId: 9
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    isCompleted: 1
+  - stepId: 9
+    stepName: Drag Bowl
+    instructionText: Drag Bowl to Pot
+    showUI: 1
+    targetType: 3
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 4
+    autoCompleteDelay: 0
+    showDelay: 1
+    branch: 0
+    nextStepId: 10
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    isCompleted: 1
+  - stepId: 10
+    stepName: Stir Pot
+    instructionText: Stir the pot, drag mouse in a circle fast motion!
+    showUI: 1
+    targetType: 5
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 8
+    autoCompleteDelay: 0
+    showDelay: 0.5
+    branch: 0
+    nextStepId: 11
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    isCompleted: 1
+  - stepId: 11
+    stepName: Frying time
+    instructionText: Time to Fry
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 24
+    autoCompleteDelay: 0
+    showDelay: 1
+    branch: 0
+    nextStepId: 12
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    isCompleted: 1
+  - stepId: 12
+    stepName: Cut screen
+    instructionText: this is tue cutting screen. this where u cut things. go right
+      one more to cook
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 21
+    autoCompleteDelay: 0
+    showDelay: 1
+    branch: 0
+    nextStepId: 13
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    isCompleted: 1
+  - stepId: 13
+    stepName: Add Oil
+    instructionText: Open the drawer by dragging it down
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 0
+    autoCompleteDelay: 0
+    showDelay: 1
+    branch: 0
+    nextStepId: 14
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    isCompleted: 1
+  - stepId: 14
+    stepName: Add Oil
+    instructionText: Click the oil and drag it to the pan
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 7
+    autoCompleteDelay: 0
+    showDelay: 0
+    branch: 0
+    nextStepId: 15
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    isCompleted: 1
+  - stepId: 15
+    stepName: Add Oil
+    instructionText: Then add the chicken in the pan
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 9
+    autoCompleteDelay: 0
+    showDelay: 1.5
+    branch: 0
+    nextStepId: 16
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    isCompleted: 1
+  - stepId: 16
+    stepName: Toss Chicken
+    instructionText: Time to toss! just flick up ur mouse to toss the pan!
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 11
+    autoCompleteDelay: 0
+    showDelay: 0.5
+    branch: 0
+    nextStepId: 17
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    isCompleted: 1
+  - stepId: 17
+    stepName: Go back to Serve screen
+    instructionText: Go back to serve screen to Serve the order!
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 22
+    autoCompleteDelay: 0
+    showDelay: 1
+    branch: 0
+    nextStepId: 18
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    isCompleted: 0
+  - stepId: 18
+    stepName: Give the order
+    instructionText: Give the order to the customer by dragging it to them
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 15
+    autoCompleteDelay: 0
+    showDelay: 1
+    branch: 0
+    nextStepId: 19
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    isCompleted: 0
+  - stepId: 19
+    stepName: Give the order
+    instructionText: Congrats you have finished the tutorial!
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 0
+    autoCompleteDelay: 0
+    showDelay: 1
+    branch: 0
+    nextStepId: 20
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    isCompleted: 0
+  autoStartFirstStep: 1

@@ -294,6 +294,9 @@ public class Pan : CookingStation
 
         Debug.Log($"Toss {completedTosses}/{requiredTosses} completed!");
 
+        // Tutorial event
+        TutorialEvents.TossCompleted();
+
         // Show success feedback
         if (tossPrompt != null)
         {
@@ -375,6 +378,9 @@ public class Pan : CookingStation
     {
         // Stop sizzle sound
         StopSizzleSound();
+
+        // Tutorial event
+        TutorialEvents.AllTossesCompleted();
 
         // Call base implementation to complete frying for all ingredients
         base.CompleteCooking();
@@ -467,6 +473,9 @@ public class Pan : CookingStation
         }
 
         Debug.Log("🛢️ Oil added to pan!");
+
+        // Tutorial event
+        TutorialEvents.OilAdded();
     }
 
     /// <summary>

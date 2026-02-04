@@ -6,7 +6,7 @@ using System;
 /// Detects circular stirring gestures from mouse input.
 /// Tracks mouse position while button is held and calculates cumulative angle changes.
 /// </summary>
-public class GestureDetector : MonoBehaviour
+public class StirGestureDetector : MonoBehaviour
 {
     [Header("Gesture Settings")]
     [SerializeField] private float minimumCircleRadius = 0.5f;

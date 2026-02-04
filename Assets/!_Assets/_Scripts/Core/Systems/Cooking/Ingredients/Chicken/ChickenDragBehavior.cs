@@ -1,11 +1,7 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class ChickenDragBehavior : MonoBehaviour, IDragHandler
+public class ChickenDragBehavior : MonoBehaviour
 {
-    [Header("Drag Settings")]
-    [SerializeField] private float dragSmoothness = 0.01f;
-
     private bool isDragging = false;
     private Vector3 dragOffset;
     private Camera mainCamera;
@@ -19,6 +15,9 @@ public class ChickenDragBehavior : MonoBehaviour, IDragHandler
     // Function to check if dragging is allowed
     public System.Func<bool> CanDrag;
 
+    // Called before drag starts - return false to cancel the drag (e.g., payment failed)
+    public System.Func<bool> OnBeforeDragStart;
+
     private void Start()
     {
         mainCamera = Camera.main;
@@ -30,14 +29,15 @@ public class ChickenDragBehavior : MonoBehaviour, IDragHandler
 
         isDragging = true;
         OnDragStarted?.Invoke();
+
+        // Tutorial event
+        TutorialEvents.ChickenPickedUp();
     }
 
     public void DragToPosition(Vector3 worldPosition)
     {
         if (!isDragging) return;
-
-        Vector3 targetPosition = worldPosition + dragOffset;
-        transform.position = Vector3.Lerp(transform.position, targetPosition, 1f - Mathf.Pow(dragSmoothness, Time.deltaTime));
+        transform.position = worldPosition + dragOffset;
     }
 
     public void EndDrag()
@@ -56,16 +56,13 @@ public class ChickenDragBehavior : MonoBehaviour, IDragHandler
         mouseWorldPos.z = transform.position.z;
         dragOffset = transform.position - mouseWorldPos;
 
-        // Call IDraggable interface if available (for payment check)
-        IDraggable draggable = GetComponent<IDraggable>();
-        if (draggable != null)
+        // Call before drag callback (e.g., for payment processing)
+        if (OnBeforeDragStart != null && !OnBeforeDragStart())
         {
-            draggable.OnDragStart();
+            return; // Callback returned false, cancel drag
         }
-        else
-        {
-            StartDrag();
-        }
+
+        StartDrag();
     }
 
     private void OnMouseUp()
@@ -82,18 +79,6 @@ public class ChickenDragBehavior : MonoBehaviour, IDragHandler
 
         Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPos.z = transform.position.z;
-
-        Vector3 targetPosition = mouseWorldPos + dragOffset;
-        transform.position = Vector3.Lerp(transform.position, targetPosition, 1f - Mathf.Pow(dragSmoothness, Time.deltaTime));
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        if (!isDragging) return;
-
-        Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(eventData.position);
-        mouseWorldPos.z = transform.position.z;
-
-        DragToPosition(mouseWorldPos);
+        transform.position = mouseWorldPos + dragOffset;
     }
 }

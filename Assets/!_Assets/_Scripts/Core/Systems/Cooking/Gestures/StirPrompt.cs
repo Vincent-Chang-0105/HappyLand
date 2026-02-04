@@ -15,6 +15,9 @@ public class StirPrompt : MonoBehaviour
     [SerializeField] private Image progressCircle; // Circular progress indicator
     [SerializeField] private Image circularGuide; // Visual guide showing circular motion
 
+    [Header("VFX")]
+    [SerializeField] private ParticleSystem stirSuccessVFX;
+
     [Header("Animation Settings")]
     [SerializeField] private float pulseScale = 1.1f;
     [SerializeField] private float pulseDuration = 0.5f;
@@ -118,19 +121,30 @@ public class StirPrompt : MonoBehaviour
     {
         StopPulseAnimation();
 
-        // Flash green
-        if (promptPanel != null)
+        // Play success VFX
+        Debug.Log($"StirPrompt.ShowStirSuccess called. VFX assigned: {stirSuccessVFX != null}");
+        if (stirSuccessVFX != null)
         {
-            Image panelImage = promptPanel.GetComponent<Image>();
-            if (panelImage != null)
-            {
-                Color originalColor = panelImage.color;
-                panelImage.DOColor(Color.green, 0.2f).OnComplete(() =>
-                {
-                    panelImage.DOColor(originalColor, 0.2f);
-                });
-            }
+            Debug.Log($"StirPrompt: Playing VFX. IsPlaying before: {stirSuccessVFX.isPlaying}");
+            stirSuccessVFX.Stop();
+            stirSuccessVFX.Clear();
+            stirSuccessVFX.Play();
+            Debug.Log($"StirPrompt: VFX Play called. IsPlaying after: {stirSuccessVFX.isPlaying}");
         }
+
+        // Flash green
+        // if (promptPanel != null)
+        // {
+        //     Image panelImage = promptPanel.GetComponent<Image>();
+        //     if (panelImage != null)
+        //     {
+        //         Color originalColor = panelImage.color;
+        //         panelImage.DOColor(Color.green, 0.2f).OnComplete(() =>
+        //         {
+        //             panelImage.DOColor(originalColor, 0.2f);
+        //         });
+        //     }
+        // }
 
         // Scale animation
         if (promptPanel != null)

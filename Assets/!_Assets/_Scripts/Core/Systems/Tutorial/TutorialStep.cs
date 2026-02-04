@@ -1,0 +1,102 @@
+using UnityEngine;
+
+[System.Serializable]
+public class TutorialStep
+{
+    [Header("Step Info")]
+    public int stepId;
+    public string stepName;
+    [TextArea(3, 5)]
+    public string instructionText;
+    public bool showUI = true; // Set false to wait for event without showing UI
+
+    [Header("Target Object")]
+    public TutorialTargetType targetType;
+    public string targetObjectTag;
+    public string targetObjectName;
+
+    [Header("Completion Condition")]
+    public TutorialCompletionType completionType;
+    public float autoCompleteDelay = 0f;
+
+    [Header("Timing")]
+    public float showDelay = 0f; // Delay before showing this step's UI (in seconds)
+
+    [Header("Branching")]
+    public TutorialBranch branch = TutorialBranch.Common;
+    public int nextStepId = -1; // -1 = auto-increment
+
+    [Header("Arrow Settings")]
+    public bool showArrow = true;
+    public Vector3 arrowOffset = new Vector3(0, 1f, 0);
+
+    [Header("Action On Complete")]
+    public TutorialActionType actionOnComplete = TutorialActionType.None;
+    public string actionParameter; // e.g., "Fried Chicken" for SpawnCustomerWithOrder
+
+    [Header("State")]
+    [HideInInspector] public bool isCompleted = false;
+}
+
+public enum TutorialTargetType
+{
+    None,
+    Chicken,
+    Faucet,
+    BoilBowl,
+    FryBowl,
+    Pot,
+    Pan,
+    OilBottle,
+    SinigangMix,
+    PlatedDish,
+    Customer,
+    ServingArea,
+    OrderSlot
+}
+
+public enum TutorialCompletionType
+{
+    ButtonPress,
+    ChickenPickedUp,
+    ChickenWashed,
+    ChickenInBoilBowl,
+    BowlOnPot,
+    StirComplete,
+    AllStirsComplete,
+    OilAdded,
+    ChickenInFryBowl,
+    BowlOnPan,
+    TossComplete,
+    AllTossesComplete,
+    SinigangMixAdded,
+    SinigangComplete,
+    DishPlated,
+    DishServed,
+    CustomerArrived,
+    CustomerWaiting,  // Customer is at slot and ready for order to be taken
+    OrderSlotClicked,  // Player clicked on an order slot to take the order
+    WashScreenEntered,
+    FaucetOpened,
+    CookScreenEntered,
+    ServeScreenEntered,
+    BoilScreenEntered,
+    CutScreenEntered,
+    ThreeChickensWashed
+}
+
+public enum TutorialBranch
+{
+    Common,
+    FriedChicken,
+    Sinigang
+}
+
+public enum TutorialActionType
+{
+    None,
+    SpawnCustomerWithOrder,  // Spawns a customer with specific order (use actionParameter)
+    ResumeGameOnly,          // Just resumes the game without waiting
+    StopCustomerGeneration,  // Stops auto customer spawning
+    StartCustomerGeneration  // Starts auto customer spawning
+}

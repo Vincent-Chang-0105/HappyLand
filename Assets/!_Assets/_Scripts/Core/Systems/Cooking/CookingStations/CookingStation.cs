@@ -166,6 +166,10 @@ public abstract class CookingStation : MonoBehaviour
         {
             // Move ingredients from bowl to cooking station
             TransferIngredientsToStation(bowl, cookableIngredients);
+
+            // Tutorial event - determine station type
+            string stationType = GetCookingProcessName() == "boiling" ? "Pot" : "Pan";
+            TutorialEvents.BowlDroppedOnStation(stationType);
         }
     }
 

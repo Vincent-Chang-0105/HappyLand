@@ -15,6 +15,9 @@ public class TossPrompt : MonoBehaviour
     [SerializeField] private Image velocityBar; // Vertical bar showing drag velocity
     [SerializeField] private Image upwardArrow; // Arrow pointing up to show toss direction
 
+    [Header("VFX")]
+    [SerializeField] private ParticleSystem tossSuccessVFX;
+
     [Header("Animation Settings")]
     [SerializeField] private float pulseScale = 1.1f;
     [SerializeField] private float pulseDuration = 0.5f;
@@ -118,19 +121,26 @@ public class TossPrompt : MonoBehaviour
     {
         StopPulseAnimation();
 
-        // Flash green
-        if (promptPanel != null)
+        // Play success VFX
+        if (tossSuccessVFX != null)
         {
-            Image panelImage = promptPanel.GetComponent<Image>();
-            if (panelImage != null)
-            {
-                Color originalColor = panelImage.color;
-                panelImage.DOColor(Color.green, 0.2f).OnComplete(() =>
-                {
-                    panelImage.DOColor(originalColor, 0.2f);
-                });
-            }
+            tossSuccessVFX.Stop();
+            tossSuccessVFX.Play();
         }
+
+        // Flash green
+        // if (promptPanel != null)
+        // {
+        //     Image panelImage = promptPanel.GetComponent<Image>();
+        //     if (panelImage != null)
+        //     {
+        //         Color originalColor = panelImage.color;
+        //         panelImage.DOColor(Color.green, 0.2f).OnComplete(() =>
+        //         {
+        //             panelImage.DOColor(originalColor, 0.2f);
+        //         });
+        //     }
+        // }
 
         // Scale animation
         if (promptPanel != null)

@@ -1,12 +1,10 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using DG.Tweening;
 
-public class Bowl : MonoBehaviour, IDraggable, IDragHandler
+public class Bowl : MonoBehaviour
 {
     [Header("Bowl Settings")]
-    [SerializeField] private float dragSmoothness = 0.01f;
     [SerializeField] private float dropZoneRadius = 1f;
     [SerializeField] private Transform ingredientContainer; // Where ingredients go inside the bowl
     [SerializeField] private LayerMask ingredientLayer = -1;
@@ -58,81 +56,38 @@ public class Bowl : MonoBehaviour, IDraggable, IDragHandler
         CheckForNearbyIngredients();
     }
     
-    #region IDraggable Implementation
-    public void OnDragStart()
-    {
-        isDragging = true;
-        Debug.Log($"Started dragging bowl: {gameObject.name}");
-    }
-    
-    public void OnDrag(Vector3 worldPosition)
-    {
-        if (!isDragging) return;
-        
-        Vector3 targetPosition = worldPosition + dragOffset;
-        transform.position = Vector3.Lerp(transform.position, targetPosition, 1f - Mathf.Pow(dragSmoothness, Time.deltaTime));
-    }
-
-    public void OnDragEnd()
-    {
-        isDragging = false;
-        SetHighlight(false);
-
-        //LERP the bowl back to its original position
-        Invoke(nameof(ReturnToOriginalPosition), 0.1f);
-        Debug.Log($"Stopped dragging bowl: {gameObject.name}");
-    }
-
-    private void ReturnToOriginalPosition()
-    {
-        transform.DOMove(originalPosition, 0.2f).SetEase(Ease.OutQuad);
-    }
-    
-    public bool IsDraggable()
-    {
-        return true; // Bowl is always draggable
-    }
-    #endregion
-    
-    #region Event System Handlers
+    #region Drag Handling
     private void OnMouseDown()
     {
-        if (!IsDraggable()) return;
-        
         Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPos.z = transform.position.z;
         dragOffset = transform.position - mouseWorldPos;
-        
-        OnDragStart();
+
+        isDragging = true;
     }
 
     private void OnMouseUp()
     {
         if (isDragging)
         {
-            OnDragEnd();
+            isDragging = false;
+            SetHighlight(false);
+            Invoke(nameof(ReturnToOriginalPosition), 0.1f);
         }
     }
-    
+
     private void OnMouseDrag()
     {
         if (!isDragging) return;
-        
+
         Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPos.z = transform.position.z;
-        
-        Vector3 targetPosition = mouseWorldPos + dragOffset;
-        transform.position = Vector3.Lerp(transform.position, targetPosition, 1f - Mathf.Pow(dragSmoothness, Time.deltaTime));
+        transform.position = mouseWorldPos + dragOffset;
     }
-    
-    public void OnDrag(PointerEventData eventData)
+
+    private void ReturnToOriginalPosition()
     {
-        if (!isDragging) return;
-        
-        Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(eventData.position);
-        mouseWorldPos.z = transform.position.z;
-        
-        OnDrag(mouseWorldPos);
+        transform.DOMove(originalPosition, 0.2f).SetEase(Ease.OutQuad);
     }
     #endregion
     
@@ -171,15 +126,18 @@ public class Bowl : MonoBehaviour, IDraggable, IDragHandler
             containedIngredients.Add(ingredient);
             
             // Stop any dragging on the ingredient first
-            IDraggable draggable = ingredient.GetComponent<IDraggable>();
-            if (draggable != null)
+            ChickenDragBehavior dragBehavior = ingredient.GetComponent<ChickenDragBehavior>();
+            if (dragBehavior != null)
             {
-                draggable.OnDragEnd(); // Force end dragging
+                dragBehavior.EndDrag();
             }
             
             // Start DOTween animation to move ingredient to bowl
             MoveIngredientToBowlWithDOTween(ingredient);
-            
+
+            // Tutorial event
+            TutorialEvents.ChickenEnteredBowl(gameObject.tag);
+
             Debug.Log($"🥣 Added {ingredient.name} to bowl!");
         }
     }
@@ -262,9 +220,9 @@ public class Bowl : MonoBehaviour, IDraggable, IDragHandler
             // Skip ingredients that are already in this bowl
             if (containedIngredients.Contains(obj.gameObject)) continue;
             
-            // Check if it's a draggable ingredient
-            IDraggable draggable = obj.GetComponent<IDraggable>();
-            if (draggable != null && CanAcceptIngredient(obj.gameObject))
+            // Check if it's a draggable ingredient (chicken)
+            ChickenDragBehavior dragBehavior = obj.GetComponent<ChickenDragBehavior>();
+            if (dragBehavior != null && dragBehavior.IsDragging && CanAcceptIngredient(obj.gameObject))
             {
                 shouldHighlight = true;
                 break;

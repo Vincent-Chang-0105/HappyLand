@@ -91,6 +91,9 @@ public class ChickenCookingState : MonoBehaviour
 
         ResetAlpha();
         OnWashComplete?.Invoke();
+
+        // Tutorial event
+        TutorialEvents.ChickenWashed();
     }
 
     public bool CanBeWashed()

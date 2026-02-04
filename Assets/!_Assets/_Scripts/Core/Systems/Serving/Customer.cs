@@ -144,8 +144,11 @@ public class Customer : MonoBehaviour
     
     private IEnumerator WaitForOrder()
     {
-        yield return new WaitForSeconds(2f); // Time to "place order"
+        yield return new WaitForSeconds(0.5f); // Time to "place order"
         currentState = CustomerState.Waiting;
+
+        // Tutorial event - customer is now waiting for order
+        TutorialEvents.CustomerWaiting();
     }
     
     #endregion
@@ -164,6 +167,12 @@ public class Customer : MonoBehaviour
 
         // Check if order is correct
         bool isCorrect = ValidateOrder(deliveredFood);
+
+        // Tutorial event
+        if (isCorrect)
+        {
+            TutorialEvents.DishServed();
+        }
 
         // Notify generator
         generator.OnCustomerOrderReceived(this, isCorrect);

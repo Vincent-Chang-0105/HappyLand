@@ -38,14 +38,27 @@ public class CustomerGenerator : MonoBehaviour
     public System.Action<Customer> OnCustomerLeft;
     public System.Action<Customer, bool> OnOrderCompleted; // customer, wasCorrect
     
+    [Header("Tutorial Settings")]
+    [SerializeField] private bool disableAutoGenerateInTutorial = true;
+
     void Start()
     {
         InitializeOrderPoints();
         InitializeCustomerQueue();
-        
+
+        // Don't auto-generate if tutorial is active
         if (autoGenerate)
         {
-            StartCustomerGeneration();
+            bool tutorialActive = TutorialManager.Instance != null && TutorialManager.Instance.IsTutorialActive;
+
+            if (tutorialActive && disableAutoGenerateInTutorial)
+            {
+                Debug.Log("CustomerGenerator: Auto-generation disabled during tutorial.");
+            }
+            else
+            {
+                StartCustomerGeneration();
+            }
         }
     }
 
@@ -219,7 +232,10 @@ public class CustomerGenerator : MonoBehaviour
         
         // Notify listeners
         OnCustomerSpawned?.Invoke(customer);
-        
+
+        // Tutorial event
+        TutorialEvents.CustomerArrived();
+
         Debug.Log($"Spawned {customerNumber} at ordering point: {availablePoint.name}");
     }
     
@@ -329,7 +345,82 @@ public class CustomerGenerator : MonoBehaviour
             SpawnCustomer();
         }
     }
-    
+
+    /// <summary>
+    /// Spawns a customer with a specific order (used for tutorial)
+    /// </summary>
+    /// <param name="orderName">The name of the order to assign (e.g., "Fried Chicken")</param>
+    public void SpawnCustomerWithSpecificOrder(string orderName)
+    {
+        if (customerPrefabs.Count == 0)
+        {
+            Debug.LogError("No customer prefabs assigned!");
+            return;
+        }
+
+        Transform availablePoint = GetAvailableOrderingPoint();
+        if (availablePoint == null)
+        {
+            Debug.LogWarning("No available ordering points for new customer.");
+            return;
+        }
+
+        // Find the matching order
+        Order targetOrder = null;
+        foreach (Order order in availableOrders)
+        {
+            if (order.orderName.ToLower().Contains(orderName.ToLower()) ||
+                orderName.ToLower().Contains(order.orderName.ToLower()))
+            {
+                targetOrder = order;
+                break;
+            }
+        }
+
+        if (targetOrder == null)
+        {
+            Debug.LogError($"Could not find order matching '{orderName}' in available orders!");
+            return;
+        }
+
+        // Get random customer prefab
+        GameObject customerPrefab = customerPrefabs[Random.Range(0, customerPrefabs.Count)];
+        GameObject customerObj = Instantiate(customerPrefab, spawnPoint.position, spawnPoint.rotation);
+
+        // Setup customer
+        Customer customer = customerObj.GetComponent<Customer>();
+        if (customer == null)
+        {
+            customer = customerObj.AddComponent<Customer>();
+        }
+
+        // Create a copy of the specific order
+        Order customerOrder = Instantiate(targetOrder);
+        customerOrder.StartOrder();
+
+        // Assign name and setup with specific order
+        int customerNumber = GetNextCustomerNumber();
+        customer.SetupCustomer($"NPC_{customerNumber}", customerOrder, this);
+
+        // Set movement points
+        customer.SetMovementPoints(spawnPoint, availablePoint, exitPoint);
+
+        // Mark ordering point as occupied
+        occupiedOrderingPoints[availablePoint] = customer;
+
+        // Track customer
+        activeCustomers.Add(customer);
+        totalCustomersServed++;
+
+        // Notify listeners
+        OnCustomerSpawned?.Invoke(customer);
+
+        // Tutorial event
+        TutorialEvents.CustomerArrived();
+
+        Debug.Log($"[Tutorial] Spawned customer with specific order: {targetOrder.orderName}");
+    }
+
     #endregion
 
     public int GetOrderingPointIndex(Transform orderingPoint)
