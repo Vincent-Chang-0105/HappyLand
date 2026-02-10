@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 using DG.Tweening;
 using AudioSystem;
 
@@ -29,10 +30,31 @@ public class Pan : CookingStation
     [SerializeField] private float tossDuration = 0.4f; // Duration of toss animation
     [SerializeField] private float tossRotation = 15f; // Slight rotation during toss
 
+    [Header("Ingredient Toss Animation")]
+    [SerializeField] private float ingredientTossHeight = 1.0f;
+    [SerializeField] private float ingredientFlipRotation = 360f;
+    [SerializeField] private float ingredientSpreadX = 0.3f;
+    [SerializeField] private float landingPositionVariance = 0.25f;
+    [SerializeField] private float landingRotationVariance = 30f;
+
+    [Header("Pan Bob Animation")]
+    [SerializeField] private float panBobHeightMin = 0.08f;
+    [SerializeField] private float panBobHeightMax = 0.25f;
+    [SerializeField] private float panBobDurationMin = 0.4f;
+    [SerializeField] private float panBobDurationMax = 0.8f;
+
+    [Header("Idle Sizzle Animation")]
+    [SerializeField] private float sizzleShakeStrength = 0.03f;
+    [SerializeField] private float sizzleShakeFrequency = 20f;
+
+    [Header("Seasoning Requirement")]
+    [SerializeField] private bool requiresSeasoning = true;
+
     // Tossing state
     private enum TossingState
     {
         NotStarted,
+        WaitingForSeasoning,
         WaitingForToss,
         TossAnimating,
         Frying
@@ -44,6 +66,9 @@ public class Pan : CookingStation
     private Vector3 originalPanPosition;
     private Quaternion originalPanRotation;
     private SoundEmitter currentSizzleEmitter;
+    private bool hasSeasoning = false;
+    private Dictionary<GameObject, Vector3> ingredientBasePositions = new Dictionary<GameObject, Vector3>();
+    private Sequence panBobSequence;
 
     #region Abstract Method Implementations
 
@@ -165,6 +190,14 @@ public class Pan : CookingStation
             return;
         }
 
+        // Check if seasoning is required before tossing
+        if (requiresSeasoning && !hasSeasoning)
+        {
+            currentTossState = TossingState.WaitingForSeasoning;
+            Debug.Log("🧂 Add salt to the pan before tossing!");
+            return;
+        }
+
         // Initialize gesture-based cooking
         isCooking = true;
         completedTosses = 0;
@@ -213,6 +246,9 @@ public class Pan : CookingStation
                 // Frying between tosses - increment timer
                 fryingTimer += Time.deltaTime;
 
+                // Update idle sizzle animation
+                UpdateSizzleAnimation();
+
                 // Update progress bar to show frying progress
                 if (cookingProgressBar != null)
                 {
@@ -249,7 +285,9 @@ public class Pan : CookingStation
 
     private void ShowTossPrompt()
     {
-        // Stop sizzle sound when waiting for toss
+        // Stop pan bob, sizzle animation, and sound when waiting for toss
+        StopPanBobAnimation();
+        StopSizzleAnimation();
         StopSizzleSound();
 
         if (tossPrompt != null)
@@ -322,8 +360,12 @@ public class Pan : CookingStation
 
     private void PlayTossAnimation()
     {
-        // Kill any existing tweens
+        // Stop bob animation and kill any existing tweens
+        StopPanBobAnimation();
         transform.DOKill();
+
+        // Animate ingredients being tossed
+        PlayIngredientTossAnimation();
 
         // Store original position
         Vector3 startPos = transform.localPosition;
@@ -347,11 +389,141 @@ public class Pan : CookingStation
         });
     }
 
+    private void PlayIngredientTossAnimation()
+    {
+        // Stop sizzle animation before toss
+        StopSizzleAnimation();
+
+        for (int i = 0; i < ingredientsInStation.Count; i++)
+        {
+            GameObject ingredient = ingredientsInStation[i];
+            if (ingredient == null) continue;
+
+            Transform t = ingredient.transform;
+            t.DOKill();
+
+            Vector3 startLocalPos = t.localPosition;
+            float staggerDelay = i * 0.05f;
+            float spreadDir = (i % 2 == 0) ? 1f : -1f;
+
+            // Randomize landing position and rotation so chickens shuffle around
+            Vector3 landingPos = new Vector3(
+                Random.Range(-landingPositionVariance, landingPositionVariance),
+                startLocalPos.y,
+                startLocalPos.z
+            );
+            float landingRotZ = Random.Range(-landingRotationVariance, landingRotationVariance);
+
+            Sequence seq = DOTween.Sequence();
+
+            // Fly up high (relative to pan), spread out, and flip
+            seq.Append(t.DOLocalMoveY(startLocalPos.y + ingredientTossHeight, tossDuration * 0.45f)
+                .SetEase(Ease.OutCubic));
+            seq.Join(t.DOLocalMoveX(startLocalPos.x + ingredientSpreadX * spreadDir, tossDuration * 0.45f)
+                .SetEase(Ease.OutSine));
+            seq.Join(t.DOLocalRotate(new Vector3(0, 0, ingredientFlipRotation * spreadDir), tossDuration * 0.45f, RotateMode.FastBeyond360)
+                .SetEase(Ease.Linear));
+
+            // Fall to new randomized position
+            seq.Append(t.DOLocalMoveY(landingPos.y, tossDuration * 0.35f)
+                .SetEase(Ease.InCubic));
+            seq.Join(t.DOLocalMoveX(landingPos.x, tossDuration * 0.35f)
+                .SetEase(Ease.InSine));
+            seq.Join(t.DOLocalRotate(new Vector3(0, 0, landingRotZ), tossDuration * 0.35f)
+                .SetEase(Ease.OutQuad));
+
+            // Small bounce on landing
+            seq.Append(t.DOLocalMoveY(landingPos.y + ingredientTossHeight * 0.1f, tossDuration * 0.1f)
+                .SetEase(Ease.OutQuad));
+            seq.Append(t.DOLocalMoveY(landingPos.y, tossDuration * 0.1f)
+                .SetEase(Ease.InQuad));
+
+            // Set final position (for sizzle animation base positions)
+            Vector3 finalPos = landingPos;
+            float finalRotZ = landingRotZ;
+            seq.OnComplete(() =>
+            {
+                t.localEulerAngles = new Vector3(0, 0, finalRotZ);
+                t.localPosition = finalPos;
+            });
+
+            seq.SetDelay(staggerDelay);
+        }
+    }
+
+    private void StartSizzleAnimation()
+    {
+        ingredientBasePositions.Clear();
+        foreach (GameObject ingredient in ingredientsInStation)
+        {
+            if (ingredient == null) continue;
+            ingredientBasePositions[ingredient] = ingredient.transform.localPosition;
+        }
+    }
+
+    private void UpdateSizzleAnimation()
+    {
+        foreach (var kvp in ingredientBasePositions)
+        {
+            if (kvp.Key == null) continue;
+            float id = kvp.Key.GetInstanceID() * 0.01f;
+            float offsetX = (Mathf.PerlinNoise(Time.time * sizzleShakeFrequency, id) - 0.5f) * 2f * sizzleShakeStrength;
+            float offsetY = (Mathf.PerlinNoise(id, Time.time * sizzleShakeFrequency) - 0.5f) * 2f * sizzleShakeStrength;
+            kvp.Key.transform.localPosition = kvp.Value + new Vector3(offsetX, offsetY, 0);
+        }
+    }
+
+    private void StopSizzleAnimation()
+    {
+        foreach (var kvp in ingredientBasePositions)
+        {
+            if (kvp.Key != null)
+            {
+                kvp.Key.transform.localPosition = kvp.Value;
+            }
+        }
+        ingredientBasePositions.Clear();
+    }
+
+    private void StartPanBobAnimation()
+    {
+        StopPanBobAnimation();
+        PlayNextBob();
+    }
+
+    private void PlayNextBob()
+    {
+        float randomHeight = Random.Range(panBobHeightMin, panBobHeightMax);
+        float randomDuration = Random.Range(panBobDurationMin, panBobDurationMax);
+
+        panBobSequence = DOTween.Sequence();
+        panBobSequence.Append(transform.DOLocalMoveY(originalPanPosition.y + randomHeight, randomDuration * 0.5f)
+            .SetEase(Ease.InOutSine));
+        panBobSequence.Append(transform.DOLocalMoveY(originalPanPosition.y, randomDuration * 0.5f)
+            .SetEase(Ease.InOutSine));
+        panBobSequence.OnComplete(() => PlayNextBob());
+    }
+
+    private void StopPanBobAnimation()
+    {
+        if (panBobSequence != null && panBobSequence.IsActive())
+        {
+            panBobSequence.Kill();
+            panBobSequence = null;
+        }
+        transform.localPosition = originalPanPosition;
+        transform.localRotation = originalPanRotation;
+    }
+
     private void OnTossAnimationComplete()
     {
         // Start frying
         currentTossState = TossingState.Frying;
         fryingTimer = 0f;
+
+        // Start pan bob and idle sizzle animation on ingredients
+        StartPanBobAnimation();
+        StartSizzleAnimation();
 
         // Start/restart cooking effects
         if (cookingEffect != null)
@@ -376,7 +548,9 @@ public class Pan : CookingStation
 
     protected override void CompleteCooking()
     {
-        // Stop sizzle sound
+        // Stop pan bob, sizzle animation, and sound
+        StopPanBobAnimation();
+        StopSizzleAnimation();
         StopSizzleSound();
 
         // Tutorial event
@@ -401,8 +575,9 @@ public class Pan : CookingStation
             Debug.LogWarning("Pan: PlatingManager not found! Cannot register fried chickens.");
         }
 
-        // Remove oil after cooking is complete
+        // Remove oil and reset seasoning after cooking is complete
         RemoveOil();
+        hasSeasoning = false;
     }
 
     #endregion
@@ -525,6 +700,8 @@ public class Pan : CookingStation
     /// </summary>
     public bool CanAcceptSeasoning()
     {
+        // Allow seasoning while waiting for it or before cooking starts
+        if (currentTossState == TossingState.WaitingForSeasoning) return true;
         return !isCooking;
     }
 
@@ -539,16 +716,20 @@ public class Pan : CookingStation
             return;
         }
 
+        hasSeasoning = true;
+        Debug.Log($"🧂 Added {seasoning.ingredientName} to pan!");
+
         // Try to use SeasoningManager if available
         SeasoningManager seasoningMgr = GetComponent<SeasoningManager>();
         if (seasoningMgr != null)
         {
             seasoningMgr.AddSeasoning(seasoning);
         }
-        else
+
+        // If we were waiting for seasoning, now start cooking
+        if (currentTossState == TossingState.WaitingForSeasoning && ingredientsInStation.Count > 0)
         {
-            // Fallback - just log if no manager is attached
-            Debug.Log($"🧂 Added seasoning: {seasoning.ingredientName} (no SeasoningManager attached)");
+            StartCooking();
         }
     }
 

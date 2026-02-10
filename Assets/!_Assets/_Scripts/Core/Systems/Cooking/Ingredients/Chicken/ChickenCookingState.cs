@@ -8,16 +8,12 @@ public class ChickenCookingState : MonoBehaviour
     [SerializeField] private Sprite friedVersionSprite;
     [SerializeField] private Sprite sinigangVersionSprite;
 
-    [Header("Washing Settings")]
-    [SerializeField] private float washDuration = 2f;
-
     [Header("Auto Bowl Settings")]
     [SerializeField] private bool autoTeleportToBowl = true;
     [SerializeField] private string boilBowlTag = "BoilBowl";
     [SerializeField] private string fryBowlTag = "FryBowl";
 
     private SpriteRenderer spriteRenderer;
-    private float washTimer = 0f;
 
     // State flags
     private bool isWashed = false;
@@ -49,22 +45,13 @@ public class ChickenCookingState : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    private void Update()
-    {
-        if (isBeingWashed)
-        {
-            UpdateWashing();
-        }
-    }
-
     #region Washing
     public void StartWashing()
     {
         if (isWashed || isBeingWashed) return;
 
         isBeingWashed = true;
-        washTimer = 0f;
-
+        Debug.Log("ChickenCookingState: Started washing");
     }
 
     public void StopWashing()
@@ -72,9 +59,8 @@ public class ChickenCookingState : MonoBehaviour
         if (!isBeingWashed) return;
 
         isBeingWashed = false;
-        washTimer = 0f;
-
         ResetAlpha();
+        Debug.Log("ChickenCookingState: Stopped washing (cancelled)");
     }
 
     public void CompleteWashing()
@@ -94,31 +80,13 @@ public class ChickenCookingState : MonoBehaviour
 
         // Tutorial event
         TutorialEvents.ChickenWashed();
+
+        Debug.Log("ChickenCookingState: Washing complete!");
     }
 
     public bool CanBeWashed()
     {
         return !isWashed && !isBeingWashed;
-    }
-
-    private void UpdateWashing()
-    {
-        washTimer += Time.deltaTime;
-
-        if (washTimer >= washDuration)
-        {
-            CompleteWashing();
-            return;
-        }
-
-        // Visual feedback - washing animation
-        if (spriteRenderer != null)
-        {
-            float alpha = Mathf.Lerp(0.7f, 1f, Mathf.PingPong(washTimer * 3f, 1f));
-            Color color = spriteRenderer.color;
-            color.a = alpha;
-            spriteRenderer.color = color;
-        }
     }
     #endregion
 
@@ -244,4 +212,48 @@ public class ChickenCookingState : MonoBehaviour
     public string GetBoilBowlTag() => boilBowlTag;
     public string GetFryBowlTag() => fryBowlTag;
     public bool ShouldAutoTeleport() => autoTeleportToBowl;
+
+    #region DevMode Helpers
+
+    /// <summary>
+    /// [DevMode] Instantly sets chicken to fully cooked fried state
+    /// </summary>
+    public void DevSetAsFried()
+    {
+        isWashed = true;
+        isBoiled = true;
+        isFried = true;
+        isBeingWashed = false;
+        isBeingBoiled = false;
+        isBeingFried = false;
+
+        if (friedVersionSprite != null && spriteRenderer != null)
+        {
+            spriteRenderer.sprite = friedVersionSprite;
+        }
+
+        Debug.Log("[DevMode] Chicken set to fried state");
+    }
+
+    /// <summary>
+    /// [DevMode] Instantly sets chicken to fully cooked sinigang state
+    /// </summary>
+    public void DevSetAsSinigang()
+    {
+        isWashed = true;
+        isBoiled = true;
+        isSiniganged = true;
+        isBeingWashed = false;
+        isBeingBoiled = false;
+        isBeingSiniganged = false;
+
+        if (sinigangVersionSprite != null && spriteRenderer != null)
+        {
+            spriteRenderer.sprite = sinigangVersionSprite;
+        }
+
+        Debug.Log("[DevMode] Chicken set to sinigang state");
+    }
+
+    #endregion
 }

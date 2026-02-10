@@ -13,11 +13,6 @@ public class TutorialUIPanel : MonoBehaviour, IPointerClickHandler
     [SerializeField] private TextMeshProUGUI tapHintText; // Shows "Tap anywhere to continue..."
     [SerializeField] private CanvasGroup canvasGroup;
 
-    [Header("Branch Selection")]
-    [SerializeField] private GameObject branchSelectionPanel;
-    [SerializeField] private Button friedChickenButton;
-    [SerializeField] private Button sinigangButton;
-
     [Header("Animation Settings")]
     [SerializeField] private float fadeInDuration = 0.3f;
     [SerializeField] private float fadeOutDuration = 0.2f;
@@ -49,22 +44,11 @@ public class TutorialUIPanel : MonoBehaviour, IPointerClickHandler
             Debug.LogWarning("TutorialUIPanel: tapHintText is not assigned. Hint won't show.");
         }
 
-        if (friedChickenButton != null)
-        {
-            friedChickenButton.onClick.AddListener(() => OnBranchSelected(TutorialBranch.FriedChicken));
-        }
-
-        if (sinigangButton != null)
-        {
-            sinigangButton.onClick.AddListener(() => OnBranchSelected(TutorialBranch.Sinigang));
-        }
-
         panel?.SetActive(false);
-        branchSelectionPanel?.SetActive(false);
         tapHintText?.gameObject.SetActive(false);
     }
 
-    public void ShowInstruction(string text, bool showBranchSelection = false)
+    public void ShowInstruction(string text)
     {
         // Kill any existing tweens to prevent race conditions
         if (canvasGroup != null)
@@ -74,8 +58,7 @@ public class TutorialUIPanel : MonoBehaviour, IPointerClickHandler
 
         panel?.SetActive(true);
 
-        // Hide branch selection and hint by default
-        branchSelectionPanel?.SetActive(false);
+        // Hide hint by default
         tapHintText?.gameObject.SetActive(false);
 
         // Fade in
@@ -90,7 +73,7 @@ public class TutorialUIPanel : MonoBehaviour, IPointerClickHandler
             StopCoroutine(typingCoroutine);
 
         isTypingComplete = false;
-        typingCoroutine = StartCoroutine(TypeText(text, showBranchSelection));
+        typingCoroutine = StartCoroutine(TypeText(text));
     }
 
     public void HideInstruction()
@@ -108,17 +91,15 @@ public class TutorialUIPanel : MonoBehaviour, IPointerClickHandler
                 .OnComplete(() =>
                 {
                     panel?.SetActive(false);
-                    branchSelectionPanel?.SetActive(false);
                 });
         }
         else
         {
             panel?.SetActive(false);
-            branchSelectionPanel?.SetActive(false);
         }
     }
 
-    private IEnumerator TypeText(string fullText, bool showBranchSelection)
+    private IEnumerator TypeText(string fullText)
     {
         if (instructionText != null)
         {
@@ -132,16 +113,7 @@ public class TutorialUIPanel : MonoBehaviour, IPointerClickHandler
         }
 
         isTypingComplete = true;
-
-        // Show appropriate UI after typing
-        if (showBranchSelection)
-        {
-            branchSelectionPanel?.SetActive(true);
-        }
-        else
-        {
-            tapHintText?.gameObject.SetActive(true);
-        }
+        tapHintText?.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -151,10 +123,6 @@ public class TutorialUIPanel : MonoBehaviour, IPointerClickHandler
     {
         // Only respond if panel is visible
         if (panel == null || !panel.activeSelf)
-            return;
-
-        // Don't trigger if branch selection is showing (user must choose a branch)
-        if (branchSelectionPanel != null && branchSelectionPanel.activeSelf)
             return;
 
         OnContinueClicked();
@@ -183,17 +151,5 @@ public class TutorialUIPanel : MonoBehaviour, IPointerClickHandler
         }
 
         TutorialManager.Instance.OnContinueButtonPressed();
-    }
-
-    private void OnBranchSelected(TutorialBranch branch)
-    {
-        TutorialManager.Instance?.SetBranch(branch);
-        TutorialManager.Instance?.OnContinueButtonPressed();
-    }
-
-    public void ShowBranchSelection()
-    {
-        branchSelectionPanel?.SetActive(true);
-        tapHintText?.gameObject.SetActive(false);
     }
 }

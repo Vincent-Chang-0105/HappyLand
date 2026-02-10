@@ -61,7 +61,7 @@ public class ExpenseManager : MonoBehaviour
     {
         // Fixed expenses stay the same
         currentElectricityCost = electricityCost;
-        currentWaterCost = waterCost;
+        currentWaterCost = 0; // Water cost is now usage-based, set by WaterCostTracker
         currentRentCost = rentCost;
 
         // Generate random expenses
@@ -209,6 +209,15 @@ public class ExpenseManager : MonoBehaviour
 
         Debug.Log($"Total expenses paid: {totalPaid} PHP");
         Debug.Log($"Total unpaid debts: Electricity={unpaidElectricity}, Water={unpaidWater}, Medicine={unpaidMedicine}, Repairs={unpaidRepairs}, Rent={unpaidRent}");
+    }
+
+    /// <summary>
+    /// Set the water cost to the actual usage-based amount from WaterCostTracker.
+    /// Called before end-of-day calculations.
+    /// </summary>
+    public void SetWaterUsageCost(int usageCost)
+    {
+        currentWaterCost = usageCost;
     }
 
     public bool HasMedicine()

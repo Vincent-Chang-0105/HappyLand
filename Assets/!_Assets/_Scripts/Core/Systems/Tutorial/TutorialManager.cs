@@ -17,9 +17,13 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
     [SerializeField] private bool pauseGameDuringSteps = true;
     [SerializeField] private float pauseDelay = 0.1f;
 
+    [Header("Navigation Control")]
+    [SerializeField] private ScreenTransitionManager screenTransitionManager;
+    [SerializeField] private bool controlNavigationDuringTutorial = true;
+
     // State
     private TutorialStep currentStep;
-    private TutorialBranch activeBranch = TutorialBranch.Common;
+    private int currentStepIndex = -1;
     private bool isTutorialActive = false;
     private bool isWaitingForAcknowledge = false;
     private float previousTimeScale = 1f;
@@ -35,7 +39,6 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
     // Properties
     public bool IsTutorialActive => isTutorialActive;
     public TutorialStep CurrentStep => currentStep;
-    public TutorialBranch ActiveBranch => activeBranch;
 
     protected override void Awake()
     {
@@ -69,19 +72,23 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
             Debug.LogWarning("TutorialManager: arrowIndicator reference is not assigned. Arrows won't show.");
         }
 
-        // Validate step IDs
-        Debug.Log($"TutorialManager: Found {tutorialData.steps.Length} steps with IDs: {string.Join(", ", System.Array.ConvertAll(tutorialData.steps, s => s.stepId.ToString()))}");
+        Debug.Log($"TutorialManager: Found {tutorialData.steps.Length} steps");
 
         tutorialData.ResetAllSteps();
         isTutorialActive = true;
-        activeBranch = TutorialBranch.Common;
+
+        // Enable tutorial mode in screen transition manager
+        if (screenTransitionManager != null && controlNavigationDuringTutorial)
+        {
+            screenTransitionManager.EnableTutorialMode();
+        }
 
         Debug.Log("Tutorial started!");
 
         if (tutorialData.autoStartFirstStep && tutorialData.steps.Length > 0)
         {
-            Debug.Log($"Auto-starting first step: ID={tutorialData.steps[0].stepId}, Name={tutorialData.steps[0].stepName}, CompletionType={tutorialData.steps[0].completionType}");
-            ShowStep(tutorialData.steps[0]);
+            Debug.Log($"Auto-starting first step: Name={tutorialData.steps[0].stepName}, CompletionType={tutorialData.steps[0].completionType}");
+            ShowStep(0);
         }
     }
 
@@ -90,28 +97,56 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
         isTutorialActive = false;
         HideCurrentStep();
         ResumeGame();
+
+        // Disable tutorial mode in screen transition manager
+        if (screenTransitionManager != null && controlNavigationDuringTutorial)
+        {
+            screenTransitionManager.DisableTutorialMode();
+        }
+
         OnTutorialCompleted?.Invoke();
         Debug.Log("Tutorial completed!");
     }
 
-    public void SetBranch(TutorialBranch branch)
+    private void ShowStep(int stepIndex)
     {
-        activeBranch = branch;
-        Debug.Log($"Tutorial branch set to: {branch}");
-    }
-
-    private void ShowStep(TutorialStep step)
-    {
+        TutorialStep step = tutorialData.GetStep(stepIndex);
         if (step == null)
         {
             StopTutorial();
             return;
         }
 
+        currentStepIndex = stepIndex;
         currentStep = step;
         OnStepStarted?.Invoke(step);
 
-        Debug.Log($"Tutorial Step {step.stepId}: {step.stepName} (showUI={step.showUI})");
+        Debug.Log($"Tutorial Step {stepIndex}: {step.stepName} (showUI={step.showUI})");
+
+        // Control navigation buttons based on step requirements
+        if (screenTransitionManager != null && controlNavigationDuringTutorial)
+        {
+            if (step.controlNavigation && step.allowedDirections != null && step.allowedDirections.Count > 0)
+            {
+                // Manual control: use specified allowed directions
+                screenTransitionManager.SetAllowedNavigationButtons(step.allowedDirections);
+            }
+            else
+            {
+                // Auto control: detect required navigation from completion type
+                System.Collections.Generic.List<DirectionButton> requiredNav = GetRequiredNavigationForStep(step);
+
+                if (requiredNav.Count > 0)
+                {
+                    screenTransitionManager.SetAllowedNavigationButtons(requiredNav);
+                }
+                else
+                {
+                    // No navigation required for this step, enable all
+                    screenTransitionManager.EnableAllNavigationButtons();
+                }
+            }
+        }
 
         // Silent step - just wait for event, no UI/pause
         if (!step.showUI)
@@ -121,14 +156,10 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
             return;
         }
 
-        // Determine if this is the branch selection step
-        bool isBranchSelection = step.stepName == "Choose Path" ||
-                                  step.instructionText.Contains("Choose:");
-
         // Show UI
         if (uiPanel != null)
         {
-            uiPanel.ShowInstruction(step.instructionText, isBranchSelection);
+            uiPanel.ShowInstruction(step.instructionText);
         }
 
         // Show arrow pointing to target
@@ -212,7 +243,7 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
         currentStep.isCompleted = true;
         OnStepCompleted?.Invoke(currentStep);
 
-        Debug.Log($"Completed step {currentStep.stepId}: {currentStep.stepName}");
+        Debug.Log($"Completed step {currentStepIndex}: {currentStep.stepName}");
 
         // Play completion VFX
         if (taskCompletionVFX != null)
@@ -236,34 +267,35 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
         HideCurrentStep();
 
         // Get next step
-        TutorialStep nextStep = tutorialData.GetNextStep(currentStep.stepId, activeBranch);
+        TutorialStep nextStep = tutorialData.GetNextStep(currentStepIndex);
+        int nextIndex = currentStepIndex + 1;
 
         if (nextStep != null)
         {
-            Debug.Log($"Moving to next step {nextStep.stepId}: {nextStep.stepName}");
+            Debug.Log($"Moving to next step {nextIndex}: {nextStep.stepName}");
 
             // Check if next step has a show delay
             if (nextStep.showDelay > 0)
             {
-                StartCoroutine(ShowStepAfterDelay(nextStep, nextStep.showDelay));
+                StartCoroutine(ShowStepAfterDelay(nextIndex, nextStep.showDelay));
             }
             else
             {
-                ShowStep(nextStep);
+                ShowStep(nextIndex);
             }
         }
         else
         {
-            Debug.Log($"No next step found after step {currentStep.stepId}. Tutorial ending.");
+            Debug.Log($"No next step found after step {currentStepIndex}. Tutorial ending.");
             StopTutorial();
         }
     }
 
-    private IEnumerator ShowStepAfterDelay(TutorialStep step, float delay)
+    private IEnumerator ShowStepAfterDelay(int stepIndex, float delay)
     {
-        Debug.Log($"Waiting {delay}s before showing step {step.stepId}: {step.stepName}");
+        Debug.Log($"Waiting {delay}s before showing step {stepIndex}");
         yield return new WaitForSecondsRealtime(delay);
-        ShowStep(step);
+        ShowStep(stepIndex);
     }
 
     private void ExecuteStepAction(TutorialStep step)
@@ -397,6 +429,47 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
 
     #endregion
 
+    #region Navigation Control
+
+    private System.Collections.Generic.List<DirectionButton> GetRequiredNavigationForStep(TutorialStep step)
+    {
+        System.Collections.Generic.List<DirectionButton> required = new System.Collections.Generic.List<DirectionButton>();
+
+        switch (step.completionType)
+        {
+            case TutorialCompletionType.WashScreenEntered:
+                // Determine which button leads to Wash screen based on current position
+                // You'll need to configure this based on your actual screen layout
+                required.Add(DirectionButton.Down); // Example: Wash is down
+                break;
+
+            case TutorialCompletionType.CookScreenEntered:
+                required.Add(DirectionButton.Right); // Example: Cook is to the right
+                break;
+
+            case TutorialCompletionType.ServeScreenEntered:
+                required.Add(DirectionButton.Up); // Example: Serve is up
+                break;
+
+            case TutorialCompletionType.BoilScreenEntered:
+                required.Add(DirectionButton.Right); // Example: Boil is to the right
+                break;
+
+            case TutorialCompletionType.CutScreenEntered:
+                required.Add(DirectionButton.Right); // Example: Cut is to the right
+                break;
+
+            default:
+                // For non-navigation steps, no specific navigation is required
+                // Returning empty list will enable all navigation buttons
+                break;
+        }
+
+        return required;
+    }
+
+    #endregion
+
     #region Game Event Subscriptions
 
     private void SubscribeToGameEvents()
@@ -419,11 +492,13 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
         TutorialEvents.OnOrderSlotClicked += HandleOrderSlotClicked;
         TutorialEvents.OnWashScreenEntered += HandleWashScreenEntered;
         TutorialEvents.OnFaucetOpened += HandleFaucetOpened;
+        TutorialEvents.OnFaucetClosed += HandleFaucetClosed;
         TutorialEvents.OnCookScreenEntered += HandleCookScreenEntered;
         TutorialEvents.OnServeScreenEntered += HandleServeScreenEntered;
         TutorialEvents.OnBoilScreenEntered += HandleBoilScreenEntered;
         TutorialEvents.OnCutScreenEntered += HandleCutScreenEntered;
         TutorialEvents.OnThreeChickensWashed += HandleThreeChickensWashed;
+        TutorialEvents.OnChickenTransferred += HandleChickenTransferred;
     }
 
     private void UnsubscribeFromGameEvents()
@@ -446,11 +521,13 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
         TutorialEvents.OnOrderSlotClicked -= HandleOrderSlotClicked;
         TutorialEvents.OnWashScreenEntered -= HandleWashScreenEntered;
         TutorialEvents.OnFaucetOpened -= HandleFaucetOpened;
+        TutorialEvents.OnFaucetClosed -= HandleFaucetClosed;
         TutorialEvents.OnCookScreenEntered -= HandleCookScreenEntered;
         TutorialEvents.OnServeScreenEntered -= HandleServeScreenEntered;
         TutorialEvents.OnBoilScreenEntered -= HandleBoilScreenEntered;
         TutorialEvents.OnCutScreenEntered -= HandleCutScreenEntered;
         TutorialEvents.OnThreeChickensWashed -= HandleThreeChickensWashed;
+        TutorialEvents.OnChickenTransferred -= HandleChickenTransferred;
     }
 
     private void CheckAndCompleteStep(TutorialCompletionType completionType)
@@ -509,11 +586,13 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
     private void HandleOrderSlotClicked() => CheckAndCompleteStep(TutorialCompletionType.OrderSlotClicked);
     private void HandleWashScreenEntered() => CheckAndCompleteStep(TutorialCompletionType.WashScreenEntered);
     private void HandleFaucetOpened() => CheckAndCompleteStep(TutorialCompletionType.FaucetOpened);
+    private void HandleFaucetClosed() => CheckAndCompleteStep(TutorialCompletionType.FaucetClosed);
     private void HandleCookScreenEntered() => CheckAndCompleteStep(TutorialCompletionType.CookScreenEntered);
     private void HandleServeScreenEntered() => CheckAndCompleteStep(TutorialCompletionType.ServeScreenEntered);
     private void HandleBoilScreenEntered() => CheckAndCompleteStep(TutorialCompletionType.BoilScreenEntered);
     private void HandleCutScreenEntered() => CheckAndCompleteStep(TutorialCompletionType.CutScreenEntered);
     private void HandleThreeChickensWashed() => CheckAndCompleteStep(TutorialCompletionType.ThreeChickensWashed);
+    private void HandleChickenTransferred() => CheckAndCompleteStep(TutorialCompletionType.ChickenTransferred);
 
     #endregion
 }

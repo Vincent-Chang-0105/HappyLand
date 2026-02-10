@@ -61,7 +61,6 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         if (!containedChickens.Contains(chicken))
         {
             containedChickens.Add(chicken);
-            Debug.Log($"Added chicken to plate. Count: {containedChickens.Count}/{requiredChickenCount}");
         }
     }
 
@@ -122,7 +121,6 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("Started dragging plated dish");
         isDragging = true;
         originalPosition = rectTransform.anchoredPosition;
 
@@ -138,22 +136,6 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         if (!isDragging) return;
 
-        // Convert screen point to canvas position
-        // Vector2 localPoint;
-        // if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
-        //     canvas.transform as RectTransform,
-        //     eventData.position,
-        //     canvas.worldCamera,
-        //     out localPoint))
-        // {
-        //     // Smooth drag movement
-        //     Vector2 targetPos = localPoint;
-        //     rectTransform.anchoredPosition = Vector2.Lerp(
-        //         rectTransform.anchoredPosition,
-        //         targetPos,
-        //         dragSmoothness
-        //     );
-        // }
         float scaleFactor = canvas != null ? canvas.scaleFactor : 1f;
 
         rectTransform.anchoredPosition += eventData.delta / scaleFactor;
@@ -161,7 +143,6 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Debug.Log("Stopped dragging plated dish");
         isDragging = false;
 
         // Restore opacity
@@ -175,13 +156,11 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         Customer nearestCustomer = FindNearestCustomer();
         if (nearestCustomer != null)
         {
-            Debug.Log($"Dish dropped near customer: {nearestCustomer.name}");
             ServeToCustomer(nearestCustomer);
         }
         else
         {
             // No customer nearby, return to original position
-            Debug.Log("No customer nearby, returning to original position");
             ReturnToOriginalPosition();
         }
     }
@@ -197,22 +176,18 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
         Vector3 worldPos = mainCamera.ScreenToWorldPoint(screenPos);
         worldPos.z = 0;
 
-        Debug.Log($"Checking for customers at world position: {worldPos}, radius: {customerDetectionRadius}");
 
         // Find all customers in range (ignore layer mask if it's set to Nothing)
         Collider2D[] hits;
         if (customerLayer.value == 0)
         {
             // Layer mask not set, search all layers
-            Debug.Log("Customer layer not set, searching all layers");
             hits = Physics2D.OverlapCircleAll(worldPos, customerDetectionRadius);
         }
         else
         {
             hits = Physics2D.OverlapCircleAll(worldPos, customerDetectionRadius, customerLayer);
         }
-
-        Debug.Log($"Found {hits.Length} colliders in range");
 
         Customer nearestCustomer = null;
         float nearestDistance = float.MaxValue;
@@ -222,7 +197,6 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             Customer customer = hit.GetComponent<Customer>();
             if (customer != null)
             {
-                Debug.Log($"Found customer: {customer.name}, IsWaiting: {customer.IsWaitingForOrder()}");
                 if (customer.IsWaitingForOrder())
                 {
                     float distance = Vector3.Distance(worldPos, hit.transform.position);
@@ -262,13 +236,13 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
         if (orderAccepted)
         {
-            Debug.Log("Customer accepted the dish!");
+            //Debug.Log("Customer accepted the dish!");
             // Destroy the plate after successful serving
             Destroy(gameObject);
         }
         else
         {
-            Debug.Log("Customer rejected the dish!");
+            //Debug.Log("Customer rejected the dish!");
             ReturnToOriginalPosition();
         }
     }

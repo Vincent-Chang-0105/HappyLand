@@ -21,7 +21,7 @@ public class OrderUIManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-         CustomerGenerator generator = FindObjectOfType<CustomerGenerator>();
+        CustomerGenerator generator = FindFirstObjectByType<CustomerGenerator>();
             if (generator != null)
             {
                 generator.OnCustomerSpawned += OnCustomerSpawned;
@@ -68,7 +68,7 @@ public class OrderUIManager : MonoBehaviour
     int GetOrderingPointIndex(Customer customer)
     {
         // Get the customer's ordering point from CustomerGenerator
-        CustomerGenerator generator = FindObjectOfType<CustomerGenerator>();
+        CustomerGenerator generator = FindFirstObjectByType<CustomerGenerator>();
         return generator.GetOrderingPointIndex(customer.GetAssignedOrderingPoint());
     }
     
@@ -96,8 +96,7 @@ public class OrderUIManager : MonoBehaviour
             
             orderButton.SetupOrderButton(customer, this);
             activeOrderButtons[customer] = orderButton;
-            
-            Debug.Log($"Created order button for {customer.CustomerName} in slot {orderingPointIndex}");
+        
         }
         else
         {
@@ -149,8 +148,6 @@ public class OrderUIManager : MonoBehaviour
             {
                 customerTicket[customer] = spawnedTicket;
             }
-            //ticketManager.SpawnTicket(customer.CurrentOrder);
-            Debug.Log($"Spawned ticket for {customer.CustomerName}'s order: {customer.CurrentOrder.orderName}");
         }
 
         if (activeOrderButtons.ContainsKey(customer))
@@ -204,6 +201,5 @@ public class OrderUIManager : MonoBehaviour
         // Clear customers with orders set
         customersWithOrders.Clear();
 
-        Debug.Log("OrderUIManager: Cleared all order buttons and tickets for new day");
     }
 }

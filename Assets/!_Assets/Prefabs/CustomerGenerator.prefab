@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7078803588547696650
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3084647276403106282}
+  - component: {fileID: 5398013248923790380}
+  m_Layer: 0
+  m_Name: CustomerGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3084647276403106282
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7078803588547696650}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5398013248923790380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7078803588547696650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a145d6524aa3279488f4dd8649e720bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CustomerGenerator
+  customerPrefab: {fileID: 8565496223795667468, guid: 7a788f4b60808d74b97a0820e60750fd, type: 3}
+  npcExpressionSets:
+  - npcNumber: 1
+    defaultExpression: {fileID: 21300000, guid: b6c2551ca951cf94499c103da0b1e2fc, type: 3}
+    happyExpression: {fileID: 21300000, guid: b3701a36195c26a49b97b87ca5908453, type: 3}
+    angryExpression: {fileID: 21300000, guid: 41d2e987f54297f479f2c4a26ea0ecc1, type: 3}
+  - npcNumber: 2
+    defaultExpression: {fileID: 21300000, guid: ee638fcb437a9c14393619de168bdcc6, type: 3}
+    happyExpression: {fileID: 21300000, guid: a5786aa78a0652e48b27404585accb3b, type: 3}
+    angryExpression: {fileID: 21300000, guid: 474288d7df73b9b4c8305fe6970da9fa, type: 3}
+  - npcNumber: 3
+    defaultExpression: {fileID: 21300000, guid: f641497838f81dc48b4d7de34156206d, type: 3}
+    happyExpression: {fileID: 21300000, guid: 672c315b26c49fe4aaf19e8c241c77f7, type: 3}
+    angryExpression: {fileID: 21300000, guid: c014c7d7db913e84db7dc365b4157246, type: 3}
+  - npcNumber: 4
+    defaultExpression: {fileID: 21300000, guid: 7703a1e7d0572ed4c90367545b8b10a5, type: 3}
+    happyExpression: {fileID: 21300000, guid: 038f86f0c5bffd94b8380f0a1de27d3a, type: 3}
+    angryExpression: {fileID: 21300000, guid: 083836600066e6144b2a49f4a4cfa6cb, type: 3}
+  - npcNumber: 5
+    defaultExpression: {fileID: 21300000, guid: 1de6acb8b809e2a43982bf27d11b5157, type: 3}
+    happyExpression: {fileID: 21300000, guid: cdd3cefc100ac6241900f210a84942ea, type: 3}
+    angryExpression: {fileID: 21300000, guid: 6cef676b0f12e3c4e9f1bdacdc3d2ada, type: 3}
+  - npcNumber: 6
+    defaultExpression: {fileID: 21300000, guid: b4b3faf5eb33c6048a692321e2a2aa1d, type: 3}
+    happyExpression: {fileID: 21300000, guid: 5c66cd6e9621e584db464ff0911fea5d, type: 3}
+    angryExpression: {fileID: 21300000, guid: 321eb27f05f0b7e409ac9ff2481e201e, type: 3}
+  - npcNumber: 7
+    defaultExpression: {fileID: 21300000, guid: 2ac4294f3ae0240418f36ef76355885d, type: 3}
+    happyExpression: {fileID: 21300000, guid: 0be8c25a04650ac4c9ff32b29d55b85d, type: 3}
+    angryExpression: {fileID: 21300000, guid: a5c9a9574e0af1d479a1a179acddc24c, type: 3}
+  - npcNumber: 8
+    defaultExpression: {fileID: 21300000, guid: 8c7e31520ae5d604f9d624986aa1395e, type: 3}
+    happyExpression: {fileID: 21300000, guid: 3e996ecb187bd7e48a01771149576dd0, type: 3}
+    angryExpression: {fileID: 21300000, guid: 6b8a4532a06af5e4191eec7b1d5fd872, type: 3}
+  - npcNumber: 9
+    defaultExpression: {fileID: 21300000, guid: c0bb29b13646c114f9e851a70bc630fd, type: 3}
+    happyExpression: {fileID: 21300000, guid: ce7c49afdf4a31840a3313faef2ca5fc, type: 3}
+    angryExpression: {fileID: 21300000, guid: 5dd24bff05817884ead62648d99960ff, type: 3}
+  - npcNumber: 10
+    defaultExpression: {fileID: 21300000, guid: c0bb29b13646c114f9e851a70bc630fd, type: 3}
+    happyExpression: {fileID: 21300000, guid: ce7c49afdf4a31840a3313faef2ca5fc, type: 3}
+    angryExpression: {fileID: 21300000, guid: 5dd24bff05817884ead62648d99960ff, type: 3}
+  spawnPoint: {fileID: 0}
+  orderingPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  exitPoint: {fileID: 0}
+  spawnInterval: 2
+  maxCustomers: 1
+  autoGenerate: 0
+  availableOrders:
+  - {fileID: 11400000, guid: 8031d1c3bd007d34b86889d50a69a1b3, type: 2}
+  - {fileID: 11400000, guid: 0999600b67f534e429abfca1556f9678, type: 2}
+  minOrdersPerCustomer: 1
+  maxOrdersPerCustomer: 3
+  todaySalesIncome: 0
+  disableAutoGenerateInTutorial: 1

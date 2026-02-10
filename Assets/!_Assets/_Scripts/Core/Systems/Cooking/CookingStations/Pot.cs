@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
+using DG.Tweening;
 
 /// <summary>
 /// Pot cooking station - specialized for boiling ingredients
@@ -14,6 +16,30 @@ public class Pot : CookingStation
     [SerializeField] private float boilingDurationBetweenStirs = 2.5f;
     [SerializeField] private StirGestureDetector gestureDetector;
     [SerializeField] private StirPrompt stirPrompt;
+
+    [Header("Boiling Motion")]
+    [SerializeField] private float boilingSwirlSpeed = 40f;  // Degrees per second for passive swirl
+    [SerializeField] private float stirringSwirlSpeed = 120f; // Faster when actively stirring
+    [SerializeField] private float stirBurstSpeed = 600f;    // Burst speed right after completing a stir
+    [SerializeField] private float bobAmount = 0.05f;        // Vertical bobbing amplitude
+    [SerializeField] private float bobSpeed = 3f;            // Bobbing frequency
+    [SerializeField] private float ingredientTiltAmount = 15f; // How much chickens tilt while swirling
+
+    [Header("Wind Down")]
+    [SerializeField] private float residualSwirlSpeed = 8f;
+    [SerializeField] private float windDownRate = 2f;
+
+    [Header("Per-Ingredient Variation")]
+    [SerializeField] private float minOrbitRadius = 0.15f;
+    [SerializeField] private float maxOrbitRadius = 1.0f;
+    [SerializeField] private float minSpeedMultiplier = 0.7f;
+    [SerializeField] private float maxSpeedMultiplier = 2.0f;
+
+    [Header("Pour Settings")]
+    [SerializeField] private float pourTiltAngle = 45f;
+    [SerializeField] private float tiltSmoothing = 8f;
+    [SerializeField] private float pourDetectRadius = 1.5f;
+    [SerializeField] private float pourPickupRadius = 1.5f;
 
     [Header("Sinigang Cooking")]
     [SerializeField] private int sinigangRequiredStirs = 3;
@@ -38,11 +64,35 @@ public class Pot : CookingStation
         SinigangCooking  // Sinigang phase active
     }
 
+    // Per-ingredient orbit data for organic motion
+    private class IngredientOrbitData
+    {
+        public float orbitRadius;
+        public float speedMultiplier;
+        public float phaseOffset;
+        public float bobPhaseOffset;
+    }
+
     private StirringState currentStirState = StirringState.NotStarted;
     private PotCookingPhase currentCookingPhase = PotCookingPhase.Initial;
     private int completedStirs = 0;
     private float boilingTimer = 0f;
     private bool hasSinigangMix = false;
+    private float currentSwirlSpeed = 0f;
+    private Vector3 containerBasePosition;
+    private float orbitAngle = 0f;
+    private Dictionary<Transform, IngredientOrbitData> ingredientOrbits = new Dictionary<Transform, IngredientOrbitData>();
+
+    // Pour state
+    private bool isPourable = false;
+    private bool isPouring = false;
+    private Vector3 potOriginalPosition;
+    private Quaternion potOriginalRotation;
+    private Vector3 dragOffset;
+    private Camera mainCamera;
+    private PourZone nearbyPourZone;
+    private bool isDraggingPot = false;
+    private bool isWindingDown = false;
 
     #region Unity Lifecycle
 
@@ -74,6 +124,23 @@ public class Pot : CookingStation
             {
                 Debug.LogWarning("Pot: No StirPrompt component found. Please add a StirPrompt UI to the pot.");
             }
+        }
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+
+        // Continue boiling motion while winding down after cooking completes
+        if (isWindingDown)
+        {
+            UpdateBoilingMotion();
+        }
+
+        // Handle pour input when pot is pourable
+        if (isPourable && !isPouring)
+        {
+            HandlePourInput();
         }
     }
 
@@ -128,7 +195,8 @@ public class Pot : CookingStation
 
     protected override bool AdditionalBowlAcceptanceCheck()
     {
-        // Pot has no additional requirements (unlike Pan which needs oil)
+        // Don't accept bowls while pot is pourable or pouring
+        if (isPourable || isPouring) return false;
         return true;
     }
 
@@ -157,6 +225,12 @@ public class Pot : CookingStation
         completedStirs = 0;
         currentStirState = StirringState.WaitingForStir;
         currentCookingPhase = PotCookingPhase.Boiling;
+
+        // Store container base position for bobbing
+        if (ingredientContainer != null)
+        {
+            containerBasePosition = ingredientContainer.localPosition;
+        }
 
         // Start cooking each ingredient
         foreach (GameObject ingredient in ingredientsInStation)
@@ -238,8 +312,89 @@ public class Pot : CookingStation
         {
             cookingMeterUI.transform.position = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * 2f);
         }
+
+        // Swirl and bob the ingredients
+        UpdateBoilingMotion();
     }
 
+    private void UpdateBoilingMotion()
+    {
+        if (ingredientContainer == null) return;
+
+        // Determine target swirl speed based on state
+        float targetSpeed;
+        float lerpRate;
+
+        if (isWindingDown)
+        {
+            targetSpeed = residualSwirlSpeed;
+            lerpRate = windDownRate;
+        }
+        else if (currentStirState == StirringState.WaitingForStir)
+        {
+            targetSpeed = boilingSwirlSpeed;
+            lerpRate = 3f;
+        }
+        else
+        {
+            targetSpeed = stirringSwirlSpeed;
+            lerpRate = 3f;
+        }
+
+        // Smooth the speed transition
+        currentSwirlSpeed = Mathf.Lerp(currentSwirlSpeed, targetSpeed, Time.deltaTime * lerpRate);
+
+        // Advance the base orbit angle
+        orbitAngle += currentSwirlSpeed * Time.deltaTime;
+
+        // Tilt amount based on speed
+        float speedRatio = Mathf.Clamp01(currentSwirlSpeed / stirBurstSpeed);
+        float tilt = ingredientTiltAmount * speedRatio;
+
+        // Move each child individually with its own orbit parameters
+        foreach (Transform child in ingredientContainer)
+        {
+            IngredientOrbitData data = GetOrCreateOrbitData(child);
+
+            // Each chicken orbits at its own speed and radius
+            float angle = (orbitAngle * data.speedMultiplier + data.phaseOffset) * Mathf.Deg2Rad;
+
+            // Elliptical orbit (slightly squashed Y for top-down pot look)
+            float x = Mathf.Cos(angle) * data.orbitRadius;
+            float y = Mathf.Sin(angle) * data.orbitRadius * 0.5f;
+
+            // Per-chicken bob with unique phase
+            float bob = Mathf.Sin(Time.time * bobSpeed + data.bobPhaseOffset) * bobAmount;
+
+            child.localPosition = new Vector3(x, y + bob, 0f);
+
+            // Tilt tangent to orbit direction
+            float tiltAngle = angle * Mathf.Rad2Deg;
+            child.rotation = Quaternion.Euler(0, 0, tiltAngle - 90f + tilt);
+        }
+
+        // Gentle vertical bob for the whole container too
+        Vector3 bobPosition = containerBasePosition;
+        bobPosition.y += Mathf.Sin(Time.time * bobSpeed * 0.5f) * bobAmount * 0.5f;
+        ingredientContainer.localPosition = bobPosition;
+    }
+
+    private IngredientOrbitData GetOrCreateOrbitData(Transform child)
+    {
+        if (!ingredientOrbits.TryGetValue(child, out IngredientOrbitData data))
+        {
+            data = new IngredientOrbitData
+            {
+                orbitRadius = Random.Range(minOrbitRadius, maxOrbitRadius),
+                speedMultiplier = Random.Range(minSpeedMultiplier, maxSpeedMultiplier),
+                phaseOffset = Random.Range(0f, 360f),
+                bobPhaseOffset = Random.Range(0f, Mathf.PI * 2f)
+            };
+            ingredientOrbits[child] = data;
+        }
+        return data;
+    }
+    
     private void ShowStirPrompt()
     {
         int requiredStirCount = (currentCookingPhase == PotCookingPhase.SinigangCooking)
@@ -304,6 +459,9 @@ public class Pot : CookingStation
         currentStirState = StirringState.Boiling;
         boilingTimer = 0f;
 
+        // Burst the swirl speed for a satisfying "whoosh"
+        currentSwirlSpeed = stirBurstSpeed;
+
         // Start/restart cooking effects
         if (cookingEffect != null)
         {
@@ -329,6 +487,12 @@ public class Pot : CookingStation
         {
             stirPrompt.UpdateProgress(progress);
         }
+
+        // Speed up swirl based on stir progress for responsive feedback
+        if (progress > 0 && ingredientContainer != null)
+        {
+            currentSwirlSpeed = Mathf.Lerp(boilingSwirlSpeed, stirringSwirlSpeed, progress);
+        }
     }
 
     #endregion
@@ -337,11 +501,9 @@ public class Pot : CookingStation
 
     protected override void CompleteCooking()
     {
-        // If sinigang mix was added, we're in sinigang mode
-        if (hasSinigangMix && currentCookingPhase == PotCookingPhase.Boiling)
+        // Boiling phase complete (handles both sinigang and non-sinigang paths)
+        if (currentCookingPhase == PotCookingPhase.Boiling)
         {
-            // Just finished first boiling phase with sinigang mix already added
-            // Need to continue with sinigang cooking
             CompleteBoilingPhase();
         }
         else if (currentCookingPhase == PotCookingPhase.SinigangCooking)
@@ -379,9 +541,15 @@ public class Pot : CookingStation
         }
         else
         {
-            Debug.Log("Boiling complete! Waiting for sinigang mix...");
+            Debug.Log("Boiling complete! Pot is now pourable - drag to PourZone.");
             currentCookingPhase = PotCookingPhase.BoilingComplete;
             isCooking = false;
+            isWindingDown = true;
+
+            // Make pot pourable
+            isPourable = true;
+            potOriginalPosition = transform.position;
+            potOriginalRotation = transform.rotation;
 
             // Hide UI temporarily
             if (cookingMeterUI != null)
@@ -392,12 +560,15 @@ public class Pot : CookingStation
             // Stop effects
             if (cookingEffect != null)
                 cookingEffect.Stop();
+
+            // Bounce to hint "drag me"
+            transform.DOPunchScale(Vector3.one * 0.1f, 0.5f, 4, 0.5f);
         }
     }
 
     private void CompleteSinigangCooking()
     {
-        Debug.Log("Sinigang cooking complete!");
+        Debug.Log("Sinigang cooking complete! Pot is now pourable - drag to PourZone.");
 
         // Tutorial event
         TutorialEvents.SinigangCompleted();
@@ -427,8 +598,23 @@ public class Pot : CookingStation
             }
         }
 
-        // Clear pot for next use
-        ClearPot();
+        // Make pot pourable instead of clearing immediately
+        isCooking = false;
+        isWindingDown = true;
+        isPourable = true;
+        potOriginalPosition = transform.position;
+        potOriginalRotation = transform.rotation;
+
+        HideStirPrompt();
+
+        if (cookingMeterUI != null)
+            cookingMeterUI.SetActive(false);
+
+        if (cookingEffect != null)
+            cookingEffect.Stop();
+
+        // Bounce to hint "drag me"
+        transform.DOPunchScale(Vector3.one * 0.1f, 0.5f, 4, 0.5f);
     }
 
     private void ClearPot()
@@ -439,6 +625,17 @@ public class Pot : CookingStation
         hasSinigangMix = false;
         currentCookingPhase = PotCookingPhase.Initial;
         isCooking = false;
+        isWindingDown = false;
+        currentSwirlSpeed = 0f;
+        orbitAngle = 0f;
+        ingredientOrbits.Clear();
+
+        // Reset ingredient container position
+        if (ingredientContainer != null)
+        {
+            ingredientContainer.localRotation = Quaternion.identity;
+            ingredientContainer.localPosition = containerBasePosition;
+        }
 
         // Reset visual to normal
         if (spriteRenderer != null)
@@ -594,6 +791,202 @@ public class Pot : CookingStation
             }
             Debug.Log($"💧 Added liquid to pot: {liquid.ingredientName} (no SeasoningManager attached)");
         }
+    }
+
+    #endregion
+
+    #region Pour Mechanic
+
+    public bool IsPourable() => isPourable;
+
+    private void HandlePourInput()
+    {
+        // Start drag - check if mouse clicks near the pot
+        if (Input.GetMouseButtonDown(0) && !isDraggingPot)
+        {
+            mainCamera = Camera.main;
+            Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            mouseWorldPos.z = transform.position.z;
+            float distance = Vector2.Distance(mouseWorldPos, transform.position);
+
+            if (distance <= pourPickupRadius)
+            {
+                isDraggingPot = true;
+                dragOffset = transform.position - mouseWorldPos;
+            }
+        }
+
+        // During drag - move pot and tilt
+        if (isDraggingPot && Input.GetMouseButton(0))
+        {
+            Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            mouseWorldPos.z = transform.position.z;
+            transform.position = mouseWorldPos + dragOffset;
+
+            // Tilt pot based on horizontal displacement from original position
+            Vector3 delta = transform.position - potOriginalPosition;
+            float tiltTarget = Mathf.Clamp(delta.x * -(pourTiltAngle / 3f), -pourTiltAngle, pourTiltAngle);
+            float currentZ = transform.eulerAngles.z;
+            if (currentZ > 180f) currentZ -= 360f;
+            float newZ = Mathf.LerpAngle(currentZ, tiltTarget, Time.unscaledDeltaTime * tiltSmoothing);
+            transform.rotation = Quaternion.Euler(0, 0, newZ);
+
+            // Highlight nearby PourZone
+            UpdatePourZoneHighlight();
+        }
+
+        // Release - check for PourZone or snap back
+        if (isDraggingPot && Input.GetMouseButtonUp(0))
+        {
+            isDraggingPot = false;
+
+            // Clear PourZone highlight
+            if (nearbyPourZone != null)
+            {
+                nearbyPourZone.SetHighlight(false);
+                nearbyPourZone = null;
+            }
+
+            // Check for PourZone nearby
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, pourDetectRadius);
+            foreach (Collider2D col in colliders)
+            {
+                PourZone pourZone = col.GetComponent<PourZone>();
+                if (pourZone != null)
+                {
+                    StartPour(pourZone);
+                    return;
+                }
+            }
+
+            // Not over a PourZone, snap back
+            SnapBackToOriginal();
+        }
+    }
+
+    private void UpdatePourZoneHighlight()
+    {
+        PourZone newNearby = null;
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, pourDetectRadius);
+        foreach (Collider2D col in colliders)
+        {
+            PourZone pz = col.GetComponent<PourZone>();
+            if (pz != null)
+            {
+                newNearby = pz;
+                break;
+            }
+        }
+
+        if (newNearby != nearbyPourZone)
+        {
+            nearbyPourZone?.SetHighlight(false);
+            nearbyPourZone = newNearby;
+            nearbyPourZone?.SetHighlight(true);
+        }
+    }
+
+    private void StartPour(PourZone pourZone)
+    {
+        isPouring = true;
+
+        GameObject destination = GameObject.FindWithTag(pourZone.DestinationTag);
+        if (destination == null)
+        {
+            Debug.LogWarning($"Pot: No destination found with tag '{pourZone.DestinationTag}'");
+            isPouring = false;
+            SnapBackToOriginal();
+            return;
+        }
+
+        Debug.Log($"Pot: Pouring {ingredientsInStation.Count} ingredients to {pourZone.DestinationTag}");
+
+        // Transfer each ingredient out of the pot
+        int count = 0;
+        foreach (GameObject ingredient in ingredientsInStation)
+        {
+            if (ingredient == null) continue;
+
+            // Unparent from pot
+            ingredient.transform.SetParent(null);
+
+            // Reset bowl state so chicken is draggable after landing
+            var chicken = ingredient.GetComponent<Chicken>();
+            if (chicken != null)
+            {
+                chicken.ExitBowl();
+
+                // Fire tutorial event
+                TutorialEvents.ChickenTransferred();
+            }
+
+            // Re-enable dragging
+            var drag = ingredient.GetComponent<ChickenDragBehavior>();
+            if (drag != null)
+                drag.enabled = true;
+
+            // Re-enable collider
+            var col = ingredient.GetComponent<Collider2D>();
+            if (col != null)
+                col.enabled = true;
+
+            // Animate to destination with stagger
+            ingredient.transform.DOMove(destination.transform.position, pourZone.PourDuration)
+                .SetDelay(count * 0.1f)
+                .SetEase(Ease.OutQuad);
+
+            // Reset rotation
+            ingredient.transform.DORotate(Vector3.zero, pourZone.PourDuration)
+                .SetDelay(count * 0.1f);
+
+            count++;
+        }
+
+        // After all ingredients transferred, return pot
+        float totalDelay = count * 0.1f + pourZone.PourDuration;
+        DOVirtual.DelayedCall(totalDelay, () => CompletePour());
+    }
+
+    private void CompletePour()
+    {
+        // Clear the pot state
+        ingredientsInStation.Clear();
+        isPourable = false;
+        isPouring = false;
+        isWindingDown = false;
+        hasSinigangMix = false;
+        currentCookingPhase = PotCookingPhase.Initial;
+        currentSwirlSpeed = 0f;
+        orbitAngle = 0f;
+        ingredientOrbits.Clear();
+
+        // Return pot to original position
+        transform.DOMove(potOriginalPosition, 0.4f).SetEase(Ease.OutQuad);
+        transform.DORotateQuaternion(potOriginalRotation, 0.4f).SetEase(Ease.OutQuad);
+
+        // Reset visual
+        if (spriteRenderer != null)
+            spriteRenderer.color = normalColor;
+
+        // Reset ingredient container
+        if (ingredientContainer != null)
+        {
+            ingredientContainer.localRotation = Quaternion.identity;
+            ingredientContainer.localPosition = containerBasePosition;
+        }
+
+        HideStirPrompt();
+
+        if (cookingMeterUI != null)
+            cookingMeterUI.SetActive(false);
+
+        Debug.Log("Pot poured and cleared - ready for next use");
+    }
+
+    private void SnapBackToOriginal()
+    {
+        transform.DOMove(potOriginalPosition, 0.3f).SetEase(Ease.OutQuad);
+        transform.DORotateQuaternion(potOriginalRotation, 0.3f).SetEase(Ease.OutQuad);
     }
 
     #endregion

@@ -92,11 +92,9 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
             // Check if we're clicking on an inventory slot - if so, don't start drawer drag
             if (IsClickingOnInventorySlot(eventData))
             {
-                Debug.Log("Clicking on inventory slot - not starting drawer drag");
                 return;
             }
             canDrag = true;
-            Debug.Log("Drag anywhere enabled - starting drag");
         }
         else if (handleRectTransform != null)
         {
@@ -106,7 +104,6 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
                 eventData.position, 
                 uiCamera
             );
-            Debug.Log($"Handle click check: {canDrag}");
         }
 
         if (canDrag)
@@ -123,8 +120,6 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
             {
                 HandleImage.color = dragColor;
             }
-            
-            Debug.Log($"Started dragging - Start pos: {dragStartPosition}, Drawer pos: {drawerStartPosition}");
         }
     }
 
@@ -163,8 +158,6 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
         newPosition = ClampDrawerPosition(newPosition);
         
         DrawerPanel.anchoredPosition = newPosition;
-        
-        Debug.Log($"Dragging - Delta: {dragDelta}, New pos: {newPosition}");
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -192,8 +185,6 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
         {
             CloseDrawer();
         }
-        
-        Debug.Log($"Stopped dragging - {(shouldOpen ? "Opening" : "Closing")}");
     }
 
     private Vector2 ClampDrawerPosition(Vector2 position)
@@ -230,7 +221,6 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
         {
             isOpen = true;
             DrawerPanel.DOAnchorPos(OpenPosition, AnimationDuration).SetEase(Ease.OutQuart);
-            Debug.Log("Opening drawer");
         }
     }
 
@@ -240,7 +230,6 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
         {
             isOpen = false;
             DrawerPanel.DOAnchorPos(ClosedPosition, AnimationDuration).SetEase(Ease.OutQuart);
-            Debug.Log("Closing drawer");
         }
     }
 
@@ -265,7 +254,7 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
             return true;
         }
 
-        Debug.LogWarning($"No space available for {quantity}x {ingredient.ingredientName}");
+        Debug.LogWarning($"No space available for {quantity}x {ingredient.ingredientName}", this);
         return false;
     }
 

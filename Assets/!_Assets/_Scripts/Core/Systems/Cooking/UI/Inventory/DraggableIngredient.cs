@@ -18,6 +18,7 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
     [SerializeField] private bool useFrameAnimation = true;
 
     private bool isDragging = false;
+    private bool manualDragMode = false;
     private Vector3 originalScale;
     private Camera mainCamera;
     private Image imageComponent;
@@ -293,12 +294,39 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
         if (hasBeenUsed) return;
 
         isDragging = true;
+        manualDragMode = true;
 
         // Bring to front in UI hierarchy
         transform.SetAsLastSibling();
 
         // Scale up slightly for visual feedback
         transform.localScale = originalScale * 1.1f;
+    }
+
+    private void Update()
+    {
+        if (!manualDragMode || !isDragging) return;
+
+        if (Input.GetMouseButton(0))
+        {
+            // Follow mouse position
+            Vector2 localPoint;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                parentCanvas.GetComponent<RectTransform>(),
+                Input.mousePosition,
+                parentCanvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : parentCanvas.worldCamera,
+                out localPoint
+            );
+            rectTransform.localPosition = localPoint;
+        }
+        else
+        {
+            // Mouse released — end drag
+            isDragging = false;
+            manualDragMode = false;
+            transform.localScale = originalScale;
+            TryUseIngredient();
+        }
     }
 
 #region Drag Interface 

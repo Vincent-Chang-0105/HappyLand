@@ -201,10 +201,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChickenCookingState
   washedVersionSprite: {fileID: 21300000, guid: d7472afa158b20941b5597c7b2d16114, type: 3}
-  boiledVersionSprite: {fileID: 21300000, guid: dfb4d8c5f2d4aa446bba272141ef003e, type: 3}
+  boiledVersionSprite: {fileID: 21300000, guid: d152b0f205312b8409393d1882855f6e, type: 3}
   friedVersionSprite: {fileID: 21300000, guid: ff0fc92a31af6b9478548fbaac3e0a62, type: 3}
   sinigangVersionSprite: {fileID: 21300000, guid: d7472afa158b20941b5597c7b2d16114, type: 3}
-  washDuration: 2
   autoTeleportToBowl: 1
   boilBowlTag: BoilBowl
   fryBowlTag: FryBowl
@@ -220,4 +219,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6465d9829e8934c4fb4547b7b45b3524, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChickenDragBehavior
-  dragSmoothness: 0.01

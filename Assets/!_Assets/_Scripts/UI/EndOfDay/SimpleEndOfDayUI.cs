@@ -79,6 +79,13 @@ public class SimpleEndOfDayUI : MonoBehaviour
             ingredientCost = MoneyManager.Instance.GetTodayExpenses();
         }
 
+        // Push actual water usage into ExpenseManager before reading costs
+        WaterCostTracker waterTracker = FindObjectOfType<WaterCostTracker>();
+        if (waterTracker != null && ExpenseManager.Instance != null)
+        {
+            ExpenseManager.Instance.SetWaterUsageCost(waterTracker.TotalWaterCostToday);
+        }
+
         if (ExpenseManager.Instance != null)
         {
             currentElectricity = ExpenseManager.Instance.ElectricityCost;
@@ -90,7 +97,16 @@ public class SimpleEndOfDayUI : MonoBehaviour
 
         // Setup checkboxes with listeners
         SetupCheckbox(electricityCheckbox, true);
-        SetupCheckbox(waterCheckbox, true);
+
+        // Water is already paid in real-time during gameplay — grey out checkbox
+        if (waterCheckbox != null)
+        {
+            waterCheckbox.onValueChanged.RemoveAllListeners();
+            waterCheckbox.isOn = false;
+            waterCheckbox.interactable = false;
+            waterCheckbox.onValueChanged.AddListener((_) => UpdateTotalsDisplay());
+        }
+
         SetupCheckbox(medicineCheckbox, currentMedicine > 0);
         SetupCheckbox(repairsCheckbox, currentRepairs > 0);
         SetupCheckbox(rentCheckbox, true);
@@ -105,7 +121,7 @@ public class SimpleEndOfDayUI : MonoBehaviour
                        $"EXPENSES:\n" +
                        $"  Ingredients: ₱{ingredientCost}\n" +
                        $"  Electricity: ₱{currentElectricity}\n" +
-                       $"  Water: ₱{currentWater}\n" +
+                       $"  Water: ₱{currentWater} (paid)\n" +
                        $"  Medicine: ₱{currentMedicine}\n" +
                        $"  Repairs: ₱{currentRepairs}\n" +
                        $"  Rent: ₱{currentRent}\n" +

@@ -29,6 +29,7 @@ public static class TutorialEvents
     // Screen navigation events
     public static event Action OnWashScreenEntered;
     public static event Action OnFaucetOpened;
+    public static event Action OnFaucetClosed;
     public static event Action OnCookScreenEntered;
     public static event Action OnServeScreenEntered;
     public static event Action OnBoilScreenEntered;
@@ -36,6 +37,9 @@ public static class TutorialEvents
 
     // Progress events
     public static event Action OnThreeChickensWashed;
+
+    // Transfer events
+    public static event Action OnChickenTransferred;
 
     // Invoke methods
     public static void ChickenPickedUp() => OnChickenPickedUp?.Invoke();
@@ -56,9 +60,11 @@ public static class TutorialEvents
     public static void OrderSlotClicked() => OnOrderSlotClicked?.Invoke();
     public static void WashScreenEntered() => OnWashScreenEntered?.Invoke();
     public static void FaucetOpened() => OnFaucetOpened?.Invoke();
+    public static void FaucetClosed() => OnFaucetClosed?.Invoke();
     public static void CookScreenEntered() => OnCookScreenEntered?.Invoke();
     public static void ServeScreenEntered() => OnServeScreenEntered?.Invoke();
     public static void BoilScreenEntered() => OnBoilScreenEntered?.Invoke();
     public static void CutScreenEntered() => OnCutScreenEntered?.Invoke();
     public static void ThreeChickensWashed() => OnThreeChickensWashed?.Invoke();
+    public static void ChickenTransferred() => OnChickenTransferred?.Invoke();
 }

@@ -342,6 +342,9 @@ public class ScreenTransitionManager : MonoBehaviour
     
     private void UpdateButtonStates()
     {
+        // If tutorial is controlling navigation, skip normal button updates
+        if (tutorialModeActive) return;
+
         // Enable/disable global navigation buttons based on available screens
         if (upButton != null)
             // Show upButton when in bottom row (y = 0) to go to serving screen (y = 1)
@@ -502,4 +505,55 @@ public class ScreenTransitionManager : MonoBehaviour
     {
         return currentScreen;
     }
+
+    #region Tutorial Integration
+
+    [Header("Tutorial Mode")]
+    [SerializeField] private bool tutorialModeActive = false;
+
+    public void EnableTutorialMode()
+    {
+        tutorialModeActive = true;
+        Debug.Log("ScreenTransitionManager: Tutorial mode enabled");
+    }
+
+    public void DisableTutorialMode()
+    {
+        tutorialModeActive = false;
+        UpdateButtonStates(); // Restore normal button states
+        Debug.Log("ScreenTransitionManager: Tutorial mode disabled");
+    }
+
+    public void SetAllowedNavigationButtons(System.Collections.Generic.List<DirectionButton> allowedDirections)
+    {
+        if (!tutorialModeActive) return;
+
+        // Disable all buttons first
+        if (upButton != null) upButton.interactable = false;
+        if (downButton != null) downButton.interactable = false;
+        if (leftButton != null) leftButton.interactable = false;
+        if (rightButton != null) rightButton.interactable = false;
+
+        // Enable only allowed buttons
+        foreach (DirectionButton direction in allowedDirections)
+        {
+            Button targetButton = GetDirectionalButton(direction);
+            if (targetButton != null && targetButton.gameObject.activeInHierarchy)
+            {
+                targetButton.interactable = true;
+            }
+        }
+
+        Debug.Log($"Tutorial: Allowed navigation buttons set to: {string.Join(", ", allowedDirections)}");
+    }
+
+    public void EnableAllNavigationButtons()
+    {
+        if (upButton != null && upButton.gameObject.activeInHierarchy) upButton.interactable = true;
+        if (downButton != null && downButton.gameObject.activeInHierarchy) downButton.interactable = true;
+        if (leftButton != null && leftButton.gameObject.activeInHierarchy) leftButton.interactable = true;
+        if (rightButton != null && rightButton.gameObject.activeInHierarchy) rightButton.interactable = true;
+    }
+
+    #endregion
 }

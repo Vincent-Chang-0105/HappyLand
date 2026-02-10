@@ -19,11 +19,10 @@ public class TicketManager : MonoBehaviour
     
     [Header("Animation")]
     [SerializeField] private float spawnAnimationDuration = 0.5f;
-    [SerializeField] private Vector3 spawnOffset = new Vector3(0, 100, 0); // Spawn from above
-    
+
     // Track active tickets
     private List<GameObject> activeTickets = new List<GameObject>();
-    
+
     public GameObject SpawnTicket(Order order)
     {
         // Find matching ticket sprite
@@ -36,38 +35,23 @@ public class TicketManager : MonoBehaviour
 
         // Create ticket object
         GameObject ticket = Instantiate(ticketPrefab, ticketContainer);
-        
+
         // Setup ticket visual
         Image ticketImage = ticket.GetComponent<Image>();
         if (ticketImage != null)
         {
             ticketImage.sprite = ticketSprite;
         }
-        
-        // Animate ticket spawn
-        AnimateTicketSpawn(ticket);
-        
-        // Track ticket
-        activeTickets.Add(ticket);
 
-        Debug.Log($"Spawned ticket for: {order.orderName}");
-        return ticket;
-    }
-    
-    void AnimateTicketSpawn(GameObject ticket)
-    {
-        // Start from above and animate down
-        Vector3 finalPosition = ticket.transform.localPosition;
-        ticket.transform.localPosition = finalPosition + spawnOffset;
-        
-        // Animate to final position
-        ticket.transform.DOLocalMove(finalPosition, spawnAnimationDuration)
-               .SetEase(Ease.OutBounce);
-               
-        // Scale animation
+        // Animate ticket spawn (scale only — HorizontalLayoutGroup handles positioning)
         ticket.transform.localScale = Vector3.zero;
         ticket.transform.DOScale(Vector3.one, spawnAnimationDuration)
                .SetEase(Ease.OutBack);
+
+        // Track ticket
+        activeTickets.Add(ticket);
+
+        return ticket;
     }
     
     Sprite GetTicketSprite(string orderName)
@@ -81,8 +65,8 @@ public class TicketManager : MonoBehaviour
         if (activeTickets.Contains(ticket))
         {
             activeTickets.Remove(ticket);
-            
-            // Animate removal
+
+            // Animate removal — layout group auto-repositions remaining tickets
             ticket.transform.DOScale(Vector3.zero, 0.3f)
                    .OnComplete(() => Destroy(ticket));
         }

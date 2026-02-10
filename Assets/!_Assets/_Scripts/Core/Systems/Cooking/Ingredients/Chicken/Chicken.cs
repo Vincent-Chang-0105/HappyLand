@@ -1,4 +1,5 @@
 using UnityEngine;
+using DG.Tweening;
 
 public class Chicken : MonoBehaviour, IWashable, IBoilable, IFryable, ISinigangable
 {
@@ -67,46 +68,24 @@ public class Chicken : MonoBehaviour, IWashable, IBoilable, IFryable, ISiniganga
     #region Event Handlers
     private void HandleWashComplete()
     {
-        if (cookingState.ShouldAutoTeleport())
+        // Chicken stays where it was washed - player must manually drag to transfer zone
+        // Just ensure it's draggable
+        if (dragBehavior != null)
         {
-            Bowl boilBowl = bowlInteraction.FindBowlByTag(cookingState.GetBoilBowlTag());
-            if (boilBowl != null && boilBowl.CanAcceptIngredient(gameObject))
-            {
-                bowlInteraction.EnterBowl(boilBowl);
-            }
+            dragBehavior.enabled = true;
         }
+        if (col2D != null)
+        {
+            col2D.enabled = true;
+        }
+
+        // No auto-teleport - player drags to transfer zone to send to Cook screen
     }
 
     private void HandleBoilComplete()
     {
-        if (cookingState.ShouldAutoTeleport())
-        {
-            // Check if we're in a pot with sinigang mix (don't teleport if so)
-            Pot pot = FindNearbyPot();
-            if (pot != null && pot.IsSinigangMode())
-            {
-                Debug.Log("Chicken boiled in sinigang mode - staying in pot");
-                return; // Stay in pot for sinigang cooking
-            }
-
-            // Normal flow: teleport to fry bowl
-            bowlInteraction.TeleportToBowlWithTag(cookingState.GetFryBowlTag());
-        }
-    }
-
-    private Pot FindNearbyPot()
-    {
-        // Check if there's a pot nearby (within reasonable range)
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 5f);
-        foreach (Collider2D col in colliders)
-        {
-            Pot pot = col.GetComponent<Pot>();
-            if (pot != null)
-            {
-                return pot;
-            }
-        }
-        return null;
+        // Chicken stays in pot - player pours the pot to transfer boiled chicken out
+        Debug.Log("Chicken boil complete - staying in pot until poured");
     }
 
     private void HandleFryComplete()
@@ -208,7 +187,7 @@ public class Chicken : MonoBehaviour, IWashable, IBoilable, IFryable, ISiniganga
 
     public bool CanBeBoiled()
     {
-        return cookingState.CanBeBoiled() && bowlInteraction.IsInBowl;
+        return cookingState.CanBeBoiled();
     }
 
     public bool IsBoiled()
@@ -235,7 +214,7 @@ public class Chicken : MonoBehaviour, IWashable, IBoilable, IFryable, ISiniganga
 
     public bool CanBeFried()
     {
-        return cookingState.CanBeFried() && bowlInteraction.IsInBowl;
+        return cookingState.CanBeFried();
     }
 
     public bool IsFried()
@@ -262,7 +241,7 @@ public class Chicken : MonoBehaviour, IWashable, IBoilable, IFryable, ISiniganga
 
     public bool CanBeSiniganged()
     {
-        return cookingState.CanBeSiniganged() && bowlInteraction.IsInBowl;
+        return cookingState.CanBeSiniganged();
     }
 
     public bool IsSiniganged()
@@ -287,5 +266,31 @@ public class Chicken : MonoBehaviour, IWashable, IBoilable, IFryable, ISiniganga
     {
         bowlInteraction.ExitBowl();
     }
+    #endregion
+
+    #region DevMode Methods
+
+    /// <summary>
+    /// [DevMode] Instantly sets chicken to fully cooked fried state
+    /// </summary>
+    public void SetAsFried()
+    {
+        if (cookingState != null)
+        {
+            cookingState.DevSetAsFried();
+        }
+    }
+
+    /// <summary>
+    /// [DevMode] Instantly sets chicken to fully cooked sinigang state
+    /// </summary>
+    public void SetAsSinigang()
+    {
+        if (cookingState != null)
+        {
+            cookingState.DevSetAsSinigang();
+        }
+    }
+
     #endregion
 }

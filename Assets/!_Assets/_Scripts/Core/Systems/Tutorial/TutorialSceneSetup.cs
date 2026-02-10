@@ -19,9 +19,32 @@ public class TutorialSceneSetup : MonoBehaviour
             Debug.Log("TutorialSceneSetup: Stopped customer auto-generation for tutorial.");
         }
 
+        // Subscribe to tutorial completion to auto-load Level1
+        if (tutorialManager != null)
+        {
+            tutorialManager.OnTutorialCompleted += EndTutorialAndLoadGame;
+        }
+        else if (TutorialManager.HasInstance)
+        {
+            TutorialManager.Instance.OnTutorialCompleted += EndTutorialAndLoadGame;
+        }
+
         if (autoStartTutorial)
         {
             Invoke(nameof(StartTutorial), startDelay);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // Unsubscribe to prevent memory leaks
+        if (tutorialManager != null)
+        {
+            tutorialManager.OnTutorialCompleted -= EndTutorialAndLoadGame;
+        }
+        else if (TutorialManager.HasInstance)
+        {
+            TutorialManager.Instance.OnTutorialCompleted -= EndTutorialAndLoadGame;
         }
     }
 

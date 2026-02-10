@@ -18,6 +18,10 @@ public class Customer : MonoBehaviour
     [SerializeField] private string customerName;
     [SerializeField] private Order currentOrder;
     [SerializeField] private CustomerState currentState = CustomerState.Moving;
+
+    [Header("Facial Expressions")]
+    [SerializeField] private FacialExpressionSet expressionSet;
+    [SerializeField] private CustomerEmotion currentEmotion = CustomerEmotion.Default;
     
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 2f;
@@ -26,6 +30,9 @@ public class Customer : MonoBehaviour
     [Header("Patience")]
     [SerializeField] private float maxPatienceTime = 120f; // 2 minutes
     [SerializeField] private float currentPatience;
+
+    [Header("Effects")]
+    [SerializeField] private GameObject MoneyEffect;
     
     // Movement points
     private Transform spawnPoint;
@@ -59,16 +66,20 @@ public class Customer : MonoBehaviour
     }
     
     #region Setup
-    
-    public void SetupCustomer(string name, Order order, CustomerGenerator gen)
+
+    public void SetupCustomer(string name, Order order, CustomerGenerator gen, FacialExpressionSet expressions)
     {
         customerName = name;
         currentOrder = order;
         generator = gen;
+        expressionSet = expressions;
         currentPatience = maxPatienceTime;
-        
+
         // Set name on GameObject for easy identification
         gameObject.name = customerName;
+
+        // Apply default facial expression
+        SetEmotion(CustomerEmotion.Default);
     }
 
     public void SetMovementPoints(Transform spawn, Transform ordering, Transform exit)
@@ -247,20 +258,21 @@ public class Customer : MonoBehaviour
     
     private IEnumerator ReactToOrder(bool wasCorrect)
     {
-        // Play animation/show reaction
+        // Play animation/show reaction and change facial expression
         if (wasCorrect)
         {
             Debug.Log($"{customerName} is happy with their order!");
-            // Play happy animation
+            SetEmotion(CustomerEmotion.Happy);
+            MoneyEffect.SetActive(true);
         }
         else
         {
             Debug.Log($"{customerName} is disappointed with their order!");
-            // Play disappointed animation
+            SetEmotion(CustomerEmotion.Angry);
         }
-        
+
         yield return new WaitForSeconds(1f);
-        
+
         // Leave restaurant
         StartLeaving();
     }
@@ -290,11 +302,12 @@ public class Customer : MonoBehaviour
     private void BecomeAngry()
     {
         currentState = CustomerState.Angry;
+        SetEmotion(CustomerEmotion.Angry);
         Debug.Log($"{customerName} got angry and left!");
-        
+
         // Notify generator of failed order
         generator.OnCustomerOrderReceived(this, false);
-        
+
         StartLeaving();
     }
     
@@ -312,13 +325,56 @@ public class Customer : MonoBehaviour
     private IEnumerator LeaveRestaurant()
     {
         yield return StartCoroutine(MoveToPoint(exitPoint));
-        
+
         // Notify generator
         //generator.OnCustomerLeaving(this);
-        
+
         // Destroy customer
         Destroy(gameObject);
     }
-    
+
+    #endregion
+
+    #region Facial Expressions
+
+    /// <summary>
+    /// Changes the customer's facial expression
+    /// </summary>
+    public void SetEmotion(CustomerEmotion emotion)
+    {
+        if (expressionSet == null)
+        {
+            Debug.LogWarning($"Customer {customerName} has no expression set assigned!");
+            return;
+        }
+
+        if (spriteRenderer == null)
+        {
+            Debug.LogWarning($"Customer {customerName} has no SpriteRenderer!");
+            return;
+        }
+
+        currentEmotion = emotion;
+        Sprite newSprite = expressionSet.GetExpression(emotion);
+
+        if (newSprite != null)
+        {
+            spriteRenderer.sprite = newSprite;
+            Debug.Log($"Customer {customerName} changed expression to: {emotion}");
+        }
+        else
+        {
+            Debug.LogWarning($"Expression {emotion} not found in expression set for customer {customerName}");
+        }
+    }
+
+    /// <summary>
+    /// Gets the current facial expression
+    /// </summary>
+    public CustomerEmotion GetCurrentEmotion()
+    {
+        return currentEmotion;
+    }
+
     #endregion
 }

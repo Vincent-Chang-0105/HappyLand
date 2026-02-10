@@ -7,6 +7,8 @@ TagManager:
   - FryBowl
   - BoilBowl
   - OrderSlot
+  - CookStaging
+  - CutBowl
   layers:
   - Default
   - TransparentFX

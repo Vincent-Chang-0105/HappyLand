@@ -163,6 +163,16 @@ public class DayManager : MonoBehaviour
         return string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
+    /// <summary>
+    /// Adds time to the current day timer. Useful for dev mode.
+    /// </summary>
+    /// <param name="seconds">Number of seconds to add</param>
+    public void AddTime(int seconds)
+    {
+        currentTimeRemaining += seconds;
+        Debug.Log($"[DayManager] Added {seconds} seconds. New time: {GetFormattedTimeRemaining()}");
+    }
+
     // Debug methods
     #if UNITY_EDITOR
     [ContextMenu("End Day Now (Debug)")]

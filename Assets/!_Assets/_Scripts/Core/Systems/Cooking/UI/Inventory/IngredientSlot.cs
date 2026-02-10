@@ -185,14 +185,7 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler
             if (dragComponent != null)
             {
                 dragComponent.Initialize(currentIngredient, 1);
-                // Create a fake pointer event and trigger drag immediately
-                PointerEventData eventData = new PointerEventData(EventSystem.current)
-                {
-                    position = Input.mousePosition,
-                    button = PointerEventData.InputButton.Left
-                };
-                
-                ExecuteEvents.Execute(dragObject, eventData, ExecuteEvents.pointerDownHandler);
+                dragComponent.BeginDragImmediate();
             }
 
             // Remove one from inventory

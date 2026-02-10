@@ -6,7 +6,8 @@ using System.Linq;
 public class CustomerGenerator : MonoBehaviour
 {
     [Header("Customer Management")]
-    [SerializeField] private List<GameObject> customerPrefabs = new List<GameObject>();
+    [SerializeField] private GameObject customerPrefab; // Single customer prefab
+    [SerializeField] private List<FacialExpressionSet> npcExpressionSets = new List<FacialExpressionSet>(); // List of NPC expression sets
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private List<Transform> orderingPoints = new List<Transform>(3);
     [SerializeField] private Transform exitPoint;
@@ -137,12 +138,12 @@ public class CustomerGenerator : MonoBehaviour
     
     private void InitializeCustomerQueue()
     {
-        // Initialize queue with numbers 1 to n (assuming you have NPC_1 to NPC_n)
+        // Initialize queue with numbers 1 to n (based on number of NPC expression sets)
         customerNameQueue.Clear();
-        
-        // If you have specific number of customer prefabs, use that count
-        int customerCount = customerPrefabs.Count > 0 ? customerPrefabs.Count : 10; // fallback to 10
-        
+
+        // Use number of expression sets as the customer count
+        int customerCount = npcExpressionSets.Count > 0 ? npcExpressionSets.Count : 10; // fallback to 10
+
         for (int i = 1; i <= customerCount; i++)
         {
             customerNameQueue.Enqueue(i);
@@ -192,9 +193,15 @@ public class CustomerGenerator : MonoBehaviour
     
     public void SpawnCustomer()
     {
-        if (customerPrefabs.Count == 0)
+        if (customerPrefab == null)
         {
-            Debug.LogError("No customer prefabs assigned!");
+            Debug.LogError("No customer prefab assigned!");
+            return;
+        }
+
+        if (npcExpressionSets.Count == 0)
+        {
+            Debug.LogError("No NPC expression sets assigned!");
             return;
         }
 
@@ -204,39 +211,41 @@ public class CustomerGenerator : MonoBehaviour
             Debug.LogWarning("No available ordering points for new customer.");
             return;
         }
-        
-        // Get random customer prefab
-        GameObject customerPrefab = customerPrefabs[Random.Range(0, customerPrefabs.Count)];
+
+        // Select a random facial expression set
+        FacialExpressionSet expressionSet = npcExpressionSets[Random.Range(0, npcExpressionSets.Count)];
+
+        // Instantiate single customer prefab
         GameObject customerObj = Instantiate(customerPrefab, spawnPoint.position, spawnPoint.rotation);
-        
+
         // Setup customer
         Customer customer = customerObj.GetComponent<Customer>();
         if (customer == null)
         {
             customer = customerObj.AddComponent<Customer>();
         }
-        
+
         // Assign name and setup
         int customerNumber = GetNextCustomerNumber();
-        customer.SetupCustomer($"NPC_{customerNumber}", GenerateRandomOrder(), this);
+        customer.SetupCustomer($"NPC_{customerNumber}", GenerateRandomOrder(), this, expressionSet);
 
         // Set movement points
         customer.SetMovementPoints(spawnPoint, availablePoint, exitPoint);
-        
+
         // Mark ordering point as occupied
         occupiedOrderingPoints[availablePoint] = customer;
-        
+
         // Track customer
         activeCustomers.Add(customer);
         totalCustomersServed++;
-        
+
         // Notify listeners
         OnCustomerSpawned?.Invoke(customer);
 
         // Tutorial event
         TutorialEvents.CustomerArrived();
 
-        Debug.Log($"Spawned {customerNumber} at ordering point: {availablePoint.name}");
+        Debug.Log($"Spawned {customerNumber} with expression set from NPC_{expressionSet.npcNumber} at ordering point: {availablePoint.name}");
     }
     
     #endregion
@@ -352,9 +361,15 @@ public class CustomerGenerator : MonoBehaviour
     /// <param name="orderName">The name of the order to assign (e.g., "Fried Chicken")</param>
     public void SpawnCustomerWithSpecificOrder(string orderName)
     {
-        if (customerPrefabs.Count == 0)
+        if (customerPrefab == null)
         {
-            Debug.LogError("No customer prefabs assigned!");
+            Debug.LogError("No customer prefab assigned!");
+            return;
+        }
+
+        if (npcExpressionSets.Count == 0)
+        {
+            Debug.LogError("No NPC expression sets assigned!");
             return;
         }
 
@@ -383,8 +398,10 @@ public class CustomerGenerator : MonoBehaviour
             return;
         }
 
-        // Get random customer prefab
-        GameObject customerPrefab = customerPrefabs[Random.Range(0, customerPrefabs.Count)];
+        // Select a random facial expression set
+        FacialExpressionSet expressionSet = npcExpressionSets[Random.Range(0, npcExpressionSets.Count)];
+
+        // Instantiate single customer prefab
         GameObject customerObj = Instantiate(customerPrefab, spawnPoint.position, spawnPoint.rotation);
 
         // Setup customer
@@ -400,7 +417,7 @@ public class CustomerGenerator : MonoBehaviour
 
         // Assign name and setup with specific order
         int customerNumber = GetNextCustomerNumber();
-        customer.SetupCustomer($"NPC_{customerNumber}", customerOrder, this);
+        customer.SetupCustomer($"NPC_{customerNumber}", customerOrder, this, expressionSet);
 
         // Set movement points
         customer.SetMovementPoints(spawnPoint, availablePoint, exitPoint);
@@ -418,7 +435,7 @@ public class CustomerGenerator : MonoBehaviour
         // Tutorial event
         TutorialEvents.CustomerArrived();
 
-        Debug.Log($"[Tutorial] Spawned customer with specific order: {targetOrder.orderName}");
+        Debug.Log($"[Tutorial] Spawned customer with specific order: {targetOrder.orderName} and expression set from NPC_{expressionSet.npcNumber}");
     }
 
     #endregion

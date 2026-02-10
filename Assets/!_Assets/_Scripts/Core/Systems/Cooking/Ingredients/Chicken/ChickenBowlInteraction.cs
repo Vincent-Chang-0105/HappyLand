@@ -81,6 +81,21 @@ public class ChickenBowlInteraction : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Resets bowl state without calling Bowl.RemoveIngredient (avoids double-remove).
+    /// Use when the bowl has already removed the ingredient externally (e.g., CookingStation transfer).
+    /// </summary>
+    public void ForceExitBowl()
+    {
+        currentBowl = null;
+        isInBowl = false;
+
+        if (col2D != null)
+        {
+            col2D.enabled = true;
+        }
+    }
+
     public void TeleportToNearestBowl()
     {
         // Don't teleport if already in bowl

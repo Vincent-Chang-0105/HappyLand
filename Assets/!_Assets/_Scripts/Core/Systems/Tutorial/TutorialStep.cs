@@ -4,7 +4,7 @@ using UnityEngine;
 public class TutorialStep
 {
     [Header("Step Info")]
-    public int stepId;
+    [HideInInspector] public int stepId; // Auto-assigned from array index via OnValidate
     public string stepName;
     [TextArea(3, 5)]
     public string instructionText;
@@ -22,10 +22,6 @@ public class TutorialStep
     [Header("Timing")]
     public float showDelay = 0f; // Delay before showing this step's UI (in seconds)
 
-    [Header("Branching")]
-    public TutorialBranch branch = TutorialBranch.Common;
-    public int nextStepId = -1; // -1 = auto-increment
-
     [Header("Arrow Settings")]
     public bool showArrow = true;
     public Vector3 arrowOffset = new Vector3(0, 1f, 0);
@@ -33,6 +29,12 @@ public class TutorialStep
     [Header("Action On Complete")]
     public TutorialActionType actionOnComplete = TutorialActionType.None;
     public string actionParameter; // e.g., "Fried Chicken" for SpawnCustomerWithOrder
+
+    [Header("Navigation Control (Optional)")]
+    [Tooltip("If true, tutorial will control which navigation buttons are enabled")]
+    public bool controlNavigation = false;
+    [Tooltip("Only these directions will be enabled (if controlNavigation is true)")]
+    public System.Collections.Generic.List<DirectionButton> allowedDirections = new System.Collections.Generic.List<DirectionButton>();
 
     [Header("State")]
     [HideInInspector] public bool isCompleted = false;
@@ -82,14 +84,9 @@ public enum TutorialCompletionType
     ServeScreenEntered,
     BoilScreenEntered,
     CutScreenEntered,
-    ThreeChickensWashed
-}
-
-public enum TutorialBranch
-{
-    Common,
-    FriedChicken,
-    Sinigang
+    ThreeChickensWashed,
+    FaucetClosed,
+    ChickenTransferred
 }
 
 public enum TutorialActionType

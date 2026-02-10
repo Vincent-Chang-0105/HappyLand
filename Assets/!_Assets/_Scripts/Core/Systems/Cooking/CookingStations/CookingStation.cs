@@ -39,6 +39,7 @@ public abstract class CookingStation : MonoBehaviour
     protected bool isHighlighted = false;
     protected float cookTimer = 0f;
     protected List<GameObject> ingredientsInStation = new List<GameObject>();
+    private Vector3 originalScale;
 
     #region Unity Lifecycle
 
@@ -52,6 +53,9 @@ public abstract class CookingStation : MonoBehaviour
             container.transform.localPosition = Vector3.zero;
             ingredientContainer = container.transform;
         }
+
+        // Store original scale for highlight animation
+        originalScale = transform.localScale;
 
         // Setup UI
         SetupCookingMeterUI();
@@ -182,6 +186,13 @@ public abstract class CookingStation : MonoBehaviour
         {
             // Remove ingredient from bowl
             bowl.RemoveIngredient(ingredient);
+
+            // Reset the ingredient's bowl interaction state (RemoveIngredient doesn't do this)
+            ChickenBowlInteraction bowlInteraction = ingredient.GetComponent<ChickenBowlInteraction>();
+            if (bowlInteraction != null)
+            {
+                bowlInteraction.ForceExitBowl();
+            }
 
             // Add to station's ingredient list
             ingredientsInStation.Add(ingredient);
@@ -450,10 +461,9 @@ public abstract class CookingStation : MonoBehaviour
 
         isHighlighted = highlight;
 
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.color = highlight ? canAcceptColor : normalColor;
-        }
+        transform.DOKill(true);
+        transform.DOScale(highlight ? originalScale * 1.1f : originalScale, 0.2f)
+            .SetEase(highlight ? Ease.OutBack : Ease.OutQuad);
     }
 
     #endregion
