@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4222460304305342809
+--- !u!1 &8085541701590954196
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,40 +8,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4208880989725417781}
-  - component: {fileID: 1556679479145556054}
-  - component: {fileID: 7682805659952769189}
+  - component: {fileID: 4241743830557518489}
+  - component: {fileID: 1483392850864994982}
+  - component: {fileID: 1567200488394924422}
   m_Layer: 0
-  m_Name: WaterSplash
+  m_Name: FryingOil
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4208880989725417781
+--- !u!4 &4241743830557518489
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4222460304305342809}
+  m_GameObject: {fileID: 8085541701590954196}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: 0.7071068, z: -0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 452.0401, y: 452.0401, z: 452.0402}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 125.08779, y: 181.01155, z: 0}
+  m_LocalScale: {x: 300, y: 300, z: 300}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: -90}
---- !u!2083052967 &1556679479145556054
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!2083052967 &1483392850864994982
 VisualEffect:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4222460304305342809}
+  m_GameObject: {fileID: 8085541701590954196}
   m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: 101d13b937d9c7e488405946bd3702ed, type: 3}
+  m_Asset: {fileID: 8926484042661614526, guid: a2e5c07940d1be54ab93694896ca1fda, type: 3}
   m_InitialEventName: OnPlay
   m_InitialEventNameOverriden: 0
   m_StartSeed: 0
@@ -71,14 +71,14 @@ VisualEffect:
       m_Array: []
     m_Bool:
       m_Array: []
---- !u!73398921 &7682805659952769189
+--- !u!73398921 &1567200488394924422
 VFXRenderer:
   serializedVersion: 1
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4222460304305342809}
+  m_GameObject: {fileID: 8085541701590954196}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 0
