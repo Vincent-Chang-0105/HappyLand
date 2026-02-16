@@ -1,15 +1,15 @@
 fileFormatVersion: 2
-guid: 9a2176cbff1ce3d4285f5932e409fbbc
+guid: 45275f89288e2c44badd59911721bacc
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4815476061570213978
-    second: star_0
+      213: 7773189179824172377
+    second: smiling_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 0
+    enableMipMap: 1
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -55,9 +55,9 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 1
+  alphaIsTransparency: 0
   spriteTessellationDetail: -1
-  textureType: 8
+  textureType: 0
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: star_0
+      name: smiling_0
       rect:
         serializedVersion: 2
-        x: 27
-        y: 41
-        width: 202
-        height: 193
+        x: 0
+        y: 0
+        width: 2048
+        height: 2048
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a582a4ae6f104d240800000000000000
-      internalID: 4815476061570213978
+      spriteID: 95d645bff5aefdb60800000000000000
+      internalID: 7773189179824172377
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      star_0: 4815476061570213978
+      smiling_0: 7773189179824172377
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
