@@ -82,7 +82,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 1
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 4
     stepName: Start Cooking
     instructionText: Lets start cooking! click on the washing button to start!
@@ -99,7 +99,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 1
     allowedDirections: 01000000
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 5
     stepName: Intro Cleaning
     instructionText: Now we need to clean the chicken!
@@ -116,7 +116,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 6
     stepName: Opening the faucet
     instructionText: Start by opening the faucet!
@@ -133,7 +133,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 7
     stepName: Drag the Chicken
     instructionText: Drag the chicken into the sink and scrub the chicken
@@ -150,7 +150,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 8
     stepName: drag chicken to the pan
     instructionText: Drag the chicken on the right pan to transfer it to the boil
@@ -168,7 +168,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 9
     stepName: Give the order
     instructionText: Now wash 2 more chicken since u need 3 for 1 dish!
@@ -185,7 +185,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 10
     stepName: Closing Faucet
     instructionText: After washing, you must close the faucet as this will drain
@@ -203,7 +203,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 11
     stepName: Go to Boil
     instructionText: Time to Boil, Click on the bottom right button to go to boil
@@ -221,7 +221,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 1
     allowedDirections: 03000000
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 12
     stepName: Drag Bowl
     instructionText: Drag Bowl to Pot
@@ -238,7 +238,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 13
     stepName: Stir Pot
     instructionText: Stir the pot, drag mouse in a circle fast motion!
@@ -255,7 +255,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 14
     stepName: Give the order
     instructionText: Drag Pot into fry pan to transfer the chicken to the Fry Screen
@@ -272,7 +272,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 15
     stepName: Frying time
     instructionText: Time to Fry
@@ -289,7 +289,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 16
     stepName: Cut screen
     instructionText: this is tue cutting screen. this where u cut things. go right
@@ -307,7 +307,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 17
     stepName: Add Oil
     instructionText: Open the drawer by dragging it down
@@ -324,7 +324,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 18
     stepName: Add Oil
     instructionText: Click the oil and drag it to the pan
@@ -341,7 +341,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 19
     stepName: Add Oil
     instructionText: Then add the chicken in the pan
@@ -358,8 +358,25 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 20
+    stepName: Give the order
+    instructionText: Add Salt to start tossing!
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 28
+    autoCompleteDelay: 0
+    showDelay: 0
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    actionOnComplete: 2
+    actionParameter: 
+    controlNavigation: 0
+    allowedDirections: 
+    isCompleted: 1
+  - stepId: 21
     stepName: Toss Chicken
     instructionText: Time to toss! just flick up ur mouse to toss the pan!
     showUI: 1
@@ -375,8 +392,8 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
-  - stepId: 21
+    isCompleted: 1
+  - stepId: 22
     stepName: Go back to Serve screen
     instructionText: Go back to serve screen to Serve the order!
     showUI: 1
@@ -392,8 +409,8 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
-  - stepId: 22
+    isCompleted: 1
+  - stepId: 23
     stepName: Give the order
     instructionText: Give the order to the customer by dragging it to them
     showUI: 1
@@ -409,8 +426,8 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
-  - stepId: 23
+    isCompleted: 1
+  - stepId: 24
     stepName: Give the order
     instructionText: Congrats you have finished the tutorial!
     showUI: 1
@@ -426,8 +443,8 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
-  - stepId: 24
+    isCompleted: 1
+  - stepId: 25
     stepName: Give the order
     instructionText: Remember, In day you only have 5 minutes
     showUI: 1
@@ -443,8 +460,8 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
-  - stepId: 25
+    isCompleted: 1
+  - stepId: 26
     stepName: Give the order
     instructionText: So try to make as much money as you can! Goodluck!
     showUI: 1
@@ -460,5 +477,5 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   autoStartFirstStep: 1

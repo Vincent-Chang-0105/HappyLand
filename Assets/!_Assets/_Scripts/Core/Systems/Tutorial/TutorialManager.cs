@@ -481,6 +481,7 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
         TutorialEvents.OnStirCompleted += HandleStirCompleted;
         TutorialEvents.OnAllStirsCompleted += HandleAllStirsCompleted;
         TutorialEvents.OnOilAdded += HandleOilAdded;
+        TutorialEvents.OnSaltAdded += HandleSaltAdded;
         TutorialEvents.OnTossCompleted += HandleTossCompleted;
         TutorialEvents.OnAllTossesCompleted += HandleAllTossesCompleted;
         TutorialEvents.OnSinigangMixAdded += HandleSinigangMixAdded;
@@ -510,6 +511,7 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
         TutorialEvents.OnStirCompleted -= HandleStirCompleted;
         TutorialEvents.OnAllStirsCompleted -= HandleAllStirsCompleted;
         TutorialEvents.OnOilAdded -= HandleOilAdded;
+        TutorialEvents.OnSaltAdded -= HandleSaltAdded;
         TutorialEvents.OnTossCompleted -= HandleTossCompleted;
         TutorialEvents.OnAllTossesCompleted -= HandleAllTossesCompleted;
         TutorialEvents.OnSinigangMixAdded -= HandleSinigangMixAdded;
@@ -575,6 +577,7 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
     private void HandleStirCompleted() => CheckAndCompleteStep(TutorialCompletionType.StirComplete);
     private void HandleAllStirsCompleted() => CheckAndCompleteStep(TutorialCompletionType.AllStirsComplete);
     private void HandleOilAdded() => CheckAndCompleteStep(TutorialCompletionType.OilAdded);
+    private void HandleSaltAdded() => CheckAndCompleteStep(TutorialCompletionType.SaltAdded);
     private void HandleTossCompleted() => CheckAndCompleteStep(TutorialCompletionType.TossComplete);
     private void HandleAllTossesCompleted() => CheckAndCompleteStep(TutorialCompletionType.AllTossesComplete);
     private void HandleSinigangMixAdded() => CheckAndCompleteStep(TutorialCompletionType.SinigangMixAdded);

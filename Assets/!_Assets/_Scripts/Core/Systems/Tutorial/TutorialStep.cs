@@ -54,7 +54,8 @@ public enum TutorialTargetType
     PlatedDish,
     Customer,
     ServingArea,
-    OrderSlot
+    OrderSlot,
+    SaltShaker
 }
 
 public enum TutorialCompletionType
@@ -86,7 +87,8 @@ public enum TutorialCompletionType
     CutScreenEntered,
     ThreeChickensWashed,
     FaucetClosed,
-    ChickenTransferred
+    ChickenTransferred,
+    SaltAdded
 }
 
 public enum TutorialActionType

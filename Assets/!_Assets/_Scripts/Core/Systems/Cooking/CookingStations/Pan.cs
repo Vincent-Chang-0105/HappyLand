@@ -719,6 +719,12 @@ public class Pan : CookingStation
         hasSeasoning = true;
         Debug.Log($"🧂 Added {seasoning.ingredientName} to pan!");
 
+        // Tutorial event for salt
+        if (seasoning.ingredientName.ToLower().Contains("salt"))
+        {
+            TutorialEvents.SaltAdded();
+        }
+
         // Try to use SeasoningManager if available
         SeasoningManager seasoningMgr = GetComponent<SeasoningManager>();
         if (seasoningMgr != null)

@@ -16,6 +16,7 @@ public static class TutorialEvents
 
     // Ingredient events
     public static event Action OnOilAdded;
+    public static event Action OnSaltAdded;
     public static event Action OnSinigangMixAdded;
     public static event Action OnSinigangCompleted;
 
@@ -51,6 +52,7 @@ public static class TutorialEvents
     public static void TossCompleted() => OnTossCompleted?.Invoke();
     public static void AllTossesCompleted() => OnAllTossesCompleted?.Invoke();
     public static void OilAdded() => OnOilAdded?.Invoke();
+    public static void SaltAdded() => OnSaltAdded?.Invoke();
     public static void SinigangMixAdded() => OnSinigangMixAdded?.Invoke();
     public static void SinigangCompleted() => OnSinigangCompleted?.Invoke();
     public static void DishPlated() => OnDishPlated?.Invoke();
