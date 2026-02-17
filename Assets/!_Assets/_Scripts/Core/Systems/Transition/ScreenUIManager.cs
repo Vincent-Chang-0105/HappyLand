@@ -40,7 +40,7 @@ public class ScreenUIManager : MonoBehaviour
         // Find ScreenTransitionManager if not assigned
         if (screenTransitionManager == null)
         {
-            screenTransitionManager = FindObjectOfType<ScreenTransitionManager>();
+            screenTransitionManager = FindFirstObjectByType<ScreenTransitionManager>();
         }
         
         // Initial UI setup
@@ -68,7 +68,7 @@ public class ScreenUIManager : MonoBehaviour
     
     private void UpdateUIForScreen(string screenName, bool instant = false)
     {
-        Debug.Log($"Updating UI for screen: {screenName}");
+        //Debug.Log($"Updating UI for screen: {screenName}");
         
         foreach (ScreenUIElement uiElement in screenUIElements)
         {
@@ -97,7 +97,7 @@ public class ScreenUIManager : MonoBehaviour
         if (instant || !uiElement.useAnimation)
         {
             uiElement.uiElement.SetActive(true);
-            Debug.Log($"Instantly showed UI element: {uiElement.elementName}");
+            //Debug.Log($"Instantly showed UI element: {uiElement.elementName}");
         }
         else
         {
@@ -110,7 +110,7 @@ public class ScreenUIManager : MonoBehaviour
         if (instant || !uiElement.useAnimation)
         {
             uiElement.uiElement.SetActive(false);
-            Debug.Log($"Instantly hid UI element: {uiElement.elementName}");
+            //Debug.Log($"Instantly hid UI element: {uiElement.elementName}");
         }
         else
         {
@@ -135,7 +135,7 @@ public class ScreenUIManager : MonoBehaviour
                 break;
         }
         
-        Debug.Log($"Animated show UI element: {uiElement.elementName}");
+        //Debug.Log($"Animated show UI element: {uiElement.elementName}");
     }
     
     private IEnumerator AnimateHideUI(ScreenUIElement uiElement)
@@ -154,7 +154,7 @@ public class ScreenUIManager : MonoBehaviour
         }
         
         uiElement.uiElement.SetActive(false);
-        Debug.Log($"Animated hide UI element: {uiElement.elementName}");
+        //Debug.Log($"Animated hide UI element: {uiElement.elementName}");
     }
     
     #region Animation Methods

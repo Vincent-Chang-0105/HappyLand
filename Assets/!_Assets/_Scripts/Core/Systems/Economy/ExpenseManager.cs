@@ -70,13 +70,13 @@ public class ExpenseManager : MonoBehaviour
 
         OnExpensesGenerated?.Invoke(TotalDailyExpenses);
 
-        Debug.Log($"Daily Expenses Generated: " +
-                  $"Electricity: {currentElectricityCost}, " +
-                  $"Water: {currentWaterCost}, " +
-                  $"Medicine: {currentMedicineCost}, " +
-                  $"Repairs: {currentHouseRepairsCost}, " +
-                  $"Rent: {currentRentCost} " +
-                  $"(Total: {TotalDailyExpenses} PHP)");
+        // Debug.Log($"Daily Expenses Generated: " +
+        //           $"Electricity: {currentElectricityCost}, " +
+        //           $"Water: {currentWaterCost}, " +
+        //           $"Medicine: {currentMedicineCost}, " +
+        //           $"Repairs: {currentHouseRepairsCost}, " +
+        //           $"Rent: {currentRentCost} " +
+        //           $"(Total: {TotalDailyExpenses} PHP)");
     }
 
     /// <summary>
@@ -105,7 +105,6 @@ public class ExpenseManager : MonoBehaviour
             {
                 totalPaid += amount;
                 unpaidElectricity = 0; // Clear accumulated debt
-                Debug.Log($"Paid Electricity: {amount} PHP");
             }
             else
             {
@@ -116,7 +115,6 @@ public class ExpenseManager : MonoBehaviour
         else
         {
             unpaidElectricity += currentElectricityCost;
-            Debug.Log($"Electricity unpaid. Accumulated: {unpaidElectricity} PHP");
         }
 
         // Pay water or add to unpaid
@@ -127,7 +125,6 @@ public class ExpenseManager : MonoBehaviour
             {
                 totalPaid += amount;
                 unpaidWater = 0;
-                Debug.Log($"Paid Water: {amount} PHP");
             }
             else
             {
@@ -138,7 +135,6 @@ public class ExpenseManager : MonoBehaviour
         else
         {
             unpaidWater += currentWaterCost;
-            Debug.Log($"Water unpaid. Accumulated: {unpaidWater} PHP");
         }
 
         // Pay medicine or add to unpaid
@@ -149,7 +145,6 @@ public class ExpenseManager : MonoBehaviour
             {
                 totalPaid += amount;
                 unpaidMedicine = 0;
-                Debug.Log($"Paid Medicine: {amount} PHP");
             }
             else
             {
@@ -160,7 +155,6 @@ public class ExpenseManager : MonoBehaviour
         else if (currentMedicineCost > 0)
         {
             unpaidMedicine += currentMedicineCost;
-            Debug.Log($"Medicine unpaid. Accumulated: {unpaidMedicine} PHP");
         }
 
         // Pay repairs or add to unpaid
@@ -171,7 +165,6 @@ public class ExpenseManager : MonoBehaviour
             {
                 totalPaid += amount;
                 unpaidRepairs = 0;
-                Debug.Log($"Paid Repairs: {amount} PHP");
             }
             else
             {
@@ -182,7 +175,6 @@ public class ExpenseManager : MonoBehaviour
         else if (currentHouseRepairsCost > 0)
         {
             unpaidRepairs += currentHouseRepairsCost;
-            Debug.Log($"Repairs unpaid. Accumulated: {unpaidRepairs} PHP");
         }
 
         // Pay rent or add to unpaid
@@ -193,7 +185,6 @@ public class ExpenseManager : MonoBehaviour
             {
                 totalPaid += amount;
                 unpaidRent = 0;
-                Debug.Log($"Paid Rent: {amount} PHP");
             }
             else
             {
@@ -204,11 +195,8 @@ public class ExpenseManager : MonoBehaviour
         else
         {
             unpaidRent += currentRentCost;
-            Debug.Log($"Rent unpaid. Accumulated: {unpaidRent} PHP");
         }
 
-        Debug.Log($"Total expenses paid: {totalPaid} PHP");
-        Debug.Log($"Total unpaid debts: Electricity={unpaidElectricity}, Water={unpaidWater}, Medicine={unpaidMedicine}, Repairs={unpaidRepairs}, Rent={unpaidRent}");
     }
 
     /// <summary>

@@ -23,7 +23,7 @@ public class Ingredient : ScriptableObject
     public Sprite[] animationFrames;
     
     [Header("Drag Properties")]
-    public Sprite draggableIcon;
+    public Sprite bowlVersionSprite;
     public IngredientUsageType usageType = IngredientUsageType.Seasoning;
     
     [Header("Visual")]

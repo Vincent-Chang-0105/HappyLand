@@ -22,6 +22,9 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
     [SerializeField] private Color normalColor = Color.white;
     [SerializeField] private Color dragColor = new Color(0.8f, 0.8f, 0.8f, 1f);
 
+    [Header("Scroll")]
+    [SerializeField] private ScrollRect scrollRect;
+
     [Header("Inventory System")]
     [SerializeField] private InventorySlot[] inventorySlots;
     [SerializeField] private List<IngredientStack> startingIngredients = new List<IngredientStack>();
@@ -60,6 +63,8 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
             thisImage.raycastTarget = true;
         }
         
+        if (scrollRect != null) scrollRect.enabled = false;
+
         InitializeInventory();
     }
 
@@ -221,6 +226,7 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
         {
             isOpen = true;
             DrawerPanel.DOAnchorPos(OpenPosition, AnimationDuration).SetEase(Ease.OutQuart);
+            if (scrollRect != null) scrollRect.enabled = true;
         }
     }
 
@@ -230,6 +236,11 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
         {
             isOpen = false;
             DrawerPanel.DOAnchorPos(ClosedPosition, AnimationDuration).SetEase(Ease.OutQuart);
+            if (scrollRect != null)
+            {
+                scrollRect.enabled = false;
+                scrollRect.verticalNormalizedPosition = 1f; // scroll back to top
+            }
         }
     }
 

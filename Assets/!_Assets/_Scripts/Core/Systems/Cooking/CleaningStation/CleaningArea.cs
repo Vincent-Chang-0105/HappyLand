@@ -1,11 +1,19 @@
 using UnityEngine;
+using UnityEngine.VFX;
 using System.Collections;
 using System.Collections.Generic;
+using AudioSystem;
 
 public class CleaningArea : MonoBehaviour
 {
     [Header("VFX")]
-    [SerializeField] private ParticleSystem splashVFX;
+    [SerializeField] private VisualEffect splashVFX;
+    [SerializeField] private float splashVFXDuration = 1f;
+
+    [Header("Sounds")]
+    [SerializeField] private SoundData splashEnterSound;
+    [SerializeField] private SoundData scrubCycleCompleteSound;
+    [SerializeField] private SoundData allScrubsCompleteSound;
 
     [Header("Scrubbing")]
     [SerializeField] private ScrubGestureDetector gestureDetector;
@@ -33,6 +41,7 @@ public class CleaningArea : MonoBehaviour
     private WashableData currentTarget;
     private bool isTrackingActive = false;
     private Coroutine waitForReleaseCoroutine;
+    private Coroutine splashVFXCoroutine;
     private Camera mainCamera;
 
     private void Awake()
@@ -64,7 +73,7 @@ public class CleaningArea : MonoBehaviour
         IWashable washable = other.GetComponent<IWashable>();
         if (washable != null && washable.CanBeWashed())
         {
-            Debug.Log($"Object {other.gameObject.name} entered cleaning area.");
+            //Debug.Log($"Object {other.gameObject.name} entered cleaning area.");
 
             // Add to tracking list
             var data = new WashableData
@@ -81,6 +90,10 @@ public class CleaningArea : MonoBehaviour
             // Notify washable
             washable.StartWashing();
 
+            // Play splash enter sound
+            if (splashEnterSound != null && SoundManager.Instance != null)
+                SoundManager.Instance.CreateSoundBuilder().WithPosition(other.transform.position).Play(splashEnterSound);
+
             // Start tracking if this is the first washable
             if (washablesInArea.Count == 1)
             {
@@ -95,7 +108,7 @@ public class CleaningArea : MonoBehaviour
     {
         if (washablesInArea.TryGetValue(other, out WashableData data))
         {
-            Debug.Log($"Object {other.gameObject.name} left cleaning area.");
+            //Debug.Log($"Object {other.gameObject.name} left cleaning area.");
 
             // Reset position/rotation
             other.transform.SetPositionAndRotation(data.originalPosition, data.originalRotation);
@@ -173,6 +186,15 @@ public class CleaningArea : MonoBehaviour
         {
             scrubPrompt.HidePrompt();
         }
+
+        // Kill VFX immediately
+        if (splashVFXCoroutine != null)
+        {
+            StopCoroutine(splashVFXCoroutine);
+            splashVFXCoroutine = null;
+        }
+        if (splashVFX != null)
+            splashVFX.gameObject.SetActive(false);
     }
 
     private void UpdatePrompt()
@@ -289,7 +311,7 @@ public class CleaningArea : MonoBehaviour
     {
         if (currentTarget == null) return;
 
-        Debug.Log($"Scrub cycle complete on {currentTarget.collider.gameObject.name}!");
+        //Debug.Log($"Scrub cycle complete on {currentTarget.collider.gameObject.name}!");
 
         // Increment this chicken's scrub count
         currentTarget.scrubCount++;
@@ -299,14 +321,22 @@ public class CleaningArea : MonoBehaviour
             scrubPrompt.ShowScrubSuccess();
         }
 
+        // Play scrub cycle complete sound
+        if (scrubCycleCompleteSound != null && SoundManager.Instance != null)
+            SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(scrubCycleCompleteSound);
+
         // Play splash VFX
         if (splashVFX != null && currentTarget.collider != null)
         {
             Vector3 vfxPos = currentTarget.collider.transform.position;
             vfxPos.z = -2f;
             splashVFX.transform.position = vfxPos;
-            splashVFX.Stop();
+
+            if (splashVFXCoroutine != null) StopCoroutine(splashVFXCoroutine);
+            splashVFX.gameObject.SetActive(false);
+            splashVFX.gameObject.SetActive(true);
             splashVFX.Play();
+            splashVFXCoroutine = StartCoroutine(DisableSplashVFXAfterDelay());
         }
 
         // Check if this chicken is fully washed
@@ -326,12 +356,24 @@ public class CleaningArea : MonoBehaviour
         }
     }
 
+    private IEnumerator DisableSplashVFXAfterDelay()
+    {
+        yield return new WaitForSeconds(splashVFXDuration);
+        if (splashVFX != null)
+            splashVFX.gameObject.SetActive(false);
+        splashVFXCoroutine = null;
+    }
+
     private void CompleteWashing(WashableData data)
     {
-        Debug.Log($"All scrubs complete! {data.collider.gameObject.name} washed.");
+        //Debug.Log($"All scrubs complete! {data.collider.gameObject.name} washed.");
 
         // Reset position/rotation
         data.collider.transform.SetPositionAndRotation(data.originalPosition, data.originalRotation);
+
+        // Play completion chime
+        if (allScrubsCompleteSound != null && SoundManager.Instance != null)
+            SoundManager.Instance.CreateSoundBuilder().Play(allScrubsCompleteSound);
 
         // Complete the washing
         data.washable?.CompleteWashing();

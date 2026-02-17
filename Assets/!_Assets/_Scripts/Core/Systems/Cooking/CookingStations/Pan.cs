@@ -17,6 +17,10 @@ public class Pan : CookingStation
 
     [Header("Audio")]
     [SerializeField] private SoundData sizzleSound;
+    [SerializeField] private SoundData panImpactSound;
+    [SerializeField] private SoundData tossSuccessSound;
+    [SerializeField] private SoundData allTossesCompleteSound;
+    [SerializeField] private SoundData panBounceSound;
 
     [Header("Gesture-Based Tossing")]
     [SerializeField] private bool useGestureTossing = true;
@@ -50,6 +54,39 @@ public class Pan : CookingStation
     [Header("Seasoning Requirement")]
     [SerializeField] private bool requiresSeasoning = true;
 
+    [Header("Sinigang Mode")]
+    [SerializeField] private bool hasWater = false;
+    [SerializeField] private bool hasSinigangMix = false;
+    [SerializeField] private GameObject waterVisual;
+    [SerializeField] private Color sinigangBrothColor = new Color(0.8f, 1f, 0.8f);
+
+    [Header("Noodle Mode")]
+    [SerializeField] private bool hasNoodles = false;
+    [SerializeField] private GameObject noodleObject = null;
+
+    [Header("Mechado Mode")]
+    [SerializeField] private bool hasCatsup = false;
+    [SerializeField] private bool hasPowderedMilk = false;
+    [SerializeField] private Color mechadoBrothColor = new Color(1f, 0.4f, 0.2f);
+
+    [Header("Adobo Mode")]
+    [SerializeField] private bool hasOnionGarlic = false;
+    [SerializeField] private bool hasSoySauce = false;
+    [SerializeField] private bool hasVinegar = false;
+    [SerializeField] private bool hasSugar = false;
+    [SerializeField] private bool hasLaurel = false;
+    [SerializeField] private Color adoboBrothColor = new Color(0.35f, 0.2f, 0.08f);
+
+    [Header("Pour Audio")]
+    [SerializeField] private SoundData pourSound;
+    [SerializeField] private SoundData ingredientAddSound;
+
+    [Header("Gesture-Based Shaking (Sinigang)")]
+    [SerializeField] private int requiredShakes = 3;
+    [SerializeField] private float cookingDurationBetweenShakes = 2f;
+    [SerializeField] private ShakeGestureDetector shakeGestureDetector;
+    [SerializeField] private ShakePrompt shakePrompt;
+
     // Tossing state
     private enum TossingState
     {
@@ -60,9 +97,21 @@ public class Pan : CookingStation
         Frying
     }
 
+    // Shaking state (sinigang)
+    private enum ShakingState
+    {
+        NotStarted,
+        WaitingForShake,
+        ShakeAnimating,
+        Cooking
+    }
+
     private TossingState currentTossState = TossingState.NotStarted;
+    private ShakingState currentShakeState = ShakingState.NotStarted;
     private int completedTosses = 0;
+    private int completedShakes = 0;
     private float fryingTimer = 0f;
+    private float shakeCookTimer = 0f;
     private Vector3 originalPanPosition;
     private Quaternion originalPanRotation;
     private SoundEmitter currentSizzleEmitter;
@@ -70,55 +119,189 @@ public class Pan : CookingStation
     private Dictionary<GameObject, Vector3> ingredientBasePositions = new Dictionary<GameObject, Vector3>();
     private Sequence panBobSequence;
 
+    // Pour state
+    [Header("Pour Settings")]
+    [SerializeField] private float pourTiltAngle = 45f;
+    [SerializeField] private float pourTiltSmoothing = 8f;
+    [SerializeField] private float pourDetectRadius = 1.5f;
+    [SerializeField] private float pourPickupRadius = 1.5f;
+    [SerializeField] private float pourDuration = 0.4f;
+
+    private bool isPourable = false;
+    private bool isPouring = false;
+    private bool isDraggingPan = false;
+    private Vector3 dragOffset;
+    private Camera mainCamera;
+    private PlatingStation nearbyPlatingStation;
+
+    /// <summary>Whether the pan is in sinigang mode (water + sinigang mix added)</summary>
+    public bool IsSinigangMode => hasWater && hasSinigangMix;
+
+    /// <summary>Whether the pan is in noodle mode (water + noodles added)</summary>
+    public bool IsNoodleMode => hasWater && hasNoodles;
+
+    /// <summary>Whether the pan is in mechado mode (water + catsup + powdered milk added)</summary>
+    public bool IsMechadoMode => hasWater && hasCatsup && hasPowderedMilk;
+
+    /// <summary>Whether the pan is in adobo mode (oil + onion&garlic added)</summary>
+    public bool IsAdoboMode => hasOil && hasOnionGarlic;
+
+    /// <summary>Whether all adobo seasonings have been added</summary>
+    public bool IsAdoboFullySeasoned => IsAdoboMode && hasSoySauce && hasVinegar && hasSugar && hasLaurel;
+
     #region Abstract Method Implementations
 
     protected override bool CanCookIngredient(GameObject ingredient)
     {
-        IFryable fryable = ingredient.GetComponent<IFryable>();
-        return fryable != null && fryable.CanBeFried();
+        if (IsAdoboMode)
+        {
+            IAdoboable adoboable = ingredient.GetComponent<IAdoboable>();
+            return adoboable != null && adoboable.CanBeAdobo();
+        }
+        else if (IsMechadoMode)
+        {
+            IMechadoable mechadoable = ingredient.GetComponent<IMechadoable>();
+            return mechadoable != null && mechadoable.CanBeMechado();
+        }
+        else if (IsNoodleMode)
+        {
+            INoodleable noodleable = ingredient.GetComponent<INoodleable>();
+            return noodleable != null && noodleable.CanBeNoodled();
+        }
+        else if (IsSinigangMode)
+        {
+            ISinigangable sinigangable = ingredient.GetComponent<ISinigangable>();
+            bool canCook = sinigangable != null && sinigangable.CanBeSiniganged();
+            return canCook;
+        }
+        else
+        {
+            IFryable fryable = ingredient.GetComponent<IFryable>();
+            bool canCook = fryable != null && fryable.CanBeFried();
+            return canCook;
+        }
     }
 
     protected override void StartCookingIngredient(GameObject ingredient)
     {
-        IFryable fryable = ingredient.GetComponent<IFryable>();
-        if (fryable != null)
+        if (IsAdoboMode)
         {
-            fryable.StartFrying();
+            ingredient.GetComponent<IAdoboable>()?.StartAdobo();
+        }
+        else if (IsMechadoMode)
+        {
+            ingredient.GetComponent<IMechadoable>()?.StartMechado();
+        }
+        else if (IsNoodleMode)
+        {
+            ingredient.GetComponent<INoodleable>()?.StartNoodling();
+        }
+        else if (IsSinigangMode)
+        {
+            ingredient.GetComponent<ISinigangable>()?.StartSiniganging();
+        }
+        else
+        {
+            ingredient.GetComponent<IFryable>()?.StartFrying();
         }
     }
 
     protected override void StopCookingIngredient(GameObject ingredient)
     {
-        IFryable fryable = ingredient.GetComponent<IFryable>();
-        if (fryable != null)
+        if (IsAdoboMode)
         {
-            fryable.StopFrying();
+            ingredient.GetComponent<IAdoboable>()?.StopAdobo();
+        }
+        else if (IsMechadoMode)
+        {
+            ingredient.GetComponent<IMechadoable>()?.StopMechado();
+        }
+        else if (IsNoodleMode)
+        {
+            ingredient.GetComponent<INoodleable>()?.StopNoodling();
+        }
+        else if (IsSinigangMode)
+        {
+            ingredient.GetComponent<ISinigangable>()?.StopSiniganging();
+        }
+        else
+        {
+            ingredient.GetComponent<IFryable>()?.StopFrying();
         }
     }
 
     protected override void CompleteCookingIngredient(GameObject ingredient)
     {
-        IFryable fryable = ingredient.GetComponent<IFryable>();
-        if (fryable != null)
+        if (IsAdoboMode)
         {
-            fryable.CompleteFrying();
+            ingredient.GetComponent<IAdoboable>()?.CompleteAdobo();
+        }
+        else if (IsMechadoMode)
+        {
+            ingredient.GetComponent<IMechadoable>()?.CompleteMechado();
+        }
+        else if (IsNoodleMode)
+        {
+            ingredient.GetComponent<INoodleable>()?.CompleteNoodling();
+        }
+        else if (IsSinigangMode)
+        {
+            ingredient.GetComponent<ISinigangable>()?.CompleteSiniganging();
+        }
+        else
+        {
+            ingredient.GetComponent<IFryable>()?.CompleteFrying();
         }
     }
 
     protected override bool AdditionalBowlAcceptanceCheck()
     {
-        // Pan requires oil before accepting ingredients
+        // Don't accept bowls while actively pouring
+        if (isPouring) return false;
+
+        // Don't accept new bowls while pan still has cooked food waiting to be poured
+        if (isPourable) return false;
+
+        // Adobo mode: requires oil + onion & garlic
+        if (IsAdoboMode)
+        {
+            return true;
+        }
+
+        // Mechado mode: requires water + catsup + powdered milk
+        if (IsMechadoMode)
+        {
+            return true;
+        }
+
+        // Noodle mode: requires water + noodles
+        if (IsNoodleMode)
+        {
+            return true;
+        }
+
+        // Sinigang mode: requires water + sinigang mix
+        if (IsSinigangMode)
+        {
+            return true;
+        }
+
+        // Frying mode: requires oil
         if (!hasOil)
         {
-            Debug.LogWarning("⚠️ Add oil to the pan first before frying!");
+            Debug.LogWarning("Add oil to the pan first before frying!");
             return false;
         }
+
         return true;
     }
 
     protected override string GetCookingProcessName()
     {
-        return "frying";
+        if (IsAdoboMode) return "adobo cooking";
+        if (IsMechadoMode) return "mechado cooking";
+        if (IsNoodleMode) return "noodle cooking";
+        return IsSinigangMode ? "sinigang cooking" : "frying";
     }
 
     #endregion
@@ -158,6 +341,27 @@ public class Pan : CookingStation
                 Debug.LogWarning("Pan: No TossPrompt component found. Please add a TossPrompt UI to the pan.");
             }
         }
+
+        // Setup shake gesture detector for sinigang mode
+        if (shakeGestureDetector == null)
+        {
+            shakeGestureDetector = GetComponentInChildren<ShakeGestureDetector>(true);
+        }
+
+        if (shakeGestureDetector != null)
+        {
+            shakeGestureDetector.SetShakeOrigin(transform);
+            shakeGestureDetector.SetActive(false);
+            shakeGestureDetector.OnShakeComplete += OnShakeGestureComplete;
+            shakeGestureDetector.OnShakeProgress += OnShakeGestureProgress;
+            shakeGestureDetector.OnAllShakesComplete += OnAllShakeGesturesComplete;
+        }
+
+        // Find shake prompt
+        if (shakePrompt == null)
+        {
+            shakePrompt = GetComponentInChildren<ShakePrompt>(true);
+        }
     }
 
     protected override void OnDestroy()
@@ -173,6 +377,23 @@ public class Pan : CookingStation
             tossGestureDetector.OnTossComplete -= OnTossGestureComplete;
             tossGestureDetector.OnTossProgress -= OnTossGestureProgress;
         }
+
+        if (shakeGestureDetector != null)
+        {
+            shakeGestureDetector.OnShakeComplete -= OnShakeGestureComplete;
+            shakeGestureDetector.OnShakeProgress -= OnShakeGestureProgress;
+            shakeGestureDetector.OnAllShakesComplete -= OnAllShakeGesturesComplete;
+        }
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+
+        if (isPourable && !isPouring)
+        {
+            HandlePourInput();
+        }
     }
 
     #endregion
@@ -182,6 +403,28 @@ public class Pan : CookingStation
     protected override void StartCooking()
     {
         if (isCooking || ingredientsInStation.Count == 0) return;
+
+        // Branch: adobo mode — needs all seasonings before tossing
+        if (IsAdoboMode && !IsAdoboFullySeasoned)
+        {
+            currentTossState = TossingState.WaitingForSeasoning;
+            NotificationManager.Instance.SetNewNotification("Add soy sauce, vinegar, sugar and laurel to the pan!");
+            return;
+        }
+
+        // Branch: noodle mode uses shake gesture
+        if (IsNoodleMode)
+        {
+            StartSinigangCooking();
+            return;
+        }
+
+        // Branch: sinigang mode uses shake gesture
+        if (IsSinigangMode)
+        {
+            StartSinigangCooking();
+            return;
+        }
 
         // If gesture tossing is disabled, use base behavior
         if (!useGestureTossing)
@@ -194,11 +437,14 @@ public class Pan : CookingStation
         if (requiresSeasoning && !hasSeasoning)
         {
             currentTossState = TossingState.WaitingForSeasoning;
-            Debug.Log("🧂 Add salt to the pan before tossing!");
+            string seasoningMsg = IsMechadoMode ? "Add crackers to the pan!" : "Add seasoning to the pan before tossing!";
+            // Note: adobo seasoning wait is handled above before this block
+            NotificationManager.Instance.SetNewNotification(seasoningMsg);
+            //ebug.Log("Add salt to the pan before tossing!");
             return;
         }
 
-        // Initialize gesture-based cooking
+        // Initialize gesture-based cooking (frying)
         isCooking = true;
         completedTosses = 0;
         currentTossState = TossingState.WaitingForToss;
@@ -212,18 +458,58 @@ public class Pan : CookingStation
             }
         }
 
-        // Start effects
+        // Start sizzle immediately when ingredients hit the pan
+        PlaySizzleSound();
+        StartSizzleAnimation();
+
         if (cookingEffect != null)
-        {
-            cookingEffect.Stop(); // Don't start yet, wait for first toss
-        }
+            cookingEffect.Play();
 
         // Show first toss prompt
         ShowTossPrompt();
     }
 
+    private void StartSinigangCooking()
+    {
+        isCooking = true;
+        completedShakes = 0;
+        currentShakeState = ShakingState.WaitingForShake;
+
+        // Start cooking each ingredient
+        foreach (GameObject ingredient in ingredientsInStation)
+        {
+            if (ingredient != null)
+            {
+                StartCookingIngredient(ingredient);
+            }
+        }
+
+        // Start effects
+        if (cookingEffect != null)
+        {
+            cookingEffect.Stop();
+        }
+
+        Debug.Log("Pan: Starting sinigang cooking - shake the pan!");
+        ShowShakePrompt();
+    }
+
     protected override void UpdateCooking()
     {
+        // Branch: noodle mode (uses same shake gesture as sinigang)
+        if (IsNoodleMode)
+        {
+            UpdateSinigangCooking();
+            return;
+        }
+
+        // Branch: sinigang mode
+        if (IsSinigangMode)
+        {
+            UpdateSinigangCooking();
+            return;
+        }
+
         // If gesture tossing is disabled, use base timer behavior
         if (!useGestureTossing)
         {
@@ -283,6 +569,50 @@ public class Pan : CookingStation
         }
     }
 
+    private void UpdateSinigangCooking()
+    {
+        switch (currentShakeState)
+        {
+            case ShakingState.WaitingForShake:
+                // Waiting for player shake gesture
+                break;
+
+            case ShakingState.Cooking:
+                // Cooking between shakes
+                shakeCookTimer += Time.deltaTime;
+
+                UpdateSizzleAnimation();
+
+                if (cookingProgressBar != null)
+                {
+                    float progress = shakeCookTimer / cookingDurationBetweenShakes;
+                    cookingProgressBar.fillAmount = progress;
+                    cookingProgressBar.color = Color.Lerp(Color.yellow, Color.green, progress);
+                }
+
+                if (shakeCookTimer >= cookingDurationBetweenShakes)
+                {
+                    if (completedShakes < requiredShakes)
+                    {
+                        currentShakeState = ShakingState.WaitingForShake;
+                        shakeCookTimer = 0f;
+                        ShowShakePrompt();
+                    }
+                    else
+                    {
+                        CompleteCooking();
+                    }
+                }
+                break;
+        }
+
+        // Update UI position
+        if (cookingMeterUI != null && cookingMeterUI.activeInHierarchy)
+        {
+            cookingMeterUI.transform.position = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * 2f);
+        }
+    }
+
     private void ShowTossPrompt()
     {
         // Stop pan bob, sizzle animation, and sound when waiting for toss
@@ -334,6 +664,10 @@ public class Pan : CookingStation
 
         // Tutorial event
         TutorialEvents.TossCompleted();
+
+        // Play toss success sound
+        if (tossSuccessSound != null && SoundManager.Instance != null)
+            SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(tossSuccessSound);
 
         // Show success feedback
         if (tossPrompt != null)
@@ -500,7 +834,12 @@ public class Pan : CookingStation
         panBobSequence.Append(transform.DOLocalMoveY(originalPanPosition.y + randomHeight, randomDuration * 0.5f)
             .SetEase(Ease.InOutSine));
         panBobSequence.Append(transform.DOLocalMoveY(originalPanPosition.y, randomDuration * 0.5f)
-            .SetEase(Ease.InOutSine));
+            .SetEase(Ease.InOutSine)
+            .OnComplete(() =>
+            {
+                if (panBounceSound != null && SoundManager.Instance != null)
+                    SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(panBounceSound);
+            }));
         panBobSequence.OnComplete(() => PlayNextBob());
     }
 
@@ -542,6 +881,10 @@ public class Pan : CookingStation
             ingredientDropEffect.Play();
         }
 
+        // Play pan impact sound (pan landing back down)
+        if (panImpactSound != null && SoundManager.Instance != null)
+            SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(panImpactSound);
+
         // Play sizzle sound
         PlaySizzleSound();
     }
@@ -554,30 +897,40 @@ public class Pan : CookingStation
         StopSizzleSound();
 
         // Tutorial event
-        TutorialEvents.AllTossesCompleted();
-
-        // Call base implementation to complete frying for all ingredients
-        base.CompleteCooking();
-
-        // Notify plating manager about fried chickens
-        if (PlatingManager.Instance != null)
+        if (IsNoodleMode || IsSinigangMode)
         {
-            foreach (GameObject ingredient in ingredientsInStation)
-            {
-                if (ingredient != null)
-                {
-                    PlatingManager.Instance.RegisterFriedChicken(ingredient);
-                }
-            }
+            TutorialEvents.SinigangCompleted();
         }
         else
         {
-            Debug.LogWarning("Pan: PlatingManager not found! Cannot register fried chickens.");
+            TutorialEvents.AllTossesCompleted();
+
+            // Play all tosses complete sound
+            if (allTossesCompleteSound != null && SoundManager.Instance != null)
+                SoundManager.Instance.CreateSoundBuilder().Play(allTossesCompleteSound);
         }
 
-        // Remove oil and reset seasoning after cooking is complete
-        RemoveOil();
-        hasSeasoning = false;
+        // Call base implementation to complete cooking for all ingredients
+        base.CompleteCooking();
+
+        // Make pan pourable - player drags it over the PlatingStation
+        // NOTE: do NOT reset hasOil/hasWater/hasOnionGarlic here — StartPourToPlate needs them to detect dish type
+        Debug.Log("Pan: Cooking complete! Drag the pan over the plate to pour.");
+        isCooking = false;
+        isPourable = true;
+
+        // Hide cooking UI
+        if (cookingMeterUI != null)
+            cookingMeterUI.SetActive(false);
+
+        HideTossPrompt();
+        HideShakePrompt();
+
+        if (cookingEffect != null)
+            cookingEffect.Stop();
+
+        // Bounce to hint "drag me"
+        transform.DOPunchScale(Vector3.one * 0.1f, 0.5f, 4, 0.5f);
     }
 
     #endregion
@@ -601,7 +954,7 @@ public class Pan : CookingStation
 
     private void StopSizzleSound()
     {
-        if (currentSizzleEmitter != null && currentSizzleEmitter.IsPlaying())
+        if (currentSizzleEmitter != null)
         {
             currentSizzleEmitter.Stop();
             currentSizzleEmitter = null;
@@ -610,6 +963,12 @@ public class Pan : CookingStation
 
     #endregion
 
+    private void PlayIngredientAddSound()
+    {
+        if (ingredientAddSound != null && SoundManager.Instance != null)
+            SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(ingredientAddSound);
+    }
+
     #region Oil Management
 
     /// <summary>
@@ -617,7 +976,7 @@ public class Pan : CookingStation
     /// </summary>
     public bool CanAcceptOil()
     {
-        return !hasOil && !isCooking;
+        return !hasOil && !isCooking && !isPourable && !isPouring;
     }
 
     /// <summary>
@@ -641,11 +1000,8 @@ public class Pan : CookingStation
             oilVisual.SetActive(true);
         }
 
-        // Visual feedback - tint sprite yellow
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.color = Color.Lerp(spriteRenderer.color, Color.yellow, 0.3f);
-        }
+        // Sizzle immediately when oil hits the pan
+        PlaySizzleSound();
 
         Debug.Log("🛢️ Oil added to pan!");
 
@@ -693,21 +1049,15 @@ public class Pan : CookingStation
 
     #endregion
 
-    #region Seasoning Management (for backward compatibility with DraggableIngredient)
+    #region Seasoning Management
 
-    /// <summary>
-    /// Check if seasoning can be added
-    /// </summary>
     public bool CanAcceptSeasoning()
     {
-        // Allow seasoning while waiting for it or before cooking starts
+        if (isPourable || isPouring) return false;
         if (currentTossState == TossingState.WaitingForSeasoning) return true;
         return !isCooking;
     }
 
-    /// <summary>
-    /// Add a seasoning ingredient - delegates to SeasoningManager if available
-    /// </summary>
     public void AddSeasoning(Ingredient seasoning)
     {
         if (!CanAcceptSeasoning())
@@ -717,26 +1067,583 @@ public class Pan : CookingStation
         }
 
         hasSeasoning = true;
-        Debug.Log($"🧂 Added {seasoning.ingredientName} to pan!");
+        PlayIngredientAddSound();
+        Debug.Log($"Added {seasoning.ingredientName} to pan!");
 
-        // Tutorial event for salt
         if (seasoning.ingredientName.ToLower().Contains("salt"))
         {
             TutorialEvents.SaltAdded();
         }
 
-        // Try to use SeasoningManager if available
         SeasoningManager seasoningMgr = GetComponent<SeasoningManager>();
         if (seasoningMgr != null)
         {
             seasoningMgr.AddSeasoning(seasoning);
         }
 
-        // If we were waiting for seasoning, now start cooking
         if (currentTossState == TossingState.WaitingForSeasoning && ingredientsInStation.Count > 0)
         {
             StartCooking();
         }
+    }
+
+    #endregion
+
+    #region Shake Gesture Handling (Sinigang)
+
+    private void ShowShakePrompt()
+    {
+        StopPanBobAnimation();
+        StopSizzleAnimation();
+        StopSizzleSound();
+
+        if (shakePrompt != null)
+        {
+            shakePrompt.ShowPrompt(completedShakes, requiredShakes);
+        }
+
+        if (shakeGestureDetector != null)
+        {
+            shakeGestureDetector.SetActive(true);
+            shakeGestureDetector.StartTracking();
+        }
+
+        if (cookingMeterUI != null)
+        {
+            cookingMeterUI.SetActive(true);
+        }
+    }
+
+    private void HideShakePrompt()
+    {
+        if (shakePrompt != null)
+        {
+            shakePrompt.HidePrompt();
+        }
+
+        if (shakeGestureDetector != null)
+        {
+            shakeGestureDetector.SetActive(false);
+        }
+    }
+
+    private void OnShakeGestureComplete()
+    {
+        if (currentShakeState != ShakingState.WaitingForShake) return;
+
+        completedShakes++;
+        Debug.Log($"Shake {completedShakes}/{requiredShakes} completed!");
+
+        if (shakePrompt != null)
+        {
+            shakePrompt.ShowShakeSuccess();
+        }
+
+        HideShakePrompt();
+
+        // Start cooking phase between shakes
+        currentShakeState = ShakingState.Cooking;
+        shakeCookTimer = 0f;
+
+        StartPanBobAnimation();
+        StartSizzleAnimation();
+
+        if (cookingEffect != null) cookingEffect.Play();
+        if (steamEffect != null) steamEffect.Play();
+
+        PlaySizzleSound();
+    }
+
+    private void OnShakeGestureProgress(float progress)
+    {
+        if (shakePrompt != null && currentShakeState == ShakingState.WaitingForShake)
+        {
+            shakePrompt.UpdateProgress(progress);
+        }
+    }
+
+    private void OnAllShakeGesturesComplete()
+    {
+        // All shakes done in one continuous gesture - complete cooking
+        Debug.Log("All shakes completed!");
+        HideShakePrompt();
+        CompleteCooking();
+    }
+
+    #endregion
+
+    #region Water & Sinigang Mix Management
+
+    public bool CanAcceptWater()
+    {
+        return !hasWater && !isCooking && !hasOil && !isPourable && !isPouring;
+    }
+
+    public void AddWater()
+    {
+        if (hasWater) return;
+
+        hasWater = true;
+        PlayIngredientAddSound();
+
+        if (waterVisual != null)
+        {
+            waterVisual.SetActive(true);
+            waterVisual.transform.localScale = Vector3.zero;
+            waterVisual.transform.DOScale(0.85f, 0.4f).SetEase(Ease.OutBack);
+        }
+
+        Debug.Log("Water added to pan!");
+    }
+
+    public bool HasWater()
+    {
+        return hasWater;
+    }
+
+    private void RemoveWater()
+    {
+        if (!hasWater) return;
+
+        hasWater = false;
+
+        if (waterVisual != null)
+        {
+            waterVisual.transform.DOScale(0f, 0.3f).SetEase(Ease.InBack).OnComplete(() =>
+            {
+                waterVisual.SetActive(false);
+                // Reset water color for next use
+                SpriteRenderer waterSprite = waterVisual.GetComponent<SpriteRenderer>();
+                if (waterSprite != null)
+                    waterSprite.color = Color.white;
+            });
+        }
+    }
+
+    public bool CanAcceptSinigangMix()
+    {
+        return !hasSinigangMix && !isCooking && hasWater && !isPourable && !isPouring;
+    }
+
+    public void AddSinigangMix(Ingredient mix)
+    {
+        if (!CanAcceptSinigangMix())
+        {
+            Debug.LogWarning("Cannot add sinigang mix! Need water first, or already has mix.");
+            return;
+        }
+
+        hasSinigangMix = true;
+        PlayIngredientAddSound();
+
+        TutorialEvents.SinigangMixAdded();
+
+        // Change water color to sinigang broth color
+        if (waterVisual != null)
+        {
+            SpriteRenderer waterSprite = waterVisual.GetComponent<SpriteRenderer>();
+            if (waterSprite != null)
+            {
+                waterSprite.DOColor(sinigangBrothColor, 0.4f);
+            }
+        }
+
+        Debug.Log($"Added {mix.ingredientName} to pan - sinigang mode activated!");
+    }
+
+    #endregion
+
+    #region Mechado Mode Management (Catsup + Powdered Milk)
+
+    public bool CanAcceptCatsup()
+    {
+        return !hasCatsup && !isCooking && hasWater && !hasOil && !hasSinigangMix && !hasNoodles && !isPourable && !isPouring;
+    }
+
+    public void AddCatsup()
+    {
+        if (!CanAcceptCatsup()) return;
+
+        hasCatsup = true;
+        PlayIngredientAddSound();
+
+        // Tint the water visual to a tomato-red colour
+        if (waterVisual != null)
+        {
+            SpriteRenderer waterSprite = waterVisual.GetComponent<SpriteRenderer>();
+            if (waterSprite != null)
+                waterSprite.DOColor(mechadoBrothColor, 0.4f);
+        }
+
+        Debug.Log("Catsup added to pan!");
+    }
+
+    public bool CanAcceptPowderedMilk()
+    {
+        return !hasPowderedMilk && !isCooking && hasCatsup && !isPourable && !isPouring;
+    }
+
+    public void AddPowderedMilk()
+    {
+        if (!CanAcceptPowderedMilk()) return;
+
+        hasPowderedMilk = true;
+        PlayIngredientAddSound();
+
+        // Lighten the broth colour slightly to show milk mixing in
+        if (waterVisual != null)
+        {
+            SpriteRenderer waterSprite = waterVisual.GetComponent<SpriteRenderer>();
+            if (waterSprite != null)
+                waterSprite.DOColor(Color.Lerp(mechadoBrothColor, Color.white, 0.25f), 0.4f);
+        }
+
+        Debug.Log("Powdered milk added to pan - mechado mode activated!");
+    }
+
+    #endregion
+
+    #region Adobo Mode Management
+
+    public bool CanAcceptOnionGarlic()
+    {
+        return !hasOnionGarlic && !isCooking && hasOil && !hasSinigangMix && !hasNoodles && !hasCatsup && !isPourable && !isPouring;
+    }
+
+    public void AddOnionGarlic()
+    {
+        if (!CanAcceptOnionGarlic()) return;
+
+        hasOnionGarlic = true;
+        PlayIngredientAddSound();
+
+        // Tint the oil visual to show the adobo broth starting
+        if (waterVisual != null)
+        {
+            waterVisual.SetActive(true);
+            SpriteRenderer waterSprite = waterVisual.GetComponent<SpriteRenderer>();
+            if (waterSprite != null)
+                waterSprite.DOColor(adoboBrothColor, 0.4f);
+        }
+        else if (oilVisual != null)
+        {
+            SpriteRenderer oilSprite = oilVisual.GetComponent<SpriteRenderer>();
+            if (oilSprite != null)
+                oilSprite.DOColor(adoboBrothColor, 0.4f);
+        }
+
+        Debug.Log("Onion & Garlic added to pan — adobo mode activated!");
+    }
+
+    public bool CanAcceptSoySauce()
+    {
+        return IsAdoboMode && !hasSoySauce && !isPourable && !isPouring;
+    }
+
+    public void AddSoySauce()
+    {
+        if (!CanAcceptSoySauce()) return;
+        hasSoySauce = true;
+        PlayIngredientAddSound();
+        Debug.Log("Soy sauce added to adobo pan!");
+        CheckAdoboSeasoningComplete();
+    }
+
+    public bool CanAcceptVinegar()
+    {
+        return IsAdoboMode && !hasVinegar && !isPourable && !isPouring;
+    }
+
+    public void AddVinegar()
+    {
+        if (!CanAcceptVinegar()) return;
+        hasVinegar = true;
+        PlayIngredientAddSound();
+        Debug.Log("Vinegar added to adobo pan!");
+        CheckAdoboSeasoningComplete();
+    }
+
+    public bool CanAcceptSugar()
+    {
+        return IsAdoboMode && !hasSugar && !isPourable && !isPouring;
+    }
+
+    public void AddSugar()
+    {
+        if (!CanAcceptSugar()) return;
+        hasSugar = true;
+        PlayIngredientAddSound();
+        Debug.Log("Sugar added to adobo pan!");
+        CheckAdoboSeasoningComplete();
+    }
+
+    public bool CanAcceptLaurel()
+    {
+        return IsAdoboMode && !hasLaurel && !isPourable && !isPouring;
+    }
+
+    public void AddLaurel()
+    {
+        if (!CanAcceptLaurel()) return;
+        hasLaurel = true;
+        PlayIngredientAddSound();
+        Debug.Log("Laurel added to adobo pan!");
+        CheckAdoboSeasoningComplete();
+    }
+
+    private void CheckAdoboSeasoningComplete()
+    {
+        if (!IsAdoboFullySeasoned) return;
+
+        // All seasonings added — satisfy the seasoning requirement and start tossing
+        hasSeasoning = true;
+        if (currentTossState == TossingState.WaitingForSeasoning && ingredientsInStation.Count > 0)
+        {
+            StartCooking();
+        }
+    }
+
+    #endregion
+
+    #region Noodle Mode Management
+
+    public bool CanAcceptNoodles()
+    {
+        return !hasNoodles && !isCooking && hasWater && !hasOil && !hasSinigangMix && !isPourable && !isPouring;
+    }
+
+    public void AddNoodles(GameObject noodleObj)
+    {
+        if (!CanAcceptNoodles()) return;
+
+        hasNoodles = true;
+        noodleObject.SetActive(true);
+
+        // Parent noodle into pan and animate it in
+        Transform container = ingredientContainer != null ? ingredientContainer : transform;
+        noodleObject.transform.SetParent(container);
+        noodleObject.transform.DOLocalMove(new Vector3(0f, 0.1f, 0f), 0.35f).SetEase(Ease.OutBack);
+        noodleObject.transform.DOScale(0.8f, 0.35f).SetEase(Ease.OutBack);
+
+        // // Disable drag so player can't pick noodle back up out of the pan
+        // DraggableIngredient drag = noodleObj.GetComponent<DraggableIngredient>();
+        // if (drag != null) drag.enabled = false;
+    }
+
+    #endregion
+
+    #region Pour Mechanic
+
+    private void HandlePourInput()
+    {
+        // Start drag
+        if (Input.GetMouseButtonDown(0) && !isDraggingPan)
+        {
+            mainCamera = Camera.main;
+            Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            mouseWorldPos.z = transform.position.z;
+            float distance = Vector2.Distance(mouseWorldPos, transform.position);
+
+            Debug.Log($"[Pan] MouseDown — pan pos: {transform.position}, mouse world pos: {mouseWorldPos}, distance: {distance:F2}, pickupRadius: {pourPickupRadius}");
+
+            if (distance <= pourPickupRadius)
+            {
+                isDraggingPan = true;
+                dragOffset = transform.position - mouseWorldPos;
+                Debug.Log($"[Pan] Drag started (offset: {dragOffset})");
+            }
+            else
+            {
+                Debug.Log($"[Pan] MouseDown too far from pan — not starting drag");
+            }
+        }
+
+        // During drag
+        if (isDraggingPan && Input.GetMouseButton(0))
+        {
+            Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            mouseWorldPos.z = transform.position.z;
+            transform.position = mouseWorldPos + dragOffset;
+
+            // Tilt pan based on horizontal displacement
+            Vector3 delta = transform.position - originalPanPosition;
+            float tiltTarget = Mathf.Clamp(delta.x * -(pourTiltAngle / 3f), -pourTiltAngle, pourTiltAngle);
+            float currentZ = transform.eulerAngles.z;
+            if (currentZ > 180f) currentZ -= 360f;
+            float newZ = Mathf.LerpAngle(currentZ, tiltTarget, Time.unscaledDeltaTime * pourTiltSmoothing);
+            transform.rotation = Quaternion.Euler(0, 0, newZ);
+
+            // Highlight nearby PlatingStation
+            UpdatePlatingStationHighlight();
+        }
+
+        // Release
+        if (isDraggingPan && Input.GetMouseButtonUp(0))
+        {
+            isDraggingPan = false;
+            Debug.Log($"[Pan] Mouse released — pan world pos: {transform.position}");
+
+            if (nearbyPlatingStation != null)
+            {
+                nearbyPlatingStation.SetHighlight(false);
+            }
+
+            // Check for PlatingStation nearby
+            Collider2D[] allHits = Physics2D.OverlapCircleAll(transform.position, pourDetectRadius);
+            Debug.Log($"[Pan] OverlapCircle at {transform.position} radius {pourDetectRadius} — found {allHits.Length} collider(s)");
+            foreach (Collider2D hit in allHits)
+            {
+                Debug.Log($"  [Pan] Hit: {hit.gameObject.name} (tag: {hit.tag}, layer: {LayerMask.LayerToName(hit.gameObject.layer)})");
+            }
+
+            PlatingStation station = FindNearbyPlatingStation();
+            if (station != null)
+            {
+                Debug.Log($"[Pan] PlatingStation found: {station.gameObject.name} — starting pour");
+                StartPourToPlate(station);
+                return;
+            }
+
+            Debug.Log($"[Pan] No PlatingStation found within radius {pourDetectRadius} — snapping back");
+            SnapBackToOriginal();
+        }
+    }
+
+    private PlatingStation FindNearbyPlatingStation()
+    {
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, pourDetectRadius);
+        foreach (Collider2D col in colliders)
+        {
+            PlatingStation station = col.GetComponent<PlatingStation>();
+            if (station != null) return station;
+        }
+        return null;
+    }
+
+    private void UpdatePlatingStationHighlight()
+    {
+        PlatingStation newNearby = FindNearbyPlatingStation();
+
+        if (newNearby != nearbyPlatingStation)
+        {
+            if (nearbyPlatingStation != null)
+                nearbyPlatingStation.SetHighlight(false);
+            nearbyPlatingStation = newNearby;
+            if (nearbyPlatingStation != null)
+                nearbyPlatingStation.SetHighlight(true);
+        }
+    }
+
+    private void StartPourToPlate(PlatingStation station)
+    {
+        isPouring = true;
+
+        if (pourSound != null && SoundManager.Instance != null)
+            SoundManager.Instance.CreateSoundBuilder().Play(pourSound);
+
+        Debug.Log($"Pan: Pouring {ingredientsInStation.Count} ingredients onto plate!");
+
+        // Build ingredient list: chickens + noodle (if noodle mode)
+        List<GameObject> ingredientsCopy = new List<GameObject>(ingredientsInStation);
+        if (IsNoodleMode && noodleObject != null)
+            ingredientsCopy.Add(noodleObject);
+
+        float totalDelay = ingredientsCopy.Count * 0.1f + pourDuration;
+
+        // Determine dish type string
+        string dishType = IsAdoboMode ? "Adobo"
+                        : IsMechadoMode ? "Mechado"
+                        : IsNoodleMode ? "NoodleChicken"
+                        : IsSinigangMode ? "Sinigang"
+                        : "FriedChicken";
+
+        // Pour all ingredients to the plating station
+        station.AcceptPour(ingredientsCopy, dishType);
+
+        // After pour animation, reset pan
+        DOVirtual.DelayedCall(totalDelay, CompletePanPour);
+    }
+
+    private void CompletePanPour()
+    {
+        Debug.Log($"Pan: CompletePanPour called! ingredientsInStation.Count={ingredientsInStation.Count}, isPourable={isPourable}, isPouring={isPouring}");
+
+        // Clear all ingredients
+        ingredientsInStation.Clear();
+
+        // Reset all flags
+        isCooking = false;
+        isPourable = false;
+        isPouring = false;
+        isDraggingPan = false;
+
+        // Reset cooking state
+        RemoveOil();
+        RemoveWater();
+
+        // Force-hide waterVisual even when hasWater was false (e.g. adobo activates it without setting hasWater)
+        if (waterVisual != null && waterVisual.activeSelf)
+        {
+            waterVisual.transform.DOKill();
+            waterVisual.SetActive(false);
+            if (waterVisual.TryGetComponent(out SpriteRenderer sp))
+                sp.color = Color.white;
+        }
+        RemoveNoodles();
+        hasOil = false;
+        hasSeasoning = false;
+        hasSinigangMix = false;
+        hasWater = false;
+        hasNoodles = false;
+        hasCatsup = false;
+        hasPowderedMilk = false;
+        hasOnionGarlic = false;
+        hasSoySauce = false;
+        hasVinegar = false;
+        hasSugar = false;
+        hasLaurel = false;
+        noodleObject = null; // PlatingStation now owns the noodle object
+
+        // Reset gesture state
+        currentTossState = TossingState.NotStarted;
+        currentShakeState = ShakingState.NotStarted;
+        completedTosses = 0;
+        completedShakes = 0;
+        fryingTimer = 0f;
+        shakeCookTimer = 0f;
+        cookTimer = 0f;
+
+        // Hide prompts and UI
+        HideTossPrompt();
+        HideShakePrompt();
+        if (cookingMeterUI != null)
+            cookingMeterUI.SetActive(false);
+
+        // Kill all tweens on pan before snapping back
+        transform.DOKill();
+
+        // Return pan to original position
+        SnapBackToOriginal();
+
+        // Reset sprite color
+        if (spriteRenderer != null)
+            spriteRenderer.color = normalColor;
+
+        Debug.Log("Pan poured and reset - ready for next use");
+    }
+
+    private void RemoveNoodles()
+    {
+        if (noodleObject != null)
+        {
+            noodleObject.SetActive(false);
+        }
+    }
+
+    private void SnapBackToOriginal()
+    {
+        transform.DOLocalMove(originalPanPosition, 0.3f).SetEase(Ease.OutQuad);
+        transform.DOLocalRotateQuaternion(originalPanRotation, 0.3f).SetEase(Ease.OutQuad);
     }
 
     #endregion

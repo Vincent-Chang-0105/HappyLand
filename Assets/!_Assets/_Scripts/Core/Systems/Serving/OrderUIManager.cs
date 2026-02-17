@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 using System.Collections;
+using AudioSystem;
 
 public class OrderUIManager : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class OrderUIManager : MonoBehaviour
 
     [Header("Ticket System")]
     [SerializeField] private TicketManager ticketManager;
+
+    [Header("Audio")]
+    [SerializeField] private SoundData getOrderSound;
 
     private Dictionary<Customer, OrderButton> activeOrderButtons = new Dictionary<Customer, OrderButton>();
     private Dictionary<Customer, GameObject> customerTicket = new Dictionary<Customer, GameObject>();
@@ -139,6 +143,10 @@ public class OrderUIManager : MonoBehaviour
         }
         
         customersWithOrders.Add(customer);
+        customer.TakeOrder();
+
+        if (getOrderSound != null && SoundManager.Instance != null)
+            SoundManager.Instance.CreateSoundBuilder().Play(getOrderSound);
 
         if (ticketManager != null)
         {

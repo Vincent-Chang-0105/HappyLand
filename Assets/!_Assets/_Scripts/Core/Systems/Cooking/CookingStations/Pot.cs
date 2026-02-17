@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 using DG.Tweening;
+using AudioSystem;
 
 /// <summary>
 /// Pot cooking station - specialized for boiling ingredients
@@ -35,16 +36,19 @@ public class Pot : CookingStation
     [SerializeField] private float minSpeedMultiplier = 0.7f;
     [SerializeField] private float maxSpeedMultiplier = 2.0f;
 
+    [Header("Sounds")]
+    [SerializeField] private SoundData stirStartedSound;
+    [SerializeField] private SoundData stirCycleCompleteSound;
+    [SerializeField] private SoundData allStirsCompleteSound;
+    [SerializeField] private SoundData boilingLoopSound;
+    [SerializeField] private SoundData ingredientAddSound;
+    [SerializeField] private SoundData pourSound;
+
     [Header("Pour Settings")]
     [SerializeField] private float pourTiltAngle = 45f;
     [SerializeField] private float tiltSmoothing = 8f;
     [SerializeField] private float pourDetectRadius = 1.5f;
     [SerializeField] private float pourPickupRadius = 1.5f;
-
-    [Header("Sinigang Cooking")]
-    [SerializeField] private int sinigangRequiredStirs = 3;
-    [SerializeField] private float sinigangBoilingDurationBetweenStirs = 2.5f;
-    [SerializeField] private Color sinigangBrothColor = new Color(0.8f, 1f, 0.8f);
 
     // Stirring state
     private enum StirringState
@@ -60,8 +64,7 @@ public class Pot : CookingStation
     {
         Initial,         // No cooking
         Boiling,         // Regular boiling
-        BoilingComplete, // Waiting for sinigang mix
-        SinigangCooking  // Sinigang phase active
+        BoilingComplete  // Boiling done, pot is pourable
     }
 
     // Per-ingredient orbit data for organic motion
@@ -77,11 +80,13 @@ public class Pot : CookingStation
     private PotCookingPhase currentCookingPhase = PotCookingPhase.Initial;
     private int completedStirs = 0;
     private float boilingTimer = 0f;
-    private bool hasSinigangMix = false;
     private float currentSwirlSpeed = 0f;
     private Vector3 containerBasePosition;
     private float orbitAngle = 0f;
     private Dictionary<Transform, IngredientOrbitData> ingredientOrbits = new Dictionary<Transform, IngredientOrbitData>();
+
+    // Sound state
+    private SoundEmitter boilingLoopEmitter;
 
     // Pour state
     private bool isPourable = false;
@@ -153,6 +158,13 @@ public class Pot : CookingStation
         {
             gestureDetector.OnStirComplete -= OnStirGestureComplete;
             gestureDetector.OnStirProgress -= OnStirGestureProgress;
+        }
+
+        // Cleanup boiling loop sound
+        if (boilingLoopEmitter != null)
+        {
+            boilingLoopEmitter.Stop();
+            boilingLoopEmitter = null;
         }
     }
 
@@ -260,14 +272,8 @@ public class Pot : CookingStation
             return;
         }
 
-        // Determine which stir counts to use based on cooking phase
-        int requiredStirCount = (currentCookingPhase == PotCookingPhase.SinigangCooking)
-            ? sinigangRequiredStirs
-            : requiredStirs;
-
-        float boilDuration = (currentCookingPhase == PotCookingPhase.SinigangCooking)
-            ? sinigangBoilingDurationBetweenStirs
-            : boilingDurationBetweenStirs;
+        int requiredStirCount = requiredStirs;
+        float boilDuration = boilingDurationBetweenStirs;
 
         // Update based on current stirring state
         switch (currentStirState)
@@ -397,14 +403,14 @@ public class Pot : CookingStation
     
     private void ShowStirPrompt()
     {
-        int requiredStirCount = (currentCookingPhase == PotCookingPhase.SinigangCooking)
-            ? sinigangRequiredStirs
-            : requiredStirs;
-
         if (stirPrompt != null)
         {
-            stirPrompt.ShowPrompt(completedStirs, requiredStirCount);
+            stirPrompt.ShowPrompt(completedStirs, requiredStirs);
         }
+
+        // Play stir started sound (spoon pickup)
+        if (stirStartedSound != null && SoundManager.Instance != null)
+            SoundManager.Instance.CreateSoundBuilder().Play(stirStartedSound);
 
         // Enable gesture detection
         if (gestureDetector != null)
@@ -441,10 +447,14 @@ public class Pot : CookingStation
 
         completedStirs++;
 
-        Debug.Log($"Stir {completedStirs}/{requiredStirs} completed!");
+        //Debug.Log($"Stir {completedStirs}/{requiredStirs} completed!");
 
         // Tutorial event
         TutorialEvents.StirCompleted();
+
+        // Play stir cycle complete sound
+        if (stirCycleCompleteSound != null && SoundManager.Instance != null)
+            SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(stirCycleCompleteSound);
 
         // Show success feedback
         if (stirPrompt != null)
@@ -458,6 +468,10 @@ public class Pot : CookingStation
         // Start boiling
         currentStirState = StirringState.Boiling;
         boilingTimer = 0f;
+
+        // Start boiling loop sound (only once, not on every stir)
+        if (boilingLoopSound != null && SoundManager.Instance != null && boilingLoopEmitter == null)
+            boilingLoopEmitter = SoundManager.Instance.CreateSoundBuilder().Play(boilingLoopSound);
 
         // Burst the swirl speed for a satisfying "whoosh"
         currentSwirlSpeed = stirBurstSpeed;
@@ -501,19 +515,12 @@ public class Pot : CookingStation
 
     protected override void CompleteCooking()
     {
-        // Boiling phase complete (handles both sinigang and non-sinigang paths)
         if (currentCookingPhase == PotCookingPhase.Boiling)
         {
             CompleteBoilingPhase();
         }
-        else if (currentCookingPhase == PotCookingPhase.SinigangCooking)
-        {
-            // Complete sinigang cooking
-            CompleteSinigangCooking();
-        }
         else
         {
-            // Regular completion (for non-sinigang ingredients)
             base.CompleteCooking();
         }
     }
@@ -532,192 +539,38 @@ public class Pot : CookingStation
         // Tutorial event
         TutorialEvents.AllStirsCompleted();
 
-        // If sinigang mix already added, start sinigang cooking phase
-        if (hasSinigangMix)
+        // Play completion fanfare + stop boiling loop
+        if (allStirsCompleteSound != null && SoundManager.Instance != null)
+            SoundManager.Instance.CreateSoundBuilder().Play(allStirsCompleteSound);
+
+        if (boilingLoopEmitter != null)
         {
-            Debug.Log("Boiling complete! Starting sinigang cooking phase...");
-            currentCookingPhase = PotCookingPhase.SinigangCooking;
-            StartSinigangCooking();
-        }
-        else
-        {
-            Debug.Log("Boiling complete! Pot is now pourable - drag to PourZone.");
-            currentCookingPhase = PotCookingPhase.BoilingComplete;
-            isCooking = false;
-            isWindingDown = true;
-
-            // Make pot pourable
-            isPourable = true;
-            potOriginalPosition = transform.position;
-            potOriginalRotation = transform.rotation;
-
-            // Hide UI temporarily
-            if (cookingMeterUI != null)
-                cookingMeterUI.SetActive(false);
-
-            HideStirPrompt();
-
-            // Stop effects
-            if (cookingEffect != null)
-                cookingEffect.Stop();
-
-            // Bounce to hint "drag me"
-            transform.DOPunchScale(Vector3.one * 0.1f, 0.5f, 4, 0.5f);
-        }
-    }
-
-    private void CompleteSinigangCooking()
-    {
-        Debug.Log("Sinigang cooking complete! Pot is now pourable - drag to PourZone.");
-
-        // Tutorial event
-        TutorialEvents.SinigangCompleted();
-
-        // Complete sinigang cooking for all ingredients
-        foreach (GameObject ingredient in ingredientsInStation)
-        {
-            if (ingredient != null)
-            {
-                ISinigangable sinigang = ingredient.GetComponent<ISinigangable>();
-                if (sinigang != null)
-                {
-                    sinigang.CompleteSiniganging();
-                }
-            }
+            boilingLoopEmitter.FadeOutAndStop(0.5f);
+            boilingLoopEmitter = null;
         }
 
-        // Register with plating manager
-        if (PlatingManager.Instance != null)
-        {
-            foreach (GameObject ingredient in ingredientsInStation)
-            {
-                if (ingredient != null)
-                {
-                    PlatingManager.Instance.RegisterSinigangChicken(ingredient);
-                }
-            }
-        }
-
-        // Make pot pourable instead of clearing immediately
+        //Debug.Log("Boiling complete! Pot is now pourable - drag to PourZone.");
+        currentCookingPhase = PotCookingPhase.BoilingComplete;
         isCooking = false;
         isWindingDown = true;
+
+        // Make pot pourable
         isPourable = true;
         potOriginalPosition = transform.position;
         potOriginalRotation = transform.rotation;
 
-        HideStirPrompt();
-
+        // Hide UI temporarily
         if (cookingMeterUI != null)
             cookingMeterUI.SetActive(false);
 
+        HideStirPrompt();
+
+        // Stop effects
         if (cookingEffect != null)
             cookingEffect.Stop();
 
         // Bounce to hint "drag me"
         transform.DOPunchScale(Vector3.one * 0.1f, 0.5f, 4, 0.5f);
-    }
-
-    private void ClearPot()
-    {
-        base.CompleteCooking(); // Calls base to clean up
-
-        ingredientsInStation.Clear();
-        hasSinigangMix = false;
-        currentCookingPhase = PotCookingPhase.Initial;
-        isCooking = false;
-        isWindingDown = false;
-        currentSwirlSpeed = 0f;
-        orbitAngle = 0f;
-        ingredientOrbits.Clear();
-
-        // Reset ingredient container position
-        if (ingredientContainer != null)
-        {
-            ingredientContainer.localRotation = Quaternion.identity;
-            ingredientContainer.localPosition = containerBasePosition;
-        }
-
-        // Reset visual to normal
-        if (spriteRenderer != null)
-            spriteRenderer.color = Color.white;
-
-        HideStirPrompt();
-
-        if (cookingMeterUI != null)
-            cookingMeterUI.SetActive(false);
-
-        Debug.Log("Pot cleared and ready for next use");
-    }
-
-    public bool CanAcceptSinigangMix()
-    {
-        // Can accept sinigang mix BEFORE cooking starts (to mark it as sinigang mode)
-        // OR after boiling is complete
-        return !hasSinigangMix;
-    }
-
-    public bool IsSinigangMode()
-    {
-        return hasSinigangMix;
-    }
-
-    public void AddSinigangMix(Ingredient mix)
-    {
-        if (!CanAcceptSinigangMix())
-        {
-            Debug.LogWarning("Pot already has sinigang mix!");
-            return;
-        }
-
-        Debug.Log($"Adding sinigang mix: {mix.ingredientName}");
-
-        hasSinigangMix = true;
-
-        // Tutorial event
-        TutorialEvents.SinigangMixAdded();
-
-        // Change pot color to indicate sinigang broth
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.color = sinigangBrothColor;
-        }
-
-        // If we're already done with initial boiling, start sinigang cooking
-        if (currentCookingPhase == PotCookingPhase.BoilingComplete)
-        {
-            currentCookingPhase = PotCookingPhase.SinigangCooking;
-            StartSinigangCooking();
-        }
-        else
-        {
-            Debug.Log("Sinigang mix added - pot is now in sinigang mode!");
-            // Pot will start in sinigang mode when ingredients are added
-        }
-    }
-
-    private void StartSinigangCooking()
-    {
-        Debug.Log("Starting sinigang cooking phase...");
-
-        isCooking = true;
-        completedStirs = 0;
-        currentStirState = StirringState.WaitingForStir;
-
-        // Start sinigang cooking on ingredients
-        foreach (GameObject ingredient in ingredientsInStation)
-        {
-            if (ingredient != null)
-            {
-                ISinigangable sinigang = ingredient.GetComponent<ISinigangable>();
-                if (sinigang != null)
-                {
-                    sinigang.StartSiniganging();
-                }
-            }
-        }
-
-        // Show stir prompt
-        ShowStirPrompt();
     }
 
     #endregion
@@ -743,6 +596,9 @@ public class Pot : CookingStation
             return;
         }
 
+        if (ingredientAddSound != null && SoundManager.Instance != null)
+            SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(ingredientAddSound);
+
         // Try to use SeasoningManager if available
         SeasoningManager seasoningMgr = GetComponent<SeasoningManager>();
         if (seasoningMgr != null)
@@ -752,7 +608,7 @@ public class Pot : CookingStation
         else
         {
             // Fallback - just log if no manager is attached
-            Debug.Log($"🧂 Added seasoning to pot: {seasoning.ingredientName} (no SeasoningManager attached)");
+            //Debug.Log($"🧂 Added seasoning to pot: {seasoning.ingredientName} (no SeasoningManager attached)");
         }
     }
 
@@ -775,6 +631,9 @@ public class Pot : CookingStation
             return;
         }
 
+        if (ingredientAddSound != null && SoundManager.Instance != null)
+            SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(ingredientAddSound);
+
         // Try to use SeasoningManager if available
         SeasoningManager seasoningMgr = GetComponent<SeasoningManager>();
         if (seasoningMgr != null)
@@ -789,7 +648,7 @@ public class Pot : CookingStation
             {
                 spriteRenderer.color = Color.Lerp(spriteRenderer.color, Color.cyan, 0.2f);
             }
-            Debug.Log($"💧 Added liquid to pot: {liquid.ingredientName} (no SeasoningManager attached)");
+            //Debug.Log($"💧 Added liquid to pot: {liquid.ingredientName} (no SeasoningManager attached)");
         }
     }
 
@@ -890,6 +749,9 @@ public class Pot : CookingStation
     {
         isPouring = true;
 
+        if (pourSound != null && SoundManager.Instance != null)
+            SoundManager.Instance.CreateSoundBuilder().Play(pourSound);
+
         GameObject destination = GameObject.FindWithTag(pourZone.DestinationTag);
         if (destination == null)
         {
@@ -899,7 +761,7 @@ public class Pot : CookingStation
             return;
         }
 
-        Debug.Log($"Pot: Pouring {ingredientsInStation.Count} ingredients to {pourZone.DestinationTag}");
+        //Debug.Log($"Pot: Pouring {ingredientsInStation.Count} ingredients to {pourZone.DestinationTag}");
 
         // Transfer each ingredient out of the pot
         int count = 0;
@@ -949,12 +811,18 @@ public class Pot : CookingStation
 
     private void CompletePour()
     {
+        // Stop boiling loop if still running
+        if (boilingLoopEmitter != null)
+        {
+            boilingLoopEmitter.FadeOutAndStop(0.3f);
+            boilingLoopEmitter = null;
+        }
+
         // Clear the pot state
         ingredientsInStation.Clear();
         isPourable = false;
         isPouring = false;
         isWindingDown = false;
-        hasSinigangMix = false;
         currentCookingPhase = PotCookingPhase.Initial;
         currentSwirlSpeed = 0f;
         orbitAngle = 0f;
@@ -980,7 +848,7 @@ public class Pot : CookingStation
         if (cookingMeterUI != null)
             cookingMeterUI.SetActive(false);
 
-        Debug.Log("Pot poured and cleared - ready for next use");
+        //Debug.Log("Pot poured and cleared - ready for next use");
     }
 
     private void SnapBackToOriginal()

@@ -130,7 +130,7 @@ public class TutorialUIPanel : MonoBehaviour, IPointerClickHandler
 
     private void OnContinueClicked()
     {
-        Debug.Log("TutorialUIPanel: Panel clicked - continuing tutorial");
+        //Debug.Log("TutorialUIPanel: Panel clicked - continuing tutorial");
 
         if (!isTypingComplete)
         {

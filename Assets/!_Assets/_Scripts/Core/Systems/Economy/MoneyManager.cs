@@ -62,8 +62,6 @@ public class MoneyManager : MonoBehaviour
             todayIncome += amount; // Track daily income
             OnMoneyChanged?.Invoke(currentMoney);
             OnMoneyEarned?.Invoke(amount);
-
-            Debug.Log($"Money earned: +{amount} PHP. Total: {currentMoney} PHP");
         }
 
         /// <summary>
@@ -81,7 +79,6 @@ public class MoneyManager : MonoBehaviour
 
             if (!CanAfford(amount))
             {
-                Debug.Log($"Insufficient funds. Need: {amount} PHP, Have: {currentMoney} PHP");
                 OnInsufficientFunds?.Invoke();
                 return false;
             }
@@ -91,7 +88,6 @@ public class MoneyManager : MonoBehaviour
             OnMoneyChanged?.Invoke(currentMoney);
             OnMoneySpent?.Invoke(amount);
 
-            Debug.Log($"Money spent: -{amount} PHP. Remaining: {currentMoney} PHP");
             return true;
         }
 
@@ -137,7 +133,6 @@ public class MoneyManager : MonoBehaviour
         {
             todayIncome = 0;
             todayExpenses = 0;
-            Debug.Log("Daily tracking reset for new day.");
         }
 
         // Debug methods for testing

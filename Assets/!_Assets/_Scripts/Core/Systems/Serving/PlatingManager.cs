@@ -26,6 +26,7 @@ public class PlatingManager : Singleton<PlatingManager>
     [SerializeField] private Transform servingArea;
     [SerializeField] private float plateSpawnDelay = 0.5f;
     [SerializeField] private Vector2 plateSpawnOffset = Vector2.zero;
+    [SerializeField] private ParticleSystem plateCompleteEffect;
 
     private void Start()
     {
@@ -56,6 +57,41 @@ public class PlatingManager : Singleton<PlatingManager>
     {
         RegisterIngredientForDish("Sinigang", chicken,
             c => c.GetComponent<ISinigangable>()?.IsSiniganged() ?? false);
+    }
+
+    /// <summary>
+    /// Register a noodled chicken as ready for plating
+    /// </summary>
+    public void RegisterNoodleChicken(GameObject chicken)
+    {
+        RegisterIngredientForDish("NoodleChicken", chicken,
+            c => c.GetComponent<INoodleable>()?.IsNoodled() ?? false);
+    }
+
+    /// <summary>
+    /// Register a mechado chicken as ready for plating
+    /// </summary>
+    public void RegisterMechadoChicken(GameObject chicken)
+    {
+        RegisterIngredientForDish("Mechado", chicken,
+            c => c.GetComponent<IMechadoable>()?.IsMechado() ?? false);
+    }
+
+    /// <summary>
+    /// Register an adobo chicken as ready for plating
+    /// </summary>
+    public void RegisterAdoboChicken(GameObject chicken)
+    {
+        RegisterIngredientForDish("Adobo", chicken,
+            c => c.GetComponent<IAdoboable>()?.IsAdobo() ?? false);
+    }
+
+    /// <summary>
+    /// Register the noodle object itself as ready for plating
+    /// </summary>
+    public void RegisterNoodleIngredient(GameObject ingredient)
+    {
+        RegisterIngredientForDish("NoodleChicken", ingredient, _ => true);
     }
 
     private void RegisterIngredientForDish(string dishName, GameObject ingredient, System.Func<GameObject, bool> validator)
@@ -140,7 +176,6 @@ public class PlatingManager : Singleton<PlatingManager>
         foreach (GameObject ingredient in ingredientsForPlate)
         {
             plate.AddChicken(ingredient); // Method name is generic despite name
-            Destroy(ingredient);
         }
 
         // Remove from waiting list
@@ -163,6 +198,11 @@ public class PlatingManager : Singleton<PlatingManager>
     {
         // Add your effects here
         // Example: particle effects, sound, animation
+        if (plateCompleteEffect != null)
+        {
+            ParticleSystem effect = Instantiate(plateCompleteEffect, plate.transform.position, Quaternion.identity, plate.transform);
+            effect.Play();
+        }
 
         // Note: Scale animation removed to prevent issues
         // If you want to add animation later, use DOTween or another animation system
@@ -177,6 +217,6 @@ public class PlatingManager : Singleton<PlatingManager>
         {
             dish.waitingIngredients.Clear();
         }
-        Debug.Log("Cleared all waiting ingredients");
+        //Debug.Log("Cleared all waiting ingredients");
     }
 }

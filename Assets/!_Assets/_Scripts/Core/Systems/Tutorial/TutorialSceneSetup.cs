@@ -16,7 +16,7 @@ public class TutorialSceneSetup : MonoBehaviour
         if (customerGenerator != null)
         {
             customerGenerator.StopCustomerGeneration();
-            Debug.Log("TutorialSceneSetup: Stopped customer auto-generation for tutorial.");
+            //Debug.Log("TutorialSceneSetup: Stopped customer auto-generation for tutorial.");
         }
 
         // Subscribe to tutorial completion to auto-load Level1

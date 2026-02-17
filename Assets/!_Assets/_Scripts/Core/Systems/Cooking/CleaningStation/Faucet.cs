@@ -14,9 +14,13 @@ public class Faucet : MonoBehaviour, IInteractable
     [Header("Water Effects")]
     [SerializeField] private ParticleSystem waterEffect;
     [SerializeField] private GameObject waterSpriteObject; // The GameObject with SpriteRenderer + Animator
-    [SerializeField] private SoundData waterSound;
     [SerializeField] private float waterForce = 5f;
     [SerializeField] private float waterFadeDuration = 0.3f; // Duration of fade in/out
+
+    [Header("Sounds")]
+    [SerializeField] private SoundData faucetOnSound;
+    [SerializeField] private SoundData faucetOffSound;
+    [SerializeField] private SoundData waterLoopSound;
 
     [Header("Water Cost")]
     [SerializeField] private WaterCostTracker waterCostTracker;
@@ -25,6 +29,7 @@ public class Faucet : MonoBehaviour, IInteractable
     private Tween handleTween;
     private Tween waterFadeTween;
     private SpriteRenderer waterSpriteRenderer;
+    private SoundEmitter waterLoopEmitter;
     
     #region IInteractable Implementation
     public void OnInteract()
@@ -63,7 +68,7 @@ public class Faucet : MonoBehaviour, IInteractable
         else
             TutorialEvents.FaucetClosed();
 
-        Debug.Log($"Faucet {(isOn ? "turned ON" : "turned OFF")}");
+        //Debug.Log($"Faucet {(isOn ? "turned ON" : "turned OFF")}");
     }
     
     private void RotateHandle()
@@ -79,6 +84,14 @@ public class Faucet : MonoBehaviour, IInteractable
         // Calculate target rotation
         float targetZ = isOn ? handleRotationAngle : 0f;
         Vector3 targetRotation = new Vector3(0, 0, targetZ);
+
+        // Play click sound immediately when handle starts turning
+        if (SoundManager.Instance != null)
+        {
+            SoundData clickSound = isOn ? faucetOnSound : faucetOffSound;
+            if (clickSound != null)
+                SoundManager.Instance.CreateSoundBuilder().Play(clickSound);
+        }
 
         // If turning OFF, stop water immediately
         if (!isOn)
@@ -156,16 +169,18 @@ public class Faucet : MonoBehaviour, IInteractable
             }
         }
 
-        // Toggle water sound
-        if (waterSound != null)
+        // Toggle water loop sound
+        if (isOn)
         {
-            if (isOn)
+            if (waterLoopSound != null && SoundManager.Instance != null)
+                waterLoopEmitter = SoundManager.Instance.CreateSoundBuilder().Play(waterLoopSound);
+        }
+        else
+        {
+            if (waterLoopEmitter != null)
             {
-                //aterSound.Play();
-            }
-            else
-            {
-                //waterSound.Stop();
+                waterLoopEmitter.FadeOutAndStop(waterFadeDuration);
+                waterLoopEmitter = null;
             }
         }
     }
@@ -179,13 +194,16 @@ public class Faucet : MonoBehaviour, IInteractable
     {
         // Cleanup tweens
         if (handleTween != null && handleTween.IsActive())
-        {
             handleTween.Kill();
-        }
 
         if (waterFadeTween != null && waterFadeTween.IsActive())
-        {
             waterFadeTween.Kill();
+
+        // Cleanup water loop sound
+        if (waterLoopEmitter != null)
+        {
+            waterLoopEmitter.Stop();
+            waterLoopEmitter = null;
         }
     }
 }

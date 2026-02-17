@@ -50,7 +50,7 @@ public class EndOfDayUI : MonoBehaviour
         if (DayManager.Instance != null)
         {
             DayManager.Instance.OnDayEnded += ShowEndOfDayReport;
-            Debug.Log("EndOfDayUI: Successfully subscribed to DayManager.OnDayEnded event");
+            //Debug.Log("EndOfDayUI: Successfully subscribed to DayManager.OnDayEnded event");
         }
         else
         {
@@ -71,7 +71,7 @@ public class EndOfDayUI : MonoBehaviour
         if (endOfDayPanel != null)
         {
             endOfDayPanel.SetActive(false);
-            Debug.Log("EndOfDayUI: Panel hidden initially");
+            //Debug.Log("EndOfDayUI: Panel hidden initially");
         }
         else
         {
@@ -95,34 +95,36 @@ public class EndOfDayUI : MonoBehaviour
 
     private void ShowEndOfDayReport(int dayNumber)
     {
-        Debug.Log($"EndOfDayUI: ShowEndOfDayReport called for Day {dayNumber}");
-
-        // Generate report
+        // Generate and display report data first (before any cutscene)
         currentReport = GenerateDailyReport(dayNumber);
-
-        // Display report
         DisplayReport(currentReport);
 
-        // Show panel with animation
-        if (endOfDayPanel != null)
-        {
-            endOfDayPanel.SetActive(true);
-            Debug.Log("EndOfDayUI: Panel activated and showing");
+        // Pause the game — stays paused through the cutscene and report
+        Time.timeScale = 0f;
 
-            if (canvasGroup != null)
-            {
-                canvasGroup.alpha = 0f;
-                canvasGroup.DOFade(1f, fadeInDuration).SetUpdate(true); // SetUpdate(true) to work with Time.timeScale = 0
-            }
-        }
+        // Play BeforeReport cutscene if one is configured, then show the panel.
+        // If no cutscene exists for this day, ShowReportPanel is called immediately.
+        if (CutsceneManager.Instance != null)
+            CutsceneManager.Instance.TryPlay(dayNumber, CutsceneTiming.BeforeReport, ShowReportPanel);
         else
+            ShowReportPanel();
+    }
+
+    private void ShowReportPanel()
+    {
+        if (endOfDayPanel == null)
         {
             Debug.LogError("EndOfDayUI: Cannot show panel - endOfDayPanel is NULL!");
+            return;
         }
 
-        // Pause game or stop time (optional)
-        Time.timeScale = 0f; // Pause game during report
-        Debug.Log("EndOfDayUI: Game paused (Time.timeScale = 0)");
+        endOfDayPanel.SetActive(true);
+
+        if (canvasGroup != null)
+        {
+            canvasGroup.alpha = 0f;
+            canvasGroup.DOFade(1f, fadeInDuration).SetUpdate(true); // SetUpdate so it works while paused
+        }
     }
 
     private DailyStatistics GenerateDailyReport(int dayNumber)
@@ -267,52 +269,50 @@ public class EndOfDayUI : MonoBehaviour
 
     private void OnContinueClicked()
     {
-        // Get checkbox states
+        // Apply whichever expenses the player chose to pay
         bool payElectricity = electricityCheckbox != null && electricityCheckbox.isOn;
-        bool payWater = waterCheckbox != null && waterCheckbox.isOn;
-        bool payMedicine = medicineCheckbox != null && medicineCheckbox.isOn;
-        bool payRepairs = repairsCheckbox != null && repairsCheckbox.isOn;
-        bool payRent = rentCheckbox != null && rentCheckbox.isOn;
+        bool payWater       = waterCheckbox      != null && waterCheckbox.isOn;
+        bool payMedicine    = medicineCheckbox   != null && medicineCheckbox.isOn;
+        bool payRepairs     = repairsCheckbox    != null && repairsCheckbox.isOn;
+        bool payRent        = rentCheckbox       != null && rentCheckbox.isOn;
 
-        // Apply selected expenses
         if (ExpenseManager.Instance != null)
-        {
             ExpenseManager.Instance.ApplySelectedExpenses(payElectricity, payWater, payMedicine, payRepairs, payRent);
-        }
 
-        // Hide panel with animation
+        // Fade out the report panel, then check for an AfterReport cutscene
         if (canvasGroup != null)
         {
-            canvasGroup.DOFade(0f, fadeOutDuration).SetUpdate(true).OnComplete(() =>
-            {
-                if (endOfDayPanel != null)
-                {
-                    endOfDayPanel.SetActive(false);
-                }
-
-                // Resume game
-                Time.timeScale = 1f;
-
-                // Continue to next day
-                if (DayManager.Instance != null)
-                {
-                    DayManager.Instance.ContinueToNextDay();
-                }
-            });
+            canvasGroup.DOFade(0f, fadeOutDuration).SetUpdate(true).OnComplete(OnReportPanelHidden);
         }
         else
         {
+            // No CanvasGroup — hide immediately and proceed
             if (endOfDayPanel != null)
-            {
                 endOfDayPanel.SetActive(false);
-            }
 
-            Time.timeScale = 1f;
-
-            if (DayManager.Instance != null)
-            {
-                DayManager.Instance.ContinueToNextDay();
-            }
+            OnReportPanelHidden();
         }
+    }
+
+    private void OnReportPanelHidden()
+    {
+        if (endOfDayPanel != null)
+            endOfDayPanel.SetActive(false);
+
+        // Resume time before the cutscene so video plays at normal speed
+        Time.timeScale = 1f;
+
+        // Play AfterReport cutscene if one is configured, then start the next day.
+        // If no cutscene exists for this day, ProceedToNextDay is called immediately.
+        if (CutsceneManager.Instance != null)
+            CutsceneManager.Instance.TryPlay(currentReport.dayNumber, CutsceneTiming.AfterReport, ProceedToNextDay);
+        else
+            ProceedToNextDay();
+    }
+
+    private void ProceedToNextDay()
+    {
+        if (DayManager.Instance != null)
+            DayManager.Instance.ContinueToNextDay();
     }
 }

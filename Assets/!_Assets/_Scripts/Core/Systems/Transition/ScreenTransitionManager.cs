@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,8 +21,10 @@ public class NavigationButton
 {
     [Header("Button Configuration")]
     public DirectionButton buttonDirection; // Which button to modify (up/down/left/right)
-    public Sprite buttonSprite; // The image to set for this button
-    
+    public Sprite buttonSprite;      // Normal state sprite
+    public Sprite hoverSprite;       // Highlighted/hovered sprite (optional)
+    public Sprite pressedSprite;     // Pressed sprite (optional, falls back to hoverSprite)
+
     [Header("Navigation Target")]
     public Vector2 targetGridPosition;
     public string targetScreenName; // Alternative to grid position
@@ -198,6 +201,8 @@ public class ScreenTransitionManager : MonoBehaviour
         yield return StartCoroutine(ShowScreenUI(currentScreen));
 
         UpdateButtonStates();
+        if (EventSystem.current != null)
+            EventSystem.current.SetSelectedGameObject(null);
 
         isTransitioning = false;
     }
@@ -235,7 +240,6 @@ public class ScreenTransitionManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"Showed UI elements for screen: {screen.screenName}");
     }
 
     private IEnumerator HideScreenUI(ScreenData screen)
@@ -271,7 +275,6 @@ public class ScreenTransitionManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"Hid UI elements for screen: {screen.screenName}");
     }
 
     private IEnumerator AnimateUIElementIn(GameObject uiElement, ScreenData screen)
@@ -388,6 +391,16 @@ public class ScreenTransitionManager : MonoBehaviour
                     {
                         buttonImage.sprite = navButton.buttonSprite;
                     }
+
+                    // Set up hover/pressed sprites via Unity's built-in SpriteSwap
+                    if (navButton.hoverSprite != null)
+                    {
+                        targetButton.transition = Selectable.Transition.SpriteSwap;
+                        SpriteState state = targetButton.spriteState;
+                        state.highlightedSprite = navButton.hoverSprite;
+                        state.pressedSprite = navButton.pressedSprite != null ? navButton.pressedSprite : navButton.hoverSprite;
+                        targetButton.spriteState = state;
+                    }
                     
                     // Verify target exists and enable button
                     bool targetExists = false;
@@ -441,7 +454,6 @@ public class ScreenTransitionManager : MonoBehaviour
             if (uiElement != null)
             {
                 uiElement.SetActive(true);
-                Debug.Log($"Manually showed UI element: {elementName}");
                 return;
             }
         }
@@ -456,7 +468,6 @@ public class ScreenTransitionManager : MonoBehaviour
             if (uiElement != null)
             {
                 uiElement.SetActive(false);
-                Debug.Log($"Manually hid UI element: {elementName}");
                 return;
             }
         }
@@ -514,14 +525,12 @@ public class ScreenTransitionManager : MonoBehaviour
     public void EnableTutorialMode()
     {
         tutorialModeActive = true;
-        Debug.Log("ScreenTransitionManager: Tutorial mode enabled");
     }
 
     public void DisableTutorialMode()
     {
         tutorialModeActive = false;
         UpdateButtonStates(); // Restore normal button states
-        Debug.Log("ScreenTransitionManager: Tutorial mode disabled");
     }
 
     public void SetAllowedNavigationButtons(System.Collections.Generic.List<DirectionButton> allowedDirections)
@@ -544,7 +553,6 @@ public class ScreenTransitionManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"Tutorial: Allowed navigation buttons set to: {string.Join(", ", allowedDirections)}");
     }
 
     public void EnableAllNavigationButtons()

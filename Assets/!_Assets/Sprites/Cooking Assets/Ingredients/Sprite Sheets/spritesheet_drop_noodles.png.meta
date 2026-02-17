@@ -1,0 +1,906 @@
+fileFormatVersion: 2
+guid: 8e1402398027db747b95402392be2dda
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -948658839804332945
+    second: spritesheet_drop_noodles_0
+  - first:
+      213: -7698641416309376198
+    second: spritesheet_drop_noodles_1
+  - first:
+      213: -4082507815654344556
+    second: spritesheet_drop_noodles_2
+  - first:
+      213: -4060195603935384377
+    second: spritesheet_drop_noodles_3
+  - first:
+      213: 5067099241055746073
+    second: spritesheet_drop_noodles_4
+  - first:
+      213: -3378113196054017512
+    second: spritesheet_drop_noodles_5
+  - first:
+      213: 5647775436021212073
+    second: spritesheet_drop_noodles_6
+  - first:
+      213: 2475354028612135756
+    second: spritesheet_drop_noodles_7
+  - first:
+      213: 2147426039447130495
+    second: spritesheet_drop_noodles_8
+  - first:
+      213: -3803784367319237984
+    second: spritesheet_drop_noodles_9
+  - first:
+      213: 8435766603664334174
+    second: spritesheet_drop_noodles_10
+  - first:
+      213: 6461810192627703818
+    second: spritesheet_drop_noodles_11
+  - first:
+      213: -1023515336647193930
+    second: spritesheet_drop_noodles_12
+  - first:
+      213: 4482143301027713361
+    second: spritesheet_drop_noodles_13
+  - first:
+      213: 9039417561951063793
+    second: spritesheet_drop_noodles_14
+  - first:
+      213: -5739700948276138467
+    second: spritesheet_drop_noodles_15
+  - first:
+      213: -1686979611253445344
+    second: spritesheet_drop_noodles_16
+  - first:
+      213: 2794360174377043071
+    second: spritesheet_drop_noodles_17
+  - first:
+      213: -509713382358159655
+    second: spritesheet_drop_noodles_18
+  - first:
+      213: -7221212724814663404
+    second: spritesheet_drop_noodles_19
+  - first:
+      213: 3187400515445095456
+    second: spritesheet_drop_noodles_20
+  - first:
+      213: -2587701304878457584
+    second: spritesheet_drop_noodles_21
+  - first:
+      213: -2414480135521198836
+    second: spritesheet_drop_noodles_22
+  - first:
+      213: 4165592933696143250
+    second: spritesheet_drop_noodles_23
+  - first:
+      213: -6907977126070929039
+    second: spritesheet_drop_noodles_24
+  - first:
+      213: 2454377576735233969
+    second: spritesheet_drop_noodles_25
+  - first:
+      213: 5641345828714554022
+    second: spritesheet_drop_noodles_26
+  - first:
+      213: -8204908094594257613
+    second: spritesheet_drop_noodles_27
+  - first:
+      213: -5269560808592055258
+    second: spritesheet_drop_noodles_28
+  - first:
+      213: -4864528998358584576
+    second: spritesheet_drop_noodles_29
+  - first:
+      213: 5855572331018224579
+    second: spritesheet_drop_noodles_30
+  - first:
+      213: -278890773878379035
+    second: spritesheet_drop_noodles_31
+  - first:
+      213: -7770046597065744536
+    second: spritesheet_drop_noodles_32
+  - first:
+      213: 4460103845550775289
+    second: spritesheet_drop_noodles_33
+  - first:
+      213: 2028318022697770366
+    second: spritesheet_drop_noodles_34
+  - first:
+      213: 1135646123517360762
+    second: spritesheet_drop_noodles_35
+  - first:
+      213: -7143377876620636972
+    second: spritesheet_drop_noodles_36
+  - first:
+      213: -2487362842836154559
+    second: spritesheet_drop_noodles_37
+  - first:
+      213: 3925725336958941729
+    second: spritesheet_drop_noodles_38
+  - first:
+      213: -4186254181374307305
+    second: spritesheet_drop_noodles_39
+  - first:
+      213: 30271254755600049
+    second: spritesheet_drop_noodles_40
+  - first:
+      213: -3658976147148816985
+    second: spritesheet_drop_noodles_41
+  - first:
+      213: 555382888319641406
+    second: spritesheet_drop_noodles_42
+  - first:
+      213: -4126540828598149698
+    second: spritesheet_drop_noodles_43
+  - first:
+      213: 6087773899534702384
+    second: spritesheet_drop_noodles_44
+  - first:
+      213: 5430399222984564651
+    second: spritesheet_drop_noodles_45
+  - first:
+      213: -2779047601198809111
+    second: spritesheet_drop_noodles_46
+  - first:
+      213: -7089754454008669643
+    second: spritesheet_drop_noodles_47
+  - first:
+      213: -8311447967350317369
+    second: spritesheet_drop_noodles_48
+  - first:
+      213: -2536446073036900250
+    second: spritesheet_drop_noodles_49
+  - first:
+      213: 2181910335583392963
+    second: spritesheet_drop_noodles_50
+  - first:
+      213: 4327755645976025534
+    second: spritesheet_drop_noodles_51
+  - first:
+      213: 7328518344996032013
+    second: spritesheet_drop_noodles_52
+  - first:
+      213: 5307942580018195374
+    second: spritesheet_drop_noodles_53
+  - first:
+      213: -5122622846858952649
+    second: spritesheet_drop_noodles_54
+  - first:
+      213: 8237011653640654129
+    second: spritesheet_drop_noodles_55
+  - first:
+      213: 7043807250375010771
+    second: spritesheet_drop_noodles_56
+  - first:
+      213: 7276229146174045984
+    second: spritesheet_drop_noodles_57
+  - first:
+      213: -738590344202745664
+    second: spritesheet_drop_noodles_58
+  - first:
+      213: 5058374160157359942
+    second: spritesheet_drop_noodles_59
+  - first:
+      213: -3369029508217876006
+    second: spritesheet_drop_noodles_60
+  - first:
+      213: 298880441937388693
+    second: spritesheet_drop_noodles_61
+  - first:
+      213: 9151922060531281152
+    second: spritesheet_drop_noodles_62
+  - first:
+      213: 3601139312199047859
+    second: spritesheet_drop_noodles_63
+  - first:
+      213: 2190972136969255716
+    second: spritesheet_drop_noodles_64
+  - first:
+      213: 4821630940769847882
+    second: spritesheet_drop_noodles_65
+  - first:
+      213: -7701321835149508221
+    second: spritesheet_drop_noodles_66
+  - first:
+      213: -2751173000330305687
+    second: spritesheet_drop_noodles_67
+  - first:
+      213: 8344030503118521629
+    second: spritesheet_drop_noodles_68
+  - first:
+      213: -2241968757025443199
+    second: spritesheet_drop_noodles_69
+  - first:
+      213: 534035852557077274
+    second: spritesheet_drop_noodles_70
+  - first:
+      213: -5188336382237737114
+    second: spritesheet_drop_noodles_71
+  - first:
+      213: -2312249820288759246
+    second: spritesheet_drop_noodles_72
+  - first:
+      213: -2357444956804690146
+    second: spritesheet_drop_noodles_73
+  - first:
+      213: 8451645388729474967
+    second: spritesheet_drop_noodles_74
+  - first:
+      213: 8363071106692129497
+    second: spritesheet_drop_noodles_75
+  - first:
+      213: 3849070874815431813
+    second: spritesheet_drop_noodles_76
+  - first:
+      213: 348337888711508953
+    second: spritesheet_drop_noodles_77
+  - first:
+      213: -3187864135417914288
+    second: spritesheet_drop_noodles_78
+  - first:
+      213: -6907891610029600710
+    second: spritesheet_drop_noodles_79
+  - first:
+      213: 1922425998066690464
+    second: spritesheet_drop_noodles_80
+  - first:
+      213: 3614235438971086858
+    second: spritesheet_drop_noodles_81
+  - first:
+      213: 2928455038323979676
+    second: spritesheet_drop_noodles_82
+  - first:
+      213: 1076510917293091517
+    second: spritesheet_drop_noodles_83
+  - first:
+      213: 3171822078880117215
+    second: spritesheet_drop_noodles_84
+  - first:
+      213: -5699421127378254303
+    second: spritesheet_drop_noodles_85
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1692
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f64bd68bfcfa5d2f0800000000000000
+      internalID: -948658839804332945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_1
+      rect:
+        serializedVersion: 2
+        x: 583
+        y: 1692
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3bf4c7cb6ee82590800000000000000
+      internalID: -7698641416309376198
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_2
+      rect:
+        serializedVersion: 2
+        x: 1166
+        y: 1692
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 498ba2f85c40857c0800000000000000
+      internalID: -4082507815654344556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_3
+      rect:
+        serializedVersion: 2
+        x: 1749
+        y: 1692
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7cc24dc2c9947a7c0800000000000000
+      internalID: -4060195603935384377
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_4
+      rect:
+        serializedVersion: 2
+        x: 2332
+        y: 1692
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91877c0c9e3f15640800000000000000
+      internalID: 5067099241055746073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_5
+      rect:
+        serializedVersion: 2
+        x: 2915
+        y: 1692
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81a042a32f78e11d0800000000000000
+      internalID: -3378113196054017512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1128
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a3a83bf5dde06e40800000000000000
+      internalID: 5647775436021212073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_7
+      rect:
+        serializedVersion: 2
+        x: 583
+        y: 1128
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4b22c0cf593a5220800000000000000
+      internalID: 2475354028612135756
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_8
+      rect:
+        serializedVersion: 2
+        x: 1166
+        y: 1128
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f719ba6fa903dcd10800000000000000
+      internalID: 2147426039447130495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_9
+      rect:
+        serializedVersion: 2
+        x: 1749
+        y: 1128
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0aab0cf654e363bc0800000000000000
+      internalID: -3803784367319237984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_10
+      rect:
+        serializedVersion: 2
+        x: 2332
+        y: 1128
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5d148b080dd11570800000000000000
+      internalID: 8435766603664334174
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_11
+      rect:
+        serializedVersion: 2
+        x: 2915
+        y: 1128
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a00a2915226fca950800000000000000
+      internalID: 6461810192627703818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 564
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6bacaf0693ebbc1f0800000000000000
+      internalID: -1023515336647193930
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_13
+      rect:
+        serializedVersion: 2
+        x: 583
+        y: 564
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 151572ab595c33e30800000000000000
+      internalID: 4482143301027713361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_14
+      rect:
+        serializedVersion: 2
+        x: 1166
+        y: 564
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1fe45843166727d70800000000000000
+      internalID: 9039417561951063793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_15
+      rect:
+        serializedVersion: 2
+        x: 1749
+        y: 564
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1e2705d56c7850b0800000000000000
+      internalID: -5739700948276138467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_16
+      rect:
+        serializedVersion: 2
+        x: 2332
+        y: 564
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02d69e74bf4a698e0800000000000000
+      internalID: -1686979611253445344
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_17
+      rect:
+        serializedVersion: 2
+        x: 2915
+        y: 564
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f740e3006cf87c620800000000000000
+      internalID: 2794360174377043071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9de674b11622de8f0800000000000000
+      internalID: -509713382358159655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_19
+      rect:
+        serializedVersion: 2
+        x: 583
+        y: 0
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41134e1594919cb90800000000000000
+      internalID: -7221212724814663404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_20
+      rect:
+        serializedVersion: 2
+        x: 1166
+        y: 0
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02c700891ebeb3c20800000000000000
+      internalID: 3187400515445095456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_21
+      rect:
+        serializedVersion: 2
+        x: 1749
+        y: 0
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01d97e99f53a61cd0800000000000000
+      internalID: -2587701304878457584
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: spritesheet_drop_noodles_22
+      rect:
+        serializedVersion: 2
+        x: 2332
+        y: 0
+        width: 583
+        height: 564
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0d9505fb1b0e7ed0800000000000000
+      internalID: -2414480135521198836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 207e7ae0b2eebdd4a8b6c2b051b572b9
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":6.0,"y":4.0},"gridSpriteSize":{"x":583.0,"y":564.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      spritesheet_drop_noodles_0: -948658839804332945
+      spritesheet_drop_noodles_1: -7698641416309376198
+      spritesheet_drop_noodles_10: 8435766603664334174
+      spritesheet_drop_noodles_11: 6461810192627703818
+      spritesheet_drop_noodles_12: -1023515336647193930
+      spritesheet_drop_noodles_13: 4482143301027713361
+      spritesheet_drop_noodles_14: 9039417561951063793
+      spritesheet_drop_noodles_15: -5739700948276138467
+      spritesheet_drop_noodles_16: -1686979611253445344
+      spritesheet_drop_noodles_17: 2794360174377043071
+      spritesheet_drop_noodles_18: -509713382358159655
+      spritesheet_drop_noodles_19: -7221212724814663404
+      spritesheet_drop_noodles_2: -4082507815654344556
+      spritesheet_drop_noodles_20: 3187400515445095456
+      spritesheet_drop_noodles_21: -2587701304878457584
+      spritesheet_drop_noodles_22: -2414480135521198836
+      spritesheet_drop_noodles_3: -4060195603935384377
+      spritesheet_drop_noodles_4: 5067099241055746073
+      spritesheet_drop_noodles_5: -3378113196054017512
+      spritesheet_drop_noodles_6: 5647775436021212073
+      spritesheet_drop_noodles_7: 2475354028612135756
+      spritesheet_drop_noodles_8: 2147426039447130495
+      spritesheet_drop_noodles_9: -3803784367319237984
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

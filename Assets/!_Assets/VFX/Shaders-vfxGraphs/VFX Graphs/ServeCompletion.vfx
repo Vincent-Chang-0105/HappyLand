@@ -33,15 +33,6 @@ MonoBehaviour:
     - model: {fileID: 8926484042661614775}
       id: 0
       isStickyNote: 0
-    - model: {fileID: 8926484042661614779}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661614975}
-      id: 0
-      isStickyNote: 0
-    - model: {fileID: 8926484042661614952}
-      id: 0
-      isStickyNote: 0
     - model: {fileID: 8926484042661615124}
       id: 0
       isStickyNote: 0
@@ -74,8 +65,8 @@ MonoBehaviour:
     serializedVersion: 2
     x: 58
     y: 118
-    width: 1579
-    height: 2273
+    width: 1578
+    height: 2253
 --- !u!114 &114350483966674976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2950,7 +2941,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEditor.VFX.AABox, Unity.VisualEffectGraph.Editor,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"center":{"x":0.0,"y":0.0,"z":-0.06554000824689865},"size":{"x":0.5,"y":1.0,"z":0.5}}'
+      m_SerializableObject: '{"center":{"x":0.0,"y":10.0,"z":-0.06554000824689865},"size":{"x":0.5,"y":1.0,"z":0.5}}'
     m_Space: 0
   m_Property:
     name: bounds
@@ -3394,7 +3385,7 @@ MonoBehaviour:
   particlePerStripCount: 32
   needsComputeBounds: 0
   boundsMode: 0
-  m_Space: 1
+  m_Space: 0
 --- !u!114 &8926484042661615220
 MonoBehaviour:
   m_ObjectHideFlags: 0

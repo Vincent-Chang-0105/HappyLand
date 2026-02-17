@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using DG.Tweening;
 
 /// <summary>
 /// Represents a plated dish containing multiple fried chickens.
@@ -101,11 +102,41 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                     return false;
                 }
             }
+            else if (dishType == "Mechado")
+            {
+                IMechadoable mechadoable = chicken.GetComponent<IMechadoable>();
+                if (mechadoable == null || !mechadoable.IsMechado())
+                {
+                    Debug.LogWarning($"Chicken in Mechado plate is not mechado-cooked: {chicken.name}");
+                    return false;
+                }
+            }
+            else if (dishType == "Adobo")
+            {
+                IAdoboable adoboable = chicken.GetComponent<IAdoboable>();
+                if (adoboable == null || !adoboable.IsAdobo())
+                {
+                    Debug.LogWarning($"Chicken in Adobo plate is not adobo-cooked: {chicken.name}");
+                    return false;
+                }
+            }
+            else if (dishType == "NoodleChicken")
+            {
+                INoodleable noodleable = chicken.GetComponent<INoodleable>();
+                if (noodleable == null) continue; // noodle object, not a chicken — always valid
+                if (!noodleable.IsNoodled())
+                {
+                    Debug.LogWarning($"Chicken in NoodleChicken plate is not noodled: {chicken.name}");
+                    return false;
+                }
+            }
             else
             {
                 // Fallback: If dishType is not set or unknown, check if chicken is cooked in any way
+                INoodleable noodleable = chicken.GetComponent<INoodleable>();
                 bool isCooked = (fryable != null && fryable.IsFried()) ||
-                                (sinigang != null && sinigang.IsSiniganged());
+                                (sinigang != null && sinigang.IsSiniganged()) ||
+                                (noodleable != null && noodleable.IsNoodled());
                 if (!isCooked)
                 {
                     Debug.LogWarning($"Plate contains uncooked chicken: {chicken.name}");
@@ -130,6 +161,10 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             canvasGroup.alpha = 0.6f;
             canvasGroup.blocksRaycasts = false; // Allow clicking through
         }
+
+        // Pop up slightly when picked up
+        transform.DOKill();
+        transform.DOScale(1.12f, 0.1f).SetEase(Ease.OutBack);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -145,12 +180,14 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     {
         isDragging = false;
 
-        // Restore opacity
+        // Restore opacity and scale
         if (canvasGroup != null)
         {
             canvasGroup.alpha = 1f;
             canvasGroup.blocksRaycasts = true;
         }
+        transform.DOKill();
+        transform.DOScale(1f, 0.15f).SetEase(Ease.OutBack);
 
         // Check if dropped near a customer
         Customer nearestCustomer = FindNearestCustomer();
@@ -211,11 +248,11 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
         if (nearestCustomer != null)
         {
-            Debug.Log($"Nearest customer: {nearestCustomer.name} at distance {nearestDistance}");
+            //Debug.Log($"Nearest customer: {nearestCustomer.name} at distance {nearestDistance}");
         }
         else
         {
-            Debug.Log("No customer found nearby");
+            //Debug.Log("No customer found nearby");
         }
 
         return nearestCustomer;
@@ -236,20 +273,24 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
         if (orderAccepted)
         {
-            //Debug.Log("Customer accepted the dish!");
-            // Destroy the plate after successful serving
-            Destroy(gameObject);
+            // Pop and shrink away before destroying
+            transform.DOKill();
+            transform.DOPunchScale(Vector3.one * 0.25f, 0.2f, 4, 0.5f)
+                .OnComplete(() => transform.DOScale(0f, 0.15f)
+                    .SetEase(Ease.InBack)
+                    .OnComplete(() => Destroy(gameObject)));
         }
         else
         {
-            //Debug.Log("Customer rejected the dish!");
             ReturnToOriginalPosition();
         }
     }
 
     private void ReturnToOriginalPosition()
     {
-        rectTransform.anchoredPosition = originalPosition;
+        transform.DOKill();
+        transform.DOScale(1f, 0.2f).SetEase(Ease.OutBack);
+        rectTransform.DOAnchorPos(originalPosition, 0.35f).SetEase(Ease.OutBack);
     }
 
     #endregion

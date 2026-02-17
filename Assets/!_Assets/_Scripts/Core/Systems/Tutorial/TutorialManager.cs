@@ -72,7 +72,7 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
             Debug.LogWarning("TutorialManager: arrowIndicator reference is not assigned. Arrows won't show.");
         }
 
-        Debug.Log($"TutorialManager: Found {tutorialData.steps.Length} steps");
+        //Debug.Log($"TutorialManager: Found {tutorialData.steps.Length} steps");
 
         tutorialData.ResetAllSteps();
         isTutorialActive = true;
@@ -83,11 +83,11 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
             screenTransitionManager.EnableTutorialMode();
         }
 
-        Debug.Log("Tutorial started!");
+        //Debug.Log("Tutorial started!");
 
         if (tutorialData.autoStartFirstStep && tutorialData.steps.Length > 0)
         {
-            Debug.Log($"Auto-starting first step: Name={tutorialData.steps[0].stepName}, CompletionType={tutorialData.steps[0].completionType}");
+            //Debug.Log($"Auto-starting first step: Name={tutorialData.steps[0].stepName}, CompletionType={tutorialData.steps[0].completionType}");
             ShowStep(0);
         }
     }
@@ -105,7 +105,7 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
         }
 
         OnTutorialCompleted?.Invoke();
-        Debug.Log("Tutorial completed!");
+        //Debug.Log("Tutorial completed!");
     }
 
     private void ShowStep(int stepIndex)
@@ -121,7 +121,7 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
         currentStep = step;
         OnStepStarted?.Invoke(step);
 
-        Debug.Log($"Tutorial Step {stepIndex}: {step.stepName} (showUI={step.showUI})");
+        //Debug.Log($"Tutorial Step {stepIndex}: {step.stepName} (showUI={step.showUI})");
 
         // Control navigation buttons based on step requirements
         if (screenTransitionManager != null && controlNavigationDuringTutorial)
@@ -214,7 +214,7 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
     {
         if (currentStep == null) return;
 
-        Debug.Log($"OnContinueButtonPressed called. currentStep={currentStep?.stepName}, completionType={currentStep?.completionType}");
+        //Debug.Log($"OnContinueButtonPressed called. currentStep={currentStep?.stepName}, completionType={currentStep?.completionType}");
 
         // For ButtonPress completion, complete the step immediately
         if (currentStep.completionType == TutorialCompletionType.ButtonPress)
@@ -227,7 +227,7 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
         {
             // For event-based completion, just resume the game and hide UI
             // The step will complete when the actual event fires
-            Debug.Log("OnContinueButtonPressed: Resuming game, waiting for event to complete step");
+            //Debug.Log("OnContinueButtonPressed: Resuming game, waiting for event to complete step");
             ResumeGame();
             if (uiPanel != null)
             {
@@ -243,7 +243,7 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
         currentStep.isCompleted = true;
         OnStepCompleted?.Invoke(currentStep);
 
-        Debug.Log($"Completed step {currentStepIndex}: {currentStep.stepName}");
+        //Debug.Log($"Completed step {currentStepIndex}: {currentStep.stepName}");
 
         // Play completion VFX
         if (taskCompletionVFX != null)
@@ -254,7 +254,7 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
 
             taskCompletionVFX.Stop();
             taskCompletionVFX.Play();
-            Debug.Log("TutorialManager: Playing completion VFX");
+            //Debug.Log("TutorialManager: Playing completion VFX");
         }
         else
         {
@@ -272,7 +272,7 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
 
         if (nextStep != null)
         {
-            Debug.Log($"Moving to next step {nextIndex}: {nextStep.stepName}");
+            //Debug.Log($"Moving to next step {nextIndex}: {nextStep.stepName}");
 
             // Check if next step has a show delay
             if (nextStep.showDelay > 0)
@@ -286,14 +286,14 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
         }
         else
         {
-            Debug.Log($"No next step found after step {currentStepIndex}. Tutorial ending.");
+            //Debug.Log($"No next step found after step {currentStepIndex}. Tutorial ending.");
             StopTutorial();
         }
     }
 
     private IEnumerator ShowStepAfterDelay(int stepIndex, float delay)
     {
-        Debug.Log($"Waiting {delay}s before showing step {stepIndex}");
+        //Debug.Log($"Waiting {delay}s before showing step {stepIndex}");
         yield return new WaitForSecondsRealtime(delay);
         ShowStep(stepIndex);
     }
@@ -303,7 +303,7 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
         if (step.actionOnComplete == TutorialActionType.None)
             return;
 
-        Debug.Log($"Executing action: {step.actionOnComplete} with parameter: {step.actionParameter}");
+        //Debug.Log($"Executing action: {step.actionOnComplete} with parameter: {step.actionParameter}");
 
         switch (step.actionOnComplete)
         {
@@ -422,7 +422,7 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
             case TutorialTargetType.OrderSlot:
                 return GameObject.FindGameObjectWithTag("OrderSlot");
             default:
-                Debug.Log("TutorialManager: Unknown target type or not implemented: " + type);
+                //Debug.Log("TutorialManager: Unknown target type or not implemented: " + type);
                 return null;
         }
     }
@@ -500,6 +500,8 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
         TutorialEvents.OnCutScreenEntered += HandleCutScreenEntered;
         TutorialEvents.OnThreeChickensWashed += HandleThreeChickensWashed;
         TutorialEvents.OnChickenTransferred += HandleChickenTransferred;
+        TutorialEvents.OnChickenAddedToPlate += HandleChickenAddedToPlate;
+        TutorialEvents.OnFriedChickenCompleted += HandleFriedChickenCompleted;
     }
 
     private void UnsubscribeFromGameEvents()
@@ -530,6 +532,8 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
         TutorialEvents.OnCutScreenEntered -= HandleCutScreenEntered;
         TutorialEvents.OnThreeChickensWashed -= HandleThreeChickensWashed;
         TutorialEvents.OnChickenTransferred -= HandleChickenTransferred;
+        TutorialEvents.OnChickenAddedToPlate -= HandleChickenAddedToPlate;
+        TutorialEvents.OnFriedChickenCompleted -= HandleFriedChickenCompleted;
     }
 
     private void CheckAndCompleteStep(TutorialCompletionType completionType)
@@ -547,7 +551,7 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
     private void HandleChickenWashed()
     {
         chickensWashedCount++;
-        Debug.Log($"TutorialManager: Chicken washed! Count: {chickensWashedCount}/3");
+        //Debug.Log($"TutorialManager: Chicken washed! Count: {chickensWashedCount}/3");
 
         CheckAndCompleteStep(TutorialCompletionType.ChickenWashed);
 
@@ -596,6 +600,8 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
     private void HandleCutScreenEntered() => CheckAndCompleteStep(TutorialCompletionType.CutScreenEntered);
     private void HandleThreeChickensWashed() => CheckAndCompleteStep(TutorialCompletionType.ThreeChickensWashed);
     private void HandleChickenTransferred() => CheckAndCompleteStep(TutorialCompletionType.ChickenTransferred);
+    private void HandleChickenAddedToPlate() => CheckAndCompleteStep(TutorialCompletionType.ChickenAddedToPlate);
+    private void HandleFriedChickenCompleted() => CheckAndCompleteStep(TutorialCompletionType.FriedChickenCompleted);
 
     #endregion
 }

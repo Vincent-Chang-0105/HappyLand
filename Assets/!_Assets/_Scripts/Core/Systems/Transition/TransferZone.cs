@@ -56,7 +56,7 @@ public class TransferZone : MonoBehaviour
             return;
         }
 
-        Debug.Log($"TransferZone: Transferring {item.name} to {destinationTag}");
+        //Debug.Log($"TransferZone: Transferring {item.name} to {destinationTag}");
 
         // Disable dragging during transfer
         var dragBehavior = item.GetComponent<ChickenDragBehavior>();
@@ -87,7 +87,7 @@ public class TransferZone : MonoBehaviour
                     collider.enabled = true;
                 }
 
-                Debug.Log($"TransferZone: {item.name} arrived at staging area");
+                //Debug.Log($"TransferZone: {item.name} arrived at staging area");
             });
     }
 

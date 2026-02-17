@@ -1012,6 +1012,7 @@ MonoBehaviour:
   snapThreshold: 0.5
   normalColor: {r: 1, g: 1, b: 1, a: 1}
   dragColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  scrollRect: {fileID: 0}
   inventorySlots:
   - {fileID: 2010976019}
   - {fileID: 1975125171}
@@ -1841,6 +1842,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Environment
       objectReference: {fileID: 0}
+    - target: {fileID: 4674820106405126541, guid: acc6e2bbfbe9e314dbc2b8eecb823643, type: 3}
+      propertyPath: cookingMeterUI
+      value: 
+      objectReference: {fileID: 2087903798}
+    - target: {fileID: 4674820106405126541, guid: acc6e2bbfbe9e314dbc2b8eecb823643, type: 3}
+      propertyPath: cookingProgressBar
+      value: 
+      objectReference: {fileID: 1937867315}
     - target: {fileID: 6927589257665597568, guid: acc6e2bbfbe9e314dbc2b8eecb823643, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1881,6 +1890,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8035509927548910683, guid: acc6e2bbfbe9e314dbc2b8eecb823643, type: 3}
+      propertyPath: cookingMeterUI
+      value: 
+      objectReference: {fileID: 2087903798}
+    - target: {fileID: 8035509927548910683, guid: acc6e2bbfbe9e314dbc2b8eecb823643, type: 3}
+      propertyPath: cookingProgressBar
+      value: 
+      objectReference: {fileID: 1937867315}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2961,7 +2978,9 @@ MonoBehaviour:
     worldPosition: {x: 0, y: 0}
     navigationButtons:
     - buttonDirection: 3
-      buttonSprite: {fileID: 577939836987530546, guid: ed23bfaa04bbd974094a2b85122271bb, type: 3}
+      buttonSprite: {fileID: 21300000, guid: ed23bfaa04bbd974094a2b85122271bb, type: 3}
+      hoverSprite: {fileID: 21300000, guid: 7b6dfe613d5961049b67020a445f56ba, type: 3}
+      pressedSprite: {fileID: 0}
       targetGridPosition: {x: 1, y: 0}
       targetScreenName: Boil
     uiElements: []
@@ -2974,11 +2993,15 @@ MonoBehaviour:
     worldPosition: {x: 0, y: 0}
     navigationButtons:
     - buttonDirection: 2
-      buttonSprite: {fileID: 1239022232463760427, guid: 35508c0843214cf429c0b0902ff9a5b5, type: 3}
+      buttonSprite: {fileID: 21300000, guid: 35508c0843214cf429c0b0902ff9a5b5, type: 3}
+      hoverSprite: {fileID: 21300000, guid: 3b02c0bd7de26334092c6165258c20a1, type: 3}
+      pressedSprite: {fileID: 0}
       targetGridPosition: {x: 0, y: 0}
       targetScreenName: Wash
     - buttonDirection: 3
-      buttonSprite: {fileID: 6365763762112063982, guid: db185663bd7e8fb4694f4f8a8c21d464, type: 3}
+      buttonSprite: {fileID: 21300000, guid: db185663bd7e8fb4694f4f8a8c21d464, type: 3}
+      hoverSprite: {fileID: 21300000, guid: 8e130ace0fcc79049a2ee6539166b755, type: 3}
+      pressedSprite: {fileID: 0}
       targetGridPosition: {x: 2, y: 0}
       targetScreenName: Cut
     uiElements:
@@ -2992,11 +3015,15 @@ MonoBehaviour:
     worldPosition: {x: 0, y: 0}
     navigationButtons:
     - buttonDirection: 2
-      buttonSprite: {fileID: 577939836987530546, guid: ed23bfaa04bbd974094a2b85122271bb, type: 3}
+      buttonSprite: {fileID: 21300000, guid: ed23bfaa04bbd974094a2b85122271bb, type: 3}
+      hoverSprite: {fileID: 21300000, guid: 7b6dfe613d5961049b67020a445f56ba, type: 3}
+      pressedSprite: {fileID: 0}
       targetGridPosition: {x: 1, y: 0}
       targetScreenName: Boil
     - buttonDirection: 3
-      buttonSprite: {fileID: 3500767101450722995, guid: cec88cfb783556c43818a4d068970523, type: 3}
+      buttonSprite: {fileID: 21300000, guid: cec88cfb783556c43818a4d068970523, type: 3}
+      hoverSprite: {fileID: 21300000, guid: 0e9ee25b4e445f34796dd89863374ee3, type: 3}
+      pressedSprite: {fileID: 0}
       targetGridPosition: {x: 3, y: 0}
       targetScreenName: Cook
     uiElements: []
@@ -3009,11 +3036,15 @@ MonoBehaviour:
     worldPosition: {x: 0, y: 0}
     navigationButtons:
     - buttonDirection: 2
-      buttonSprite: {fileID: 6365763762112063982, guid: db185663bd7e8fb4694f4f8a8c21d464, type: 3}
+      buttonSprite: {fileID: 21300000, guid: db185663bd7e8fb4694f4f8a8c21d464, type: 3}
+      hoverSprite: {fileID: 21300000, guid: 8e130ace0fcc79049a2ee6539166b755, type: 3}
+      pressedSprite: {fileID: 0}
       targetGridPosition: {x: 2, y: 0}
       targetScreenName: Cut
     - buttonDirection: 0
       buttonSprite: {fileID: 6202019841952275170, guid: 9bebe8ca43b247a48966c8a3c4262577, type: 3}
+      hoverSprite: {fileID: 21300000, guid: 1cdfcdc483fcab1479d56510b545908e, type: 3}
+      pressedSprite: {fileID: 0}
       targetGridPosition: {x: 0, y: 1}
       targetScreenName: Serve
     uiElements:
@@ -3027,7 +3058,9 @@ MonoBehaviour:
     worldPosition: {x: 0, y: 0}
     navigationButtons:
     - buttonDirection: 1
-      buttonSprite: {fileID: 1239022232463760427, guid: 35508c0843214cf429c0b0902ff9a5b5, type: 3}
+      buttonSprite: {fileID: 21300000, guid: 35508c0843214cf429c0b0902ff9a5b5, type: 3}
+      hoverSprite: {fileID: 21300000, guid: 3b02c0bd7de26334092c6165258c20a1, type: 3}
+      pressedSprite: {fileID: 0}
       targetGridPosition: {x: 0, y: 0}
       targetScreenName: Wash
     uiElements:
@@ -3335,6 +3368,29 @@ MonoBehaviour:
   - {fileID: 514541280}
   - {fileID: 2044141090}
   ticketManager: {fileID: 298375852}
+  getOrderSound:
+    clip: {fileID: 8300000, guid: a2696d8f15d3d15469ec032d74149b3c, type: 3}
+    mixerGroup: {fileID: 7142711898134432833, guid: 63090d78504b5da43bed8f06cca39817, type: 2}
+    loop: 0
+    playOnAwake: 0
+    frequentSound: 0
+    mute: 0
+    bypassEffects: 0
+    bypassListenerEffects: 0
+    bypassReverbZones: 0
+    priority: 128
+    volume: 1
+    pitch: 1
+    panStereo: 0
+    spatialBlend: 0
+    reverbZoneMix: 1
+    dopplerLevel: 1
+    spread: 0
+    minDistance: 1
+    maxDistance: 500
+    ignoreListenerVolume: 0
+    ignoreListenerPause: 0
+    rolloffMode: 0
 --- !u!224 &514541280 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5466665506453069389, guid: b3e9746ae3a30fe4791e72700a093672, type: 3}
@@ -11608,6 +11664,7 @@ MonoBehaviour:
   servingArea: {fileID: 285284861}
   plateSpawnDelay: 0.5
   plateSpawnOffset: {x: 0, y: 0}
+  plateCompleteEffect: {fileID: 0}
 --- !u!1 &1836304130
 GameObject:
   m_ObjectHideFlags: 0
@@ -13503,8 +13560,8 @@ RectTransform:
   m_GameObject: {fileID: 2087903798}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 894660792}
   - {fileID: 1937867314}
@@ -15310,7 +15367,7 @@ MonoBehaviour:
   sfxVolumeText: {fileID: 0}
   musicVolumeText: {fileID: 0}
   brightnessText: {fileID: 0}
-  isMainMenu: 1
+  isMainMenu: 0
 --- !u!1 &6086131754684988060
 GameObject:
   m_ObjectHideFlags: 0

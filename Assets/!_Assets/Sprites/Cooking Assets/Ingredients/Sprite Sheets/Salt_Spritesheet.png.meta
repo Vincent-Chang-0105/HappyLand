@@ -1,0 +1,965 @@
+fileFormatVersion: 2
+guid: 6bb20ed37e1dc0f4aab742d4780fa1ca
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2305177335306269713
+    second: Salt_Spritesheet_0
+  - first:
+      213: -5758774221449654554
+    second: Salt_Spritesheet_1
+  - first:
+      213: -4975027708100015074
+    second: Salt_Spritesheet_2
+  - first:
+      213: -9054713414664749237
+    second: Salt_Spritesheet_3
+  - first:
+      213: -31952524889217931
+    second: Salt_Spritesheet_4
+  - first:
+      213: 5856427016075174686
+    second: Salt_Spritesheet_5
+  - first:
+      213: 8412023036963879840
+    second: Salt_Spritesheet_6
+  - first:
+      213: 7198707005896728573
+    second: Salt_Spritesheet_7
+  - first:
+      213: -6108825877488766629
+    second: Salt_Spritesheet_8
+  - first:
+      213: 7312277162515892142
+    second: Salt_Spritesheet_9
+  - first:
+      213: 8740001164635402841
+    second: Salt_Spritesheet_10
+  - first:
+      213: 2209788111730778164
+    second: Salt_Spritesheet_11
+  - first:
+      213: 5522897286463793129
+    second: Salt_Spritesheet_12
+  - first:
+      213: 6459289139477228682
+    second: Salt_Spritesheet_13
+  - first:
+      213: 4903000918110006223
+    second: Salt_Spritesheet_14
+  - first:
+      213: 8537585778701557765
+    second: Salt_Spritesheet_15
+  - first:
+      213: 5422821748458763626
+    second: Salt_Spritesheet_16
+  - first:
+      213: 3441652702146201326
+    second: Salt_Spritesheet_17
+  - first:
+      213: 3897150710632172827
+    second: Salt_Spritesheet_18
+  - first:
+      213: 2761607004222954863
+    second: Salt_Spritesheet_19
+  - first:
+      213: 5053532514786799479
+    second: Salt_Spritesheet_20
+  - first:
+      213: -8841018612484913466
+    second: Salt_Spritesheet_21
+  - first:
+      213: -7273722367319917528
+    second: Salt_Spritesheet_22
+  - first:
+      213: 6668942184540811585
+    second: Salt_Spritesheet_23
+  - first:
+      213: -5790813470089517640
+    second: Salt_Spritesheet_24
+  - first:
+      213: -6281642633424192380
+    second: Salt_Spritesheet_25
+  - first:
+      213: -4566673322462750292
+    second: Salt_Spritesheet_26
+  - first:
+      213: -7447591325804487147
+    second: Salt_Spritesheet_27
+  - first:
+      213: -5053850976582140689
+    second: Salt_Spritesheet_28
+  - first:
+      213: 8763418048933878230
+    second: Salt_Spritesheet_29
+  - first:
+      213: -1279039381403326881
+    second: Salt_Spritesheet_30
+  - first:
+      213: 7988169728953286492
+    second: Salt_Spritesheet_31
+  - first:
+      213: 283647947874125862
+    second: Salt_Spritesheet_32
+  - first:
+      213: -578053782557302298
+    second: Salt_Spritesheet_33
+  - first:
+      213: 3365995952432585507
+    second: Salt_Spritesheet_34
+  - first:
+      213: -6132701875905915513
+    second: Salt_Spritesheet_35
+  - first:
+      213: 4747413011727530034
+    second: Salt_Spritesheet_36
+  - first:
+      213: -3125658226812007668
+    second: Salt_Spritesheet_37
+  - first:
+      213: -8758015519004105688
+    second: Salt_Spritesheet_38
+  - first:
+      213: -2841705562773678409
+    second: Salt_Spritesheet_39
+  - first:
+      213: 5677276050192810750
+    second: Salt_Spritesheet_40
+  - first:
+      213: -731152906555506386
+    second: Salt_Spritesheet_41
+  - first:
+      213: 4910269361834240403
+    second: Salt_Spritesheet_42
+  - first:
+      213: -7471998056457155949
+    second: Salt_Spritesheet_43
+  - first:
+      213: -848318071006243425
+    second: Salt_Spritesheet_44
+  - first:
+      213: -8217114164099996808
+    second: Salt_Spritesheet_45
+  - first:
+      213: 5662133668141496133
+    second: Salt_Spritesheet_46
+  - first:
+      213: -6499250207378881992
+    second: Salt_Spritesheet_47
+  - first:
+      213: -7367874392963425549
+    second: Salt_Spritesheet_48
+  - first:
+      213: -7143641550348820961
+    second: Salt_Spritesheet_49
+  - first:
+      213: -8070476183630512199
+    second: Salt_Spritesheet_50
+  - first:
+      213: -8795504015797237084
+    second: Salt_Spritesheet_51
+  - first:
+      213: 7873779048057372752
+    second: Salt_Spritesheet_52
+  - first:
+      213: 2571757019982907430
+    second: Salt_Spritesheet_53
+  - first:
+      213: 6300139764911640512
+    second: Salt_Spritesheet_54
+  - first:
+      213: 2472015215908151825
+    second: Salt_Spritesheet_55
+  - first:
+      213: 4748825072687055206
+    second: Salt_Spritesheet_56
+  - first:
+      213: 2959630457566427979
+    second: Salt_Spritesheet_57
+  - first:
+      213: -3428328443978777503
+    second: Salt_Spritesheet_58
+  - first:
+      213: -1723881017567208967
+    second: Salt_Spritesheet_59
+  - first:
+      213: 5375195667014316236
+    second: Salt_Spritesheet_60
+  - first:
+      213: -1876730394721144249
+    second: Salt_Spritesheet_61
+  - first:
+      213: -6361236041492699307
+    second: Salt_Spritesheet_62
+  - first:
+      213: -8111864923499432420
+    second: Salt_Spritesheet_63
+  - first:
+      213: -3504654658439017301
+    second: Salt_Spritesheet_64
+  - first:
+      213: 6685218176975026720
+    second: Salt_Spritesheet_65
+  - first:
+      213: 671746034152156378
+    second: Salt_Spritesheet_66
+  - first:
+      213: -2022226797233296882
+    second: Salt_Spritesheet_67
+  - first:
+      213: -3076145199649088949
+    second: Salt_Spritesheet_68
+  - first:
+      213: 1448570006553839611
+    second: Salt_Spritesheet_69
+  - first:
+      213: -8887775176112021999
+    second: Salt_Spritesheet_70
+  - first:
+      213: -1068823574043817687
+    second: Salt_Spritesheet_71
+  - first:
+      213: -1972638671162461957
+    second: Salt_Spritesheet_72
+  - first:
+      213: 6043960991222217774
+    second: Salt_Spritesheet_73
+  - first:
+      213: 8275609481975368040
+    second: Salt_Spritesheet_74
+  - first:
+      213: 5247826700463319186
+    second: Salt_Spritesheet_75
+  - first:
+      213: 4357979183315170089
+    second: Salt_Spritesheet_76
+  - first:
+      213: -6955817466929459134
+    second: Salt_Spritesheet_77
+  - first:
+      213: 8126579028105232367
+    second: Salt_Spritesheet_78
+  - first:
+      213: 3572232899694044787
+    second: Salt_Spritesheet_79
+  - first:
+      213: -8274396583948842912
+    second: Salt_Spritesheet_80
+  - first:
+      213: -5616484601613523228
+    second: Salt_Spritesheet_81
+  - first:
+      213: 6719970106532059965
+    second: Salt_Spritesheet_82
+  - first:
+      213: 875132826429064444
+    second: Salt_Spritesheet_83
+  - first:
+      213: -490485972567763285
+    second: Salt_Spritesheet_84
+  - first:
+      213: -5795267213375800942
+    second: Salt_Spritesheet_85
+  - first:
+      213: -1806315527211406802
+    second: Salt_Spritesheet_86
+  - first:
+      213: 2788018866755503625
+    second: Salt_Spritesheet_87
+  - first:
+      213: 5103879597592966030
+    second: Salt_Spritesheet_88
+  - first:
+      213: -5795279720269749645
+    second: Salt_Spritesheet_89
+  - first:
+      213: 3486602622170594687
+    second: Salt_Spritesheet_90
+  - first:
+      213: 4307484516684480165
+    second: Salt_Spritesheet_91
+  - first:
+      213: 6793880273391737863
+    second: Salt_Spritesheet_92
+  - first:
+      213: -4247259341507500613
+    second: Salt_Spritesheet_93
+  - first:
+      213: -1362395778772123903
+    second: Salt_Spritesheet_94
+  - first:
+      213: 7682633395558022775
+    second: Salt_Spritesheet_95
+  - first:
+      213: -6992151685919402690
+    second: Salt_Spritesheet_96
+  - first:
+      213: -939500623602684332
+    second: Salt_Spritesheet_97
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Salt_Spritesheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1500
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: febc9c84d6d5200e0800000000000000
+      internalID: -2305177335306269713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_1
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 1500
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ee01dc5b59b410b0800000000000000
+      internalID: -5758774221449654554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_2
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 1500
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e1c09f688a625fab0800000000000000
+      internalID: -4975027708100015074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_3
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 1500
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4f71ff8f12375280800000000000000
+      internalID: -9054713414664749237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1200
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5742d40195b7e8ff0800000000000000
+      internalID: -31952524889217931
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_5
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 1200
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e13692aa755364150800000000000000
+      internalID: 5856427016075174686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_6
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 1200
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ab72a022628db470800000000000000
+      internalID: 8412023036963879840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 1200
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dff1798a1e1f6e360800000000000000
+      internalID: 7198707005896728573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 900
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b517199fa37193ba0800000000000000
+      internalID: -6108825877488766629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_9
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 900
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea706f2565d6a7560800000000000000
+      internalID: 7312277162515892142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_10
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 900
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 952f792b0c8ba4970800000000000000
+      internalID: 8740001164635402841
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_11
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 900
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4302894649ebaae10800000000000000
+      internalID: 2209788111730778164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 600
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e7a4aa02d545ac40800000000000000
+      internalID: 5522897286463793129
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_13
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 600
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8c2414ef3104a950800000000000000
+      internalID: 6459289139477228682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_14
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 600
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fcb6c599b55fa0440800000000000000
+      internalID: 4903000918110006223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_15
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 600
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 500eeea18099b7670800000000000000
+      internalID: 8537585778701557765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 300
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a65b52d16abb14b40800000000000000
+      internalID: 5422821748458763626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_17
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 300
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee600bfd5e433cf20800000000000000
+      internalID: 3441652702146201326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_18
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 300
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1d446f5ce5751630800000000000000
+      internalID: 3897150710632172827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_19
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 300
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6d90ff40f2335620800000000000000
+      internalID: 2761607004222954863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77fe0c42c01c12640800000000000000
+      internalID: 5053532514786799479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_21
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c64836e9646e4580800000000000000
+      internalID: -8841018612484913466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_22
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82c35157b0c8e0b90800000000000000
+      internalID: -7273722367319917528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Salt_Spritesheet_23
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1413c215597dc8c50800000000000000
+      internalID: 6668942184540811585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 3b1a84b0620a485489fb8a3d32865292
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":4.0,"y":6.0},"gridSpriteSize":{"x":300.0,"y":300.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      Salt_Spritesheet_0: -2305177335306269713
+      Salt_Spritesheet_1: -5758774221449654554
+      Salt_Spritesheet_10: 8740001164635402841
+      Salt_Spritesheet_11: 2209788111730778164
+      Salt_Spritesheet_12: 5522897286463793129
+      Salt_Spritesheet_13: 6459289139477228682
+      Salt_Spritesheet_14: 4903000918110006223
+      Salt_Spritesheet_15: 8537585778701557765
+      Salt_Spritesheet_16: 5422821748458763626
+      Salt_Spritesheet_17: 3441652702146201326
+      Salt_Spritesheet_18: 3897150710632172827
+      Salt_Spritesheet_19: 2761607004222954863
+      Salt_Spritesheet_2: -4975027708100015074
+      Salt_Spritesheet_20: 5053532514786799479
+      Salt_Spritesheet_21: -8841018612484913466
+      Salt_Spritesheet_22: -7273722367319917528
+      Salt_Spritesheet_23: 6668942184540811585
+      Salt_Spritesheet_3: -9054713414664749237
+      Salt_Spritesheet_4: -31952524889217931
+      Salt_Spritesheet_5: 5856427016075174686
+      Salt_Spritesheet_6: 8412023036963879840
+      Salt_Spritesheet_7: 7198707005896728573
+      Salt_Spritesheet_8: -6108825877488766629
+      Salt_Spritesheet_9: 7312277162515892142
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

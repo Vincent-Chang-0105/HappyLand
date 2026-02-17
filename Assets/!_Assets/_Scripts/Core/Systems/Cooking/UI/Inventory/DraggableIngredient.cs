@@ -17,6 +17,9 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
     [SerializeField] private IngredientAnimController animController;
     [SerializeField] private bool useFrameAnimation = true;
 
+    [Header("Drag Settings (Manual Mode)")]
+    [SerializeField] private float minDragDistanceToUse = 60f; // Min pixels dragged before ingredient can be used
+
     private bool isDragging = false;
     private bool manualDragMode = false;
     private Vector3 originalScale;
@@ -25,6 +28,7 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
     private RectTransform rectTransform;
     private Canvas parentCanvas;
     private bool hasBeenUsed = false;
+    private Vector2 spawnLocalPosition;
     
     private void Start()
     {
@@ -60,7 +64,7 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
 
         if (imageComponent != null && ingredient != null)
         {
-            imageComponent.sprite = ingredient.draggableIcon;
+            imageComponent.sprite = ingredient.bowlVersionSprite != null ? ingredient.bowlVersionSprite : ingredient.animationFrames[0];
         }
 
     }
@@ -74,21 +78,21 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
 
         // Convert UI position to world position for detecting Pan/Pot
         Vector3 worldPos = GetWorldPosition();
-        Debug.Log($"🔍 Checking for cooking stations at world pos: {worldPos}, radius: {dropRadius}");
+        //Debug.Log($"🔍 Checking for cooking stations at world pos: {worldPos}, radius: {dropRadius}");
 
         // Check for pans and pots in range
         Collider2D[] nearbyColliders = Physics2D.OverlapCircleAll(worldPos, dropRadius);
-        Debug.Log($"🔍 Found {nearbyColliders.Length} colliders nearby");
+        //Debug.Log($"🔍 Found {nearbyColliders.Length} colliders nearby");
 
         foreach (Collider2D collider in nearbyColliders)
         {
-            Debug.Log($"🔍 Checking collider: {collider.gameObject.name}");
+            //Debug.Log($"🔍 Checking collider: {collider.gameObject.name}");
 
             // Try to use on Pan
             Pan pan = collider.GetComponent<Pan>();
             if (pan != null && CanUseOnPan())
             {
-                Debug.Log($"🔍 Found Pan, attempting to use {ingredientData.ingredientName}");
+                //Debug.Log($"🔍 Found Pan, attempting to use {ingredientData.ingredientName}");
                 wasUsed = UseOnPan(pan);
                 if (wasUsed) break;
             }
@@ -97,7 +101,7 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
             Pot pot = collider.GetComponent<Pot>();
             if (pot != null)
             {
-                Debug.Log($"🔍 Found Pot! Can use on pot: {CanUseOnPot()}, Ingredient: {ingredientData.ingredientName}");
+                //Debug.Log($"🔍 Found Pot! Can use on pot: {CanUseOnPot()}, Ingredient: {ingredientData.ingredientName}");
                 if (CanUseOnPot())
                 {
                     wasUsed = UseOnPot(pot);
@@ -109,7 +113,7 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
         if (!wasUsed)
         {
             // Ingredient wasn't used, destroy it
-            Debug.Log($"❌ {ingredientData.ingredientName} not used, destroying");
+            //Debug.Log($"❌ {ingredientData.ingredientName} not used, destroying");
             DestroyIngredient();
         }
     }
@@ -141,16 +145,11 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
     
     private bool CanUseOnPan()
     {
-        // Sinigang mix can only be used on pots, not pans
-        if (ingredientData.ingredientName.Contains("Sinigang"))
-        {
-            return false;
-        }
-
         switch (ingredientData.usageType)
         {
             case IngredientUsageType.Oil:
             case IngredientUsageType.Seasoning:
+            case IngredientUsageType.Liquid:
                 return true;
             default:
                 return false;
@@ -171,6 +170,125 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
     
     private bool UseOnPan(Pan pan)
     {
+        // Noodles: stay in pan (do NOT fade out — pan takes ownership of the GameObject)
+        if (ingredientData.ingredientName.Contains("Noodles"))
+        {
+            if (pan.CanAcceptNoodles())
+            {
+                pan.AddNoodles(gameObject);
+                hasBeenUsed = true;
+                //Debug.Log($"Added {ingredientData.ingredientName} to pan (noodle mode)");
+                AnimateUse();
+                return true;
+            }
+            return false;
+        }
+
+        // Catsup (mechado step 2 — goes on pan after water)
+        if (ingredientData.ingredientName.Contains("Catsup") || ingredientData.ingredientName.Contains("Ketchup"))
+        {
+            if (pan.CanAcceptCatsup())
+            {
+                pan.AddCatsup();
+                hasBeenUsed = true;
+                AnimateUse();
+                return true;
+            }
+            return false;
+        }
+
+        // Powdered milk (mechado step 3 — goes on pan after catsup)
+        if (ingredientData.ingredientName.Contains("Milk") || ingredientData.ingredientName.Contains("Powder"))
+        {
+            if (pan.CanAcceptPowderedMilk())
+            {
+                pan.AddPowderedMilk();
+                hasBeenUsed = true;
+                AnimateUse();
+                return true;
+            }
+            return false;
+        }
+
+        // Onion & Garlic (adobo step 1 — after oil, before chicken)
+        if (ingredientData.ingredientName.Contains("Onion") || ingredientData.ingredientName.Contains("Garlic"))
+        {
+            if (pan.CanAcceptOnionGarlic())
+            {
+                pan.AddOnionGarlic();
+                hasBeenUsed = true;
+                AnimateUse();
+                return true;
+            }
+            return false;
+        }
+
+        // Soy sauce (adobo seasoning — after chicken)
+        if (ingredientData.ingredientName.Contains("Soy"))
+        {
+            if (pan.CanAcceptSoySauce())
+            {
+                pan.AddSoySauce();
+                hasBeenUsed = true;
+                AnimateUse();
+                return true;
+            }
+            return false;
+        }
+
+        // Vinegar (adobo seasoning)
+        if (ingredientData.ingredientName.Contains("Vinegar"))
+        {
+            if (pan.CanAcceptVinegar())
+            {
+                pan.AddVinegar();
+                hasBeenUsed = true;
+                AnimateUse();
+                return true;
+            }
+            return false;
+        }
+
+        // Sugar (adobo seasoning)
+        if (ingredientData.ingredientName.Contains("Sugar"))
+        {
+            if (pan.CanAcceptSugar())
+            {
+                pan.AddSugar();
+                hasBeenUsed = true;
+                AnimateUse();
+                return true;
+            }
+            return false;
+        }
+
+        // Laurel / Bay Leaf (adobo seasoning — final trigger)
+        if (ingredientData.ingredientName.Contains("Laurel") || ingredientData.ingredientName.Contains("Bay"))
+        {
+            if (pan.CanAcceptLaurel())
+            {
+                pan.AddLaurel();
+                hasBeenUsed = true;
+                AnimateUse();
+                return true;
+            }
+            return false;
+        }
+
+        // Special handling for sinigang mix on pan
+        if (ingredientData.ingredientName.Contains("Sinigang"))
+        {
+            if (pan.CanAcceptSinigangMix())
+            {
+                pan.AddSinigangMix(ingredientData);
+                hasBeenUsed = true;
+                //Debug.Log($"Added {ingredientData.ingredientName} to pan (sinigang mode)");
+                AnimateUse();
+                return true;
+            }
+            return false;
+        }
+
         switch (ingredientData.usageType)
         {
             case IngredientUsageType.Oil:
@@ -178,55 +296,47 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
                 {
                     pan.AddOil();
                     hasBeenUsed = true;
-                    Debug.Log($"🛢️ Added {ingredientData.ingredientName} to pan");
+                    //Debug.Log($"Added {ingredientData.ingredientName} to pan");
                     AnimateUse();
                     return true;
                 }
                 break;
-                
+
             case IngredientUsageType.Seasoning:
                 if (pan.CanAcceptSeasoning())
                 {
                     pan.AddSeasoning(ingredientData);
                     hasBeenUsed = true;
-                    Debug.Log($"🧂 Added {ingredientData.ingredientName} to pan");
+                    //Debug.Log($"Added {ingredientData.ingredientName} to pan");
+                    AnimateUse();
+                    return true;
+                }
+                break;
+
+            case IngredientUsageType.Liquid:
+                if (pan.CanAcceptWater())
+                {
+                    pan.AddWater();
+                    hasBeenUsed = true;
+                    //Debug.Log($"Added {ingredientData.ingredientName} to pan");
                     AnimateUse();
                     return true;
                 }
                 break;
         }
-        
+
         return false;
     }
     
     private bool UseOnPot(Pot pot)
     {
-        Debug.Log($"🍲 UseOnPot called for: {ingredientData.ingredientName}");
-
-        // Special handling for sinigang mix
+        // Sinigang mix no longer goes to pot - it goes to pan
         if (ingredientData.ingredientName.Contains("Sinigang"))
         {
-            Debug.Log($"🍲 Detected Sinigang in name! Checking if pot can accept...");
-            if (pot.CanAcceptSinigangMix())
-            {
-                Debug.Log($"🍲 Pot accepts sinigang mix! Adding...");
-                pot.AddSinigangMix(ingredientData);
-                hasBeenUsed = true;
-                Debug.Log($"✅ Used sinigang mix on pot!");
-                AnimateUse();
-                return true;
-            }
-            else
-            {
-                Debug.LogWarning("⚠️ Pot cannot accept sinigang mix (already has one)!");
-                // Don't consume the ingredient
-                return false;
-            }
+            //Debug.Log("Sinigang mix should be used on the pan, not the pot!");
+            return false;
         }
 
-        Debug.Log($"🍲 Not sinigang, trying regular usage type: {ingredientData.usageType}");
-
-        // Regular seasoning/liquid handling
         switch (ingredientData.usageType)
         {
             case IngredientUsageType.Seasoning:
@@ -234,7 +344,7 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
                 {
                     pot.AddSeasoning(ingredientData);
                     hasBeenUsed = true;
-                    Debug.Log($"🧂 Added {ingredientData.ingredientName} to pot");
+                    //Debug.Log($"Added {ingredientData.ingredientName} to pot");
                     AnimateUse();
                     return true;
                 }
@@ -245,14 +355,13 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
                 {
                     pot.AddLiquid(ingredientData);
                     hasBeenUsed = true;
-                    Debug.Log($"💧 Added {ingredientData.ingredientName} to pot");
+                    //Debug.Log($"Added {ingredientData.ingredientName} to pot");
                     AnimateUse();
                     return true;
                 }
                 break;
         }
 
-        Debug.Log($"🍲 Pot cannot accept this ingredient");
         return false;
     }
 
@@ -295,6 +404,7 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
 
         isDragging = true;
         manualDragMode = true;
+        spawnLocalPosition = rectTransform.localPosition;
 
         // Bring to front in UI hierarchy
         transform.SetAsLastSibling();
@@ -325,7 +435,17 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
             isDragging = false;
             manualDragMode = false;
             transform.localScale = originalScale;
-            TryUseIngredient();
+
+            // Only use ingredient if it was dragged far enough from spawn point
+            float draggedDistance = Vector2.Distance(rectTransform.localPosition, spawnLocalPosition);
+            if (draggedDistance >= minDragDistanceToUse)
+            {
+                TryUseIngredient();
+            }
+            else
+            {
+                DestroyIngredient();
+            }
         }
     }
 
@@ -334,7 +454,7 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
     {
         if (hasBeenUsed) return;
 
-        Debug.Log($"🖱️ Began dragging {ingredientData.ingredientName}");
+        //Debug.Log($"🖱️ Began dragging {ingredientData.ingredientName}");
         
         isDragging = true;
 
@@ -349,7 +469,7 @@ public class DraggableIngredient : MonoBehaviour, IBeginDragHandler, IDragHandle
     {
         if (hasBeenUsed || !isDragging) return;
 
-        Debug.Log($"Dragging {ingredientData.ingredientName}");
+        //Debug.Log($"Dragging {ingredientData.ingredientName}");
         // Move by the delta (how much the pointer moved since last frame)
         // Scale the delta by canvas scale factor for proper movement
         Canvas canvas = parentCanvas;

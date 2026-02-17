@@ -23,6 +23,8 @@ public static class TutorialEvents
     // Serving events
     public static event Action OnDishPlated;
     public static event Action OnDishServed;
+    public static event Action OnChickenAddedToPlate;   // Individual chicken placed on plating station
+    public static event Action OnFriedChickenCompleted; // Fried chicken dish fully assembled on plate
     public static event Action OnCustomerArrived;
     public static event Action OnCustomerWaiting; // Customer is at slot and ready for order to be taken
     public static event Action OnOrderSlotClicked; // Player clicked on an order slot
@@ -57,6 +59,8 @@ public static class TutorialEvents
     public static void SinigangCompleted() => OnSinigangCompleted?.Invoke();
     public static void DishPlated() => OnDishPlated?.Invoke();
     public static void DishServed() => OnDishServed?.Invoke();
+    public static void ChickenAddedToPlate() => OnChickenAddedToPlate?.Invoke();
+    public static void FriedChickenCompleted() => OnFriedChickenCompleted?.Invoke();
     public static void CustomerArrived() => OnCustomerArrived?.Invoke();
     public static void CustomerWaiting() => OnCustomerWaiting?.Invoke();
     public static void OrderSlotClicked() => OnOrderSlotClicked?.Invoke();

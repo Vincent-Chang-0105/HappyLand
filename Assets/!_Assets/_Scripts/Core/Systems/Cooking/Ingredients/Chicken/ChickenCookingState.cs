@@ -7,6 +7,9 @@ public class ChickenCookingState : MonoBehaviour
     [SerializeField] private Sprite boiledVersionSprite;
     [SerializeField] private Sprite friedVersionSprite;
     [SerializeField] private Sprite sinigangVersionSprite;
+    [SerializeField] private Sprite noodledVersionSprite;
+    [SerializeField] private Sprite mechadoVersionSprite;
+    [SerializeField] private Sprite adoboVersionSprite;
 
     [Header("Auto Bowl Settings")]
     [SerializeField] private bool autoTeleportToBowl = true;
@@ -24,12 +27,21 @@ public class ChickenCookingState : MonoBehaviour
     private bool isBeingFried = false;
     private bool isSiniganged = false;
     private bool isBeingSiniganged = false;
+    private bool isNoodled = false;
+    private bool isBeingNoodled = false;
+    private bool isMechado = false;
+    private bool isBeingMechado = false;
+    private bool isAdobo = false;
+    private bool isBeingAdobo = false;
 
     // Events
     public System.Action OnWashComplete;
     public System.Action OnBoilComplete;
     public System.Action OnFryComplete;
     public System.Action OnSinigangComplete;
+    public System.Action OnNoodleComplete;
+    public System.Action OnMechadoComplete;
+    public System.Action OnAdoboComplete;
 
     public bool IsWashed => isWashed;
     public bool IsBoiled => isBoiled;
@@ -39,6 +51,12 @@ public class ChickenCookingState : MonoBehaviour
     public bool IsBeingFried => isBeingFried;
     public bool IsSiniganged => isSiniganged;
     public bool IsBeingSiniganged => isBeingSiniganged;
+    public bool IsNoodled => isNoodled;
+    public bool IsBeingNoodled => isBeingNoodled;
+    public bool IsMechado => isMechado;
+    public bool IsBeingMechado => isBeingMechado;
+    public bool IsAdobo => isAdobo;
+    public bool IsBeingAdobo => isBeingAdobo;
 
     private void Awake()
     {
@@ -51,7 +69,7 @@ public class ChickenCookingState : MonoBehaviour
         if (isWashed || isBeingWashed) return;
 
         isBeingWashed = true;
-        Debug.Log("ChickenCookingState: Started washing");
+        //Debug.Log("ChickenCookingState: Started washing");
     }
 
     public void StopWashing()
@@ -60,7 +78,7 @@ public class ChickenCookingState : MonoBehaviour
 
         isBeingWashed = false;
         ResetAlpha();
-        Debug.Log("ChickenCookingState: Stopped washing (cancelled)");
+        //Debug.Log("ChickenCookingState: Stopped washing (cancelled)");
     }
 
     public void CompleteWashing()
@@ -81,7 +99,7 @@ public class ChickenCookingState : MonoBehaviour
         // Tutorial event
         TutorialEvents.ChickenWashed();
 
-        Debug.Log("ChickenCookingState: Washing complete!");
+        //Debug.Log("ChickenCookingState: Washing complete!");
     }
 
     public bool CanBeWashed()
@@ -199,6 +217,111 @@ public class ChickenCookingState : MonoBehaviour
     }
     #endregion
 
+    #region Noodling
+    public void StartNoodling()
+    {
+        if (isNoodled || isBeingNoodled || !isWashed || !isBoiled) return;
+
+        isBeingNoodled = true;
+    }
+
+    public void StopNoodling()
+    {
+        if (!isBeingNoodled) return;
+
+        isBeingNoodled = false;
+    }
+
+    public void CompleteNoodling()
+    {
+        if (!isBeingNoodled) return;
+
+        isBeingNoodled = false;
+        isNoodled = true;
+
+        if (noodledVersionSprite != null && spriteRenderer != null)
+        {
+            spriteRenderer.sprite = noodledVersionSprite;
+        }
+
+        OnNoodleComplete?.Invoke();
+    }
+
+    public bool CanBeNoodled()
+    {
+        return isWashed && isBoiled && !isNoodled && !isBeingNoodled;
+    }
+    #endregion
+
+    #region Mechado
+    public void StartMechado()
+    {
+        if (isMechado || isBeingMechado || !isWashed || !isBoiled) return;
+
+        isBeingMechado = true;
+    }
+
+    public void StopMechado()
+    {
+        if (!isBeingMechado) return;
+
+        isBeingMechado = false;
+    }
+
+    public void CompleteMechado()
+    {
+        if (!isBeingMechado) return;
+
+        isBeingMechado = false;
+        isMechado = true;
+
+        if (mechadoVersionSprite != null && spriteRenderer != null)
+        {
+            spriteRenderer.sprite = mechadoVersionSprite;
+        }
+
+        OnMechadoComplete?.Invoke();
+    }
+
+    public bool CanBeMechado()
+    {
+        return isWashed && isBoiled && !isMechado && !isBeingMechado;
+    }
+    #endregion
+
+    #region Adobo
+    public void StartAdobo()
+    {
+        if (isAdobo || isBeingAdobo || !isWashed || !isBoiled) return;
+        isBeingAdobo = true;
+    }
+
+    public void StopAdobo()
+    {
+        if (!isBeingAdobo) return;
+        isBeingAdobo = false;
+    }
+
+    public void CompleteAdobo()
+    {
+        if (!isBeingAdobo) return;
+        isBeingAdobo = false;
+        isAdobo = true;
+
+        if (adoboVersionSprite != null && spriteRenderer != null)
+        {
+            spriteRenderer.sprite = adoboVersionSprite;
+        }
+
+        OnAdoboComplete?.Invoke();
+    }
+
+    public bool CanBeAdobo()
+    {
+        return isWashed && isBoiled && !isAdobo && !isBeingAdobo;
+    }
+    #endregion
+
     private void ResetAlpha()
     {
         if (spriteRenderer != null)
@@ -232,7 +355,7 @@ public class ChickenCookingState : MonoBehaviour
             spriteRenderer.sprite = friedVersionSprite;
         }
 
-        Debug.Log("[DevMode] Chicken set to fried state");
+        //Debug.Log("[DevMode] Chicken set to fried state");
     }
 
     /// <summary>
@@ -252,7 +375,7 @@ public class ChickenCookingState : MonoBehaviour
             spriteRenderer.sprite = sinigangVersionSprite;
         }
 
-        Debug.Log("[DevMode] Chicken set to sinigang state");
+        //Debug.Log("[DevMode] Chicken set to sinigang state");
     }
 
     #endregion

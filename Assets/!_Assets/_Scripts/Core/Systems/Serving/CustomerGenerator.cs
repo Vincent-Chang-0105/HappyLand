@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+[System.Serializable]
+public class DayMenuUnlock
+{
+    [Tooltip("Orders become available starting from this day")]
+    public int unlockDay = 1;
+    public List<Order> orders = new List<Order>();
+}
+
 public class CustomerGenerator : MonoBehaviour
 {
     [Header("Customer Management")]
@@ -11,6 +19,7 @@ public class CustomerGenerator : MonoBehaviour
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private List<Transform> orderingPoints = new List<Transform>(3);
     [SerializeField] private Transform exitPoint;
+    private HashSet<FacialExpressionSet> usedExpressionSets = new HashSet<FacialExpressionSet>();
 
     //List of all active customers
     private Dictionary<Transform, Customer> occupiedOrderingPoints = new Dictionary<Transform, Customer>();
@@ -25,6 +34,10 @@ public class CustomerGenerator : MonoBehaviour
     [SerializeField] private List<Order> availableOrders = new List<Order>();
     [SerializeField] private int minOrdersPerCustomer = 1;
     [SerializeField] private int maxOrdersPerCustomer = 3;
+
+    [Header("Menu Unlocks (by Day)")]
+    [Tooltip("Orders added to the menu on a specific day. All unlocks up to the current day are combined.")]
+    [SerializeField] private List<DayMenuUnlock> menuUnlocks = new List<DayMenuUnlock>();
     
     // Runtime tracking
     private Queue<int> customerNameQueue = new Queue<int>();
@@ -47,6 +60,13 @@ public class CustomerGenerator : MonoBehaviour
         InitializeOrderPoints();
         InitializeCustomerQueue();
 
+        // Subscribe to day changes so the menu updates each day
+        if (DayManager.Instance != null)
+        {
+            DayManager.Instance.OnDayStarted += ApplyMenuUnlocks;
+            ApplyMenuUnlocks(DayManager.Instance.CurrentDay);
+        }
+
         // Don't auto-generate if tutorial is active
         if (autoGenerate)
         {
@@ -61,6 +81,12 @@ public class CustomerGenerator : MonoBehaviour
                 StartCustomerGeneration();
             }
         }
+    }
+
+    void OnDestroy()
+    {
+        if (DayManager.Instance != null)
+            DayManager.Instance.OnDayStarted -= ApplyMenuUnlocks;
     }
 
     void Update()
@@ -94,7 +120,7 @@ public class CustomerGenerator : MonoBehaviour
             }
         }
 
-        Debug.Log($"Initialized {occupiedOrderingPoints.Count} ordering points");
+        //Debug.Log($"Initialized {occupiedOrderingPoints.Count} ordering points");
     }
 
     private bool HasAvailableOrderingPoint()
@@ -212,8 +238,22 @@ public class CustomerGenerator : MonoBehaviour
             return;
         }
 
-        // Select a random facial expression set
-        FacialExpressionSet expressionSet = npcExpressionSets[Random.Range(0, npcExpressionSets.Count)];
+        // Get available expression sets (not currently in use)
+        List<FacialExpressionSet> availableSets = npcExpressionSets
+            .Where(set => !usedExpressionSets.Contains(set))
+            .ToList();
+
+        // If all sets are in use, allow reuse (fallback)
+        if (availableSets.Count == 0)
+        {
+            availableSets = new List<FacialExpressionSet>(npcExpressionSets);
+        }
+
+        // Select a random facial expression set from available ones
+        FacialExpressionSet expressionSet = availableSets[Random.Range(0, availableSets.Count)];
+        
+        // Mark this expression set as in use
+        usedExpressionSets.Add(expressionSet);
 
         // Instantiate single customer prefab
         GameObject customerObj = Instantiate(customerPrefab, spawnPoint.position, spawnPoint.rotation);
@@ -245,13 +285,31 @@ public class CustomerGenerator : MonoBehaviour
         // Tutorial event
         TutorialEvents.CustomerArrived();
 
-        Debug.Log($"Spawned {customerNumber} with expression set from NPC_{expressionSet.npcNumber} at ordering point: {availablePoint.name}");
+        //Debug.Log($"Spawned {customerNumber} with expression set from NPC_{expressionSet.npcNumber} at ordering point: {availablePoint.name}");
     }
     
     #endregion
     
     #region Order Generation
-    
+
+    private void ApplyMenuUnlocks(int day)
+    {
+        if (menuUnlocks == null || menuUnlocks.Count == 0) return;
+
+        availableOrders.Clear();
+        foreach (DayMenuUnlock unlock in menuUnlocks)
+        {
+            if (unlock.unlockDay <= day)
+            {
+                foreach (Order order in unlock.orders)
+                {
+                    if (order != null && !availableOrders.Contains(order))
+                        availableOrders.Add(order);
+                }
+            }
+        }
+    }
+
     private Order GenerateRandomOrder()
     {
         if (availableOrders.Count == 0)
@@ -301,7 +359,7 @@ public class CustomerGenerator : MonoBehaviour
             {
                 MoneyManager.Instance.AddMoney(reward);
                 todaySalesIncome += reward; // Track daily sales
-                Debug.Log($"MONEY EARNED! Customer {customer.CustomerName} paid {reward} PHP for correct order!");
+                //Debug.Log($"MONEY EARNED! Customer {customer.CustomerName} paid {reward} PHP for correct order!");
             }
             else
             {
@@ -324,13 +382,19 @@ public class CustomerGenerator : MonoBehaviour
         if (customerPoint != null)
         {
             occupiedOrderingPoints[customerPoint] = null; // Free up ordering point
-            Debug.Log($"Freed ordering point: {customerPoint.name}");
+            //Debug.Log($"Freed ordering point: {customerPoint.name}");
+        }
+
+        FacialExpressionSet customerSet = customer.GetExpressionSet();
+        if (customerSet != null)
+        {
+            usedExpressionSets.Remove(customerSet);
         }
         
         activeCustomers.Remove(customer);
         OnCustomerLeft?.Invoke(customer);
         
-        Debug.Log($"Customer {customer.CustomerName} left the restaurant");
+        //Debug.Log($"Customer {customer.CustomerName} left the restaurant");
     }
     
     #endregion
@@ -398,8 +462,22 @@ public class CustomerGenerator : MonoBehaviour
             return;
         }
 
-        // Select a random facial expression set
-        FacialExpressionSet expressionSet = npcExpressionSets[Random.Range(0, npcExpressionSets.Count)];
+        // Get available expression sets (not currently in use)
+        List<FacialExpressionSet> availableSets = npcExpressionSets
+            .Where(set => !usedExpressionSets.Contains(set))
+            .ToList();
+
+        // If all sets are in use, allow reuse (fallback)
+        if (availableSets.Count == 0)
+        {
+            availableSets = new List<FacialExpressionSet>(npcExpressionSets);
+        }
+
+        // Select a random facial expression set from available ones
+        FacialExpressionSet expressionSet = availableSets[Random.Range(0, availableSets.Count)];
+
+        // Mark this expression set as in use
+        usedExpressionSets.Add(expressionSet);
 
         // Instantiate single customer prefab
         GameObject customerObj = Instantiate(customerPrefab, spawnPoint.position, spawnPoint.rotation);
@@ -435,7 +513,7 @@ public class CustomerGenerator : MonoBehaviour
         // Tutorial event
         TutorialEvents.CustomerArrived();
 
-        Debug.Log($"[Tutorial] Spawned customer with specific order: {targetOrder.orderName} and expression set from NPC_{expressionSet.npcNumber}");
+        //Debug.Log($"[Tutorial] Spawned customer with specific order: {targetOrder.orderName} and expression set from NPC_{expressionSet.npcNumber}");
     }
 
     #endregion
@@ -466,6 +544,6 @@ public class CustomerGenerator : MonoBehaviour
     public void ResetDailySales()
     {
         todaySalesIncome = 0;
-        Debug.Log("Daily sales tracking reset.");
+        //Debug.Log("Daily sales tracking reset.");
     }
 }

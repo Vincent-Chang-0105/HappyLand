@@ -1,7 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
 
-public class Chicken : MonoBehaviour, IWashable, IBoilable, IFryable, ISinigangable
+public class Chicken : MonoBehaviour, IWashable, IBoilable, IFryable, ISinigangable, INoodleable, IMechadoable, IAdoboable
 {
     [Header("Economy")]
     [SerializeField] private int chickenCost = 5;
@@ -96,7 +96,7 @@ public class Chicken : MonoBehaviour, IWashable, IBoilable, IFryable, ISiniganga
     private void HandleSinigangComplete()
     {
         Debug.Log("Chicken sinigang cooking complete!");
-        // NOTE: Do NOT teleport - chicken stays in pot for plating
+        // Chicken stays in pan - player drags to PlatingStation
     }
     #endregion
 
@@ -125,8 +125,12 @@ public class Chicken : MonoBehaviour, IWashable, IBoilable, IFryable, ISiniganga
 
     private bool CanBeDragged()
     {
-        // Can't drag while being washed or in a bowl
+        // Can't drag while being washed, in a bowl, or in a cooking station
         if (cookingState.IsBeingWashed || bowlInteraction.IsInBowl)
+            return false;
+
+        // Can't drag while being cooked in a pot or pan
+        if (cookingState.IsBeingBoiled || cookingState.IsBeingFried || cookingState.IsBeingSiniganged || cookingState.IsBeingNoodled || cookingState.IsBeingMechado || cookingState.IsBeingAdobo)
             return false;
 
         // If already paid, allow dragging
@@ -250,6 +254,60 @@ public class Chicken : MonoBehaviour, IWashable, IBoilable, IFryable, ISiniganga
     }
     #endregion
 
+    #region INoodleable Implementation
+    public void StartNoodling()
+    {
+        cookingState.StartNoodling();
+    }
+
+    public void StopNoodling()
+    {
+        cookingState.StopNoodling();
+    }
+
+    public void CompleteNoodling()
+    {
+        cookingState.CompleteNoodling();
+    }
+
+    public bool CanBeNoodled()
+    {
+        return cookingState.CanBeNoodled();
+    }
+
+    public bool IsNoodled()
+    {
+        return cookingState.IsNoodled;
+    }
+    #endregion
+
+    #region IMechadoable Implementation
+    public void StartMechado()
+    {
+        cookingState.StartMechado();
+    }
+
+    public void StopMechado()
+    {
+        cookingState.StopMechado();
+    }
+
+    public void CompleteMechado()
+    {
+        cookingState.CompleteMechado();
+    }
+
+    public bool CanBeMechado()
+    {
+        return cookingState.CanBeMechado();
+    }
+
+    public bool IsMechado()
+    {
+        return cookingState.IsMechado;
+    }
+    #endregion
+
     #region Public Bowl Interaction Methods
     public bool IsInBowl()
     {
@@ -265,6 +323,33 @@ public class Chicken : MonoBehaviour, IWashable, IBoilable, IFryable, ISiniganga
     public void ExitBowl()
     {
         bowlInteraction.ExitBowl();
+    }
+    #endregion
+
+    #region IAdoboable Implementation
+    public void StartAdobo()
+    {
+        cookingState.StartAdobo();
+    }
+
+    public void StopAdobo()
+    {
+        cookingState.StopAdobo();
+    }
+
+    public void CompleteAdobo()
+    {
+        cookingState.CompleteAdobo();
+    }
+
+    public bool CanBeAdobo()
+    {
+        return cookingState.CanBeAdobo();
+    }
+
+    public bool IsAdobo()
+    {
+        return cookingState.IsAdobo;
     }
     #endregion
 

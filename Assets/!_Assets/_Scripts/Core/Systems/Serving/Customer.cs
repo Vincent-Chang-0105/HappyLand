@@ -1,6 +1,7 @@
 using UnityEngine;
 using DG.Tweening;
 using System.Collections;
+using AudioSystem;
 
 public enum CustomerState
 {
@@ -33,6 +34,9 @@ public class Customer : MonoBehaviour
 
     [Header("Effects")]
     [SerializeField] private GameObject MoneyEffect;
+
+    [Header("Audio")]
+    [SerializeField] private SoundData orderCompleteSound;
     
     // Movement points
     private Transform spawnPoint;
@@ -44,6 +48,18 @@ public class Customer : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Animator animator;
     
+    // Order tracking
+    private bool orderTaken = false;
+
+    // Animation state
+    private Tween idleBobTween;
+    private Vector3 originalLocalPos;
+
+    // Cached yield instructions
+    private static readonly WaitForSeconds waitForOrderDelay = new(0.5f);
+    private static readonly WaitForSeconds waitAfterReaction = new(1.25f);
+    private static readonly WaitForSeconds waitForExitAnim = new(0.25f);
+
     // Properties
     public string CustomerName => customerName;
     public Order CurrentOrder => currentOrder;
@@ -106,30 +122,25 @@ public class Customer : MonoBehaviour
     {
         currentState = CustomerState.Moving;
         yield return StartCoroutine(MoveToPoint(orderingPoint));
-        
+
+        // Arrival bounce
+        transform.DOPunchScale(Vector3.one * 0.2f, 0.45f, 5, 0.3f);
+
         currentState = CustomerState.Ordering;
         StartOrdering();
     }
-    
-    private IEnumerator MoveToPoint(Transform target)
+
+    private IEnumerator MoveToPoint(Transform target, bool isLeaving = false)
     {
-        while (Vector3.Distance(transform.position, target.position) > 0.1f)
-        {
-            // Move towards target
-            Vector3 direction = (target.position - transform.position).normalized;
-            transform.position += direction * moveSpeed * Time.deltaTime;
-            
-            // Rotate towards movement direction
-            if (direction != Vector3.zero)
-            {
-                Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-            }
-            
-            yield return null;
-        }
-        
-        transform.position = target.position;
+        float distance = Vector3.Distance(transform.position, target.position);
+        if (distance < 0.01f) yield break;
+
+        transform.DOKill();
+        float duration = distance / moveSpeed;
+        Ease ease = isLeaving ? Ease.InSine : Ease.OutSine;
+        yield return transform.DOMove(target.position, duration)
+            .SetEase(ease)
+            .WaitForCompletion();
     }
     
     #endregion
@@ -150,16 +161,32 @@ public class Customer : MonoBehaviour
     private void DisplayOrder()
     {
         // This would show the order UI/speech bubble
-        Debug.Log($"{customerName} wants: {currentOrder.orderName}");
+        //Debug.Log($"{customerName} wants: {currentOrder.orderName}");
     }
     
     private IEnumerator WaitForOrder()
     {
-        yield return new WaitForSeconds(0.5f); // Time to "place order"
+        yield return waitForOrderDelay;
         currentState = CustomerState.Waiting;
+        StartIdleBob();
 
         // Tutorial event - customer is now waiting for order
         TutorialEvents.CustomerWaiting();
+    }
+
+    private void StartIdleBob()
+    {
+        originalLocalPos = transform.localPosition;
+        idleBobTween = transform.DOLocalMoveY(originalLocalPos.y + 0.07f, 0.75f)
+            .SetEase(Ease.InOutSine)
+            .SetLoops(-1, LoopType.Yoyo);
+    }
+
+    private void StopIdleBob()
+    {
+        idleBobTween?.Kill();
+        idleBobTween = null;
+        transform.localPosition = new Vector3(transform.localPosition.x, originalLocalPos.y, transform.localPosition.z);
     }
     
     #endregion
@@ -183,6 +210,8 @@ public class Customer : MonoBehaviour
         if (isCorrect)
         {
             TutorialEvents.DishServed();
+            if (orderCompleteSound != null && SoundManager.Instance != null)
+                SoundManager.Instance.CreateSoundBuilder().Play(orderCompleteSound);
         }
 
         // Notify generator
@@ -207,7 +236,7 @@ public class Customer : MonoBehaviour
         if (plate != null)
         {
             // Validate the plated dish
-            Debug.Log($"Customer received plated dish with {plate.ChickenCount} ingredients");
+            //Debug.Log($"Customer received plated dish with {plate.ChickenCount} ingredients");
 
             // Check if plate is complete and valid
             if (!plate.ValidateDish())
@@ -223,26 +252,26 @@ public class Customer : MonoBehaviour
             // Direct match or substring match
             if (dishLower.Contains(orderLower) || orderLower.Contains(dishLower))
             {
-                Debug.Log($"✅ Customer accepted plated dish: {plate.DishName}");
+                //Debug.Log($"✅ Customer accepted plated dish: {plate.DishName}");
                 return true;
             }
 
             // Specific dish matching
             if (orderLower.Contains("sinigang") && dishLower.Contains("sinigang"))
             {
-                Debug.Log($"✅ Customer accepted sinigang dish");
+                //Debug.Log($"✅ Customer accepted sinigang dish");
                 return true;
             }
 
             if (orderLower.Contains("fried") && dishLower.Contains("fried"))
             {
-                Debug.Log($"✅ Customer accepted fried chicken");
+                //Debug.Log($"✅ Customer accepted fried chicken");
                 return true;
             }
 
             if (orderLower.Contains("chicken") && dishLower.Contains("chicken"))
             {
-                Debug.Log($"✅ Customer accepted chicken dish");
+                //Debug.Log($"✅ Customer accepted chicken dish");
                 return true;
             }
 
@@ -252,7 +281,7 @@ public class Customer : MonoBehaviour
 
         // Fallback: Original name-based check for other food items
         bool matches = deliveredFood.name.Contains(currentOrder.orderName);
-        Debug.Log($"Customer validation (name check): {deliveredFood.name} vs {currentOrder.orderName} = {matches}");
+        //Debug.Log($"Customer validation (name check): {deliveredFood.name} vs {currentOrder.orderName} = {matches}");
         return matches;
     }
     
@@ -261,28 +290,42 @@ public class Customer : MonoBehaviour
         // Play animation/show reaction and change facial expression
         if (wasCorrect)
         {
-            Debug.Log($"{customerName} is happy with their order!");
             SetEmotion(CustomerEmotion.Happy);
             MoneyEffect.SetActive(true);
+            // Happy bounce
+            transform.DOKill();
+            transform.DOPunchScale(Vector3.one * 0.35f, 0.5f, 5, 0.4f);
         }
         else
         {
-            Debug.Log($"{customerName} is disappointed with their order!");
             SetEmotion(CustomerEmotion.Angry);
+            // Angry shake
+            transform.DOKill();
+            transform.DOShakePosition(0.4f, new Vector3(0.12f, 0f, 0f), 18, 0f);
         }
 
-        yield return new WaitForSeconds(1f);
+        yield return waitAfterReaction;
 
         // Leave restaurant
         StartLeaving();
     }
     
     /// <summary>
-    /// Check if customer is currently waiting for their order
+    /// Mark that the player has taken this customer's order (clicked the order button)
+    /// </summary>
+    public void TakeOrder()
+    {
+        orderTaken = true;
+        // Excited little pop when order is taken
+        transform.DOPunchScale(Vector3.one * 0.18f, 0.3f, 4, 0.5f);
+    }
+
+    /// <summary>
+    /// Check if customer is currently waiting for their order AND the order has been taken
     /// </summary>
     public bool IsWaitingForOrder()
     {
-        return currentState == CustomerState.Waiting;
+        return currentState == CustomerState.Waiting && orderTaken;
     }
 
     #endregion
@@ -303,7 +346,7 @@ public class Customer : MonoBehaviour
     {
         currentState = CustomerState.Angry;
         SetEmotion(CustomerEmotion.Angry);
-        Debug.Log($"{customerName} got angry and left!");
+        //Debug.Log($"{customerName} got angry and left!");
 
         // Notify generator of failed order
         generator.OnCustomerOrderReceived(this, false);
@@ -317,6 +360,7 @@ public class Customer : MonoBehaviour
     
     private void StartLeaving()
     {
+        StopIdleBob();
         currentState = CustomerState.Leaving;
         generator.OnCustomerLeaving(this);
         StartCoroutine(LeaveRestaurant());
@@ -324,12 +368,14 @@ public class Customer : MonoBehaviour
     
     private IEnumerator LeaveRestaurant()
     {
-        yield return StartCoroutine(MoveToPoint(exitPoint));
+        yield return StartCoroutine(MoveToPoint(exitPoint, isLeaving: true));
 
-        // Notify generator
-        //generator.OnCustomerLeaving(this);
+        // Pop out: shrink and fade before destroying
+        transform.DOScale(Vector3.zero, 0.22f).SetEase(Ease.InBack);
+        if (spriteRenderer != null)
+            spriteRenderer.DOFade(0f, 0.22f);
 
-        // Destroy customer
+        yield return waitForExitAnim;
         Destroy(gameObject);
     }
 
@@ -360,12 +406,17 @@ public class Customer : MonoBehaviour
         if (newSprite != null)
         {
             spriteRenderer.sprite = newSprite;
-            Debug.Log($"Customer {customerName} changed expression to: {emotion}");
+            //Debug.Log($"Customer {customerName} changed expression to: {emotion}");
         }
         else
         {
             Debug.LogWarning($"Expression {emotion} not found in expression set for customer {customerName}");
         }
+    }
+
+    public FacialExpressionSet GetExpressionSet()
+    {
+        return expressionSet;
     }
 
     /// <summary>

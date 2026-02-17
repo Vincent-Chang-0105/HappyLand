@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using DG.Tweening;
+using UnityEngine.EventSystems;
 
 public class Bowl : MonoBehaviour
 {
@@ -59,6 +60,10 @@ public class Bowl : MonoBehaviour
     #region Drag Handling
     private void OnMouseDown()
     {
+        // Don't pick up bowl if pointer is over a UI element (e.g. ingredient drawer)
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            return;
+
         Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         mouseWorldPos.z = transform.position.z;
         dragOffset = transform.position - mouseWorldPos;
@@ -138,7 +143,7 @@ public class Bowl : MonoBehaviour
             // Tutorial event
             TutorialEvents.ChickenEnteredBowl(gameObject.tag);
 
-            Debug.Log($"🥣 Added {ingredient.name} to bowl!");
+            //Debug.Log($"🥣 Added {ingredient.name} to bowl!");
         }
     }
     
@@ -176,7 +181,7 @@ public class Bowl : MonoBehaviour
             dropEffect.Play();
         }
         
-        Debug.Log($"✅ Ingredient {ingredient.name} animation completed!");
+        //Debug.Log($"✅ Ingredient {ingredient.name} animation completed!");
     }
     
     public void RemoveIngredient(GameObject ingredient)
@@ -191,7 +196,7 @@ public class Bowl : MonoBehaviour
             // Unparent the ingredient
             ingredient.transform.SetParent(null);
             
-            Debug.Log($"🥣 Removed {ingredient.name} from bowl!");
+            //Debug.Log($"🥣 Removed {ingredient.name} from bowl!");
         }
     }
     

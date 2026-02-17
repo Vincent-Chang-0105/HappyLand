@@ -1,0 +1,959 @@
+fileFormatVersion: 2
+guid: 26ac27eb8599271459548bb391f5f673
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3743820430912728877
+    second: Sinigang_Spritesheet_0
+  - first:
+      213: -6881396547608306007
+    second: Sinigang_Spritesheet_1
+  - first:
+      213: -3811361139120002054
+    second: Sinigang_Spritesheet_2
+  - first:
+      213: -8874978209458453152
+    second: Sinigang_Spritesheet_3
+  - first:
+      213: -4482004515803265982
+    second: Sinigang_Spritesheet_4
+  - first:
+      213: -5944978757590939214
+    second: Sinigang_Spritesheet_5
+  - first:
+      213: -6490830498043761799
+    second: Sinigang_Spritesheet_6
+  - first:
+      213: -441737895906722998
+    second: Sinigang_Spritesheet_7
+  - first:
+      213: 4712096078376915915
+    second: Sinigang_Spritesheet_8
+  - first:
+      213: -3493181101690031705
+    second: Sinigang_Spritesheet_9
+  - first:
+      213: 9108841579308690542
+    second: Sinigang_Spritesheet_10
+  - first:
+      213: -8000597506612321757
+    second: Sinigang_Spritesheet_11
+  - first:
+      213: -2616527358094559269
+    second: Sinigang_Spritesheet_12
+  - first:
+      213: 3735161757290929101
+    second: Sinigang_Spritesheet_13
+  - first:
+      213: -1636700935065171434
+    second: Sinigang_Spritesheet_14
+  - first:
+      213: -7396486412213084051
+    second: Sinigang_Spritesheet_15
+  - first:
+      213: -2671108918368527734
+    second: Sinigang_Spritesheet_16
+  - first:
+      213: 2050369304564063136
+    second: Sinigang_Spritesheet_17
+  - first:
+      213: -3036617012785952939
+    second: Sinigang_Spritesheet_18
+  - first:
+      213: 6585118383882988845
+    second: Sinigang_Spritesheet_19
+  - first:
+      213: -8152211315559200155
+    second: Sinigang_Spritesheet_20
+  - first:
+      213: 6920310274678634699
+    second: Sinigang_Spritesheet_21
+  - first:
+      213: -2209489424040161443
+    second: Sinigang_Spritesheet_22
+  - first:
+      213: 1466466739516388077
+    second: Sinigang_Spritesheet_23
+  - first:
+      213: -7729176291045795885
+    second: Sinigang_Spritesheet_24
+  - first:
+      213: 3467470056440249900
+    second: Sinigang_Spritesheet_25
+  - first:
+      213: -151627879061277525
+    second: Sinigang_Spritesheet_26
+  - first:
+      213: 1675085417976545329
+    second: Sinigang_Spritesheet_27
+  - first:
+      213: 7176663389898777876
+    second: Sinigang_Spritesheet_28
+  - first:
+      213: 2256765005243747448
+    second: Sinigang_Spritesheet_29
+  - first:
+      213: -7747447872124750014
+    second: Sinigang_Spritesheet_30
+  - first:
+      213: -3707861760690518658
+    second: Sinigang_Spritesheet_31
+  - first:
+      213: 4612772656112176437
+    second: Sinigang_Spritesheet_32
+  - first:
+      213: -6842782452365748340
+    second: Sinigang_Spritesheet_33
+  - first:
+      213: -6061305741718073774
+    second: Sinigang_Spritesheet_34
+  - first:
+      213: 5811990931628105102
+    second: Sinigang_Spritesheet_35
+  - first:
+      213: -6700481104039079679
+    second: Sinigang_Spritesheet_36
+  - first:
+      213: -5898702426311352231
+    second: Sinigang_Spritesheet_37
+  - first:
+      213: -4417149136348187956
+    second: Sinigang_Spritesheet_38
+  - first:
+      213: -2216661271717121530
+    second: Sinigang_Spritesheet_39
+  - first:
+      213: -8583588561938053088
+    second: Sinigang_Spritesheet_40
+  - first:
+      213: 2852674100390960539
+    second: Sinigang_Spritesheet_41
+  - first:
+      213: -5509314117353811049
+    second: Sinigang_Spritesheet_42
+  - first:
+      213: 6033242259218970694
+    second: Sinigang_Spritesheet_43
+  - first:
+      213: 2307151156864059029
+    second: Sinigang_Spritesheet_44
+  - first:
+      213: -950708183927268355
+    second: Sinigang_Spritesheet_45
+  - first:
+      213: 798108376570945986
+    second: Sinigang_Spritesheet_46
+  - first:
+      213: 6468260267820392390
+    second: Sinigang_Spritesheet_47
+  - first:
+      213: -1952991657041502168
+    second: Sinigang_Spritesheet_48
+  - first:
+      213: -6612758074159847216
+    second: Sinigang_Spritesheet_49
+  - first:
+      213: -8560177404224795772
+    second: Sinigang_Spritesheet_50
+  - first:
+      213: 7572144235994745929
+    second: Sinigang_Spritesheet_51
+  - first:
+      213: 7287631594118535812
+    second: Sinigang_Spritesheet_52
+  - first:
+      213: -2147410948310084201
+    second: Sinigang_Spritesheet_53
+  - first:
+      213: -6016845656431452204
+    second: Sinigang_Spritesheet_54
+  - first:
+      213: -6040941649968059316
+    second: Sinigang_Spritesheet_55
+  - first:
+      213: 3974930597743727385
+    second: Sinigang_Spritesheet_56
+  - first:
+      213: 2175734027406398779
+    second: Sinigang_Spritesheet_57
+  - first:
+      213: -308154620344030457
+    second: Sinigang_Spritesheet_58
+  - first:
+      213: -3086819626317132116
+    second: Sinigang_Spritesheet_59
+  - first:
+      213: 2648851987592516902
+    second: Sinigang_Spritesheet_60
+  - first:
+      213: -1213345212220606474
+    second: Sinigang_Spritesheet_61
+  - first:
+      213: 3931187401865062916
+    second: Sinigang_Spritesheet_62
+  - first:
+      213: -170796457870102753
+    second: Sinigang_Spritesheet_63
+  - first:
+      213: -5290561156555120392
+    second: Sinigang_Spritesheet_64
+  - first:
+      213: 3361759837732691661
+    second: Sinigang_Spritesheet_65
+  - first:
+      213: 8207292198840017659
+    second: Sinigang_Spritesheet_66
+  - first:
+      213: -732371367737793931
+    second: Sinigang_Spritesheet_67
+  - first:
+      213: 6251754077189291420
+    second: Sinigang_Spritesheet_68
+  - first:
+      213: 2295388272230327556
+    second: Sinigang_Spritesheet_69
+  - first:
+      213: 4371574095927654724
+    second: Sinigang_Spritesheet_70
+  - first:
+      213: 3523215196528084255
+    second: Sinigang_Spritesheet_71
+  - first:
+      213: 1308482738083610146
+    second: Sinigang_Spritesheet_72
+  - first:
+      213: 6012614445661752997
+    second: Sinigang_Spritesheet_73
+  - first:
+      213: -5760386274721481964
+    second: Sinigang_Spritesheet_74
+  - first:
+      213: 1933261684534612975
+    second: Sinigang_Spritesheet_75
+  - first:
+      213: -3053298211658632169
+    second: Sinigang_Spritesheet_76
+  - first:
+      213: 1720556730195852438
+    second: Sinigang_Spritesheet_77
+  - first:
+      213: 164555927361202136
+    second: Sinigang_Spritesheet_78
+  - first:
+      213: -5595778428943696086
+    second: Sinigang_Spritesheet_79
+  - first:
+      213: -2951415884330416844
+    second: Sinigang_Spritesheet_80
+  - first:
+      213: -2208075082159957900
+    second: Sinigang_Spritesheet_81
+  - first:
+      213: 6987346061049972621
+    second: Sinigang_Spritesheet_82
+  - first:
+      213: -8114317876922310850
+    second: Sinigang_Spritesheet_83
+  - first:
+      213: -2982725871260754150
+    second: Sinigang_Spritesheet_84
+  - first:
+      213: 7135943463800720168
+    second: Sinigang_Spritesheet_85
+  - first:
+      213: 4157414015383865586
+    second: Sinigang_Spritesheet_86
+  - first:
+      213: 5308935957928306571
+    second: Sinigang_Spritesheet_87
+  - first:
+      213: -8696358311559695751
+    second: Sinigang_Spritesheet_88
+  - first:
+      213: -2606770285723674216
+    second: Sinigang_Spritesheet_89
+  - first:
+      213: 8085772015843544706
+    second: Sinigang_Spritesheet_90
+  - first:
+      213: -968030722295691186
+    second: Sinigang_Spritesheet_91
+  - first:
+      213: 7085653426090568293
+    second: Sinigang_Spritesheet_92
+  - first:
+      213: 8443558594483561831
+    second: Sinigang_Spritesheet_93
+  - first:
+      213: 7338077299723067770
+    second: Sinigang_Spritesheet_94
+  - first:
+      213: 8639264397597044383
+    second: Sinigang_Spritesheet_95
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1500
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2f2767a8d8b4f330800000000000000
+      internalID: 3743820430912728877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_1
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 1500
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ae15359c4e5080a0800000000000000
+      internalID: -6881396547608306007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_2
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 1500
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afb2608cc335b1bc0800000000000000
+      internalID: -3811361139120002054
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_3
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 1500
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06585e3175eb5d480800000000000000
+      internalID: -8874978209458453152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1200
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24489d9b3a8bcc1c0800000000000000
+      internalID: -4482004515803265982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_5
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 1200
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b98c8c51513f7da0800000000000000
+      internalID: -5944978757590939214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_6
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 1200
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97b64da4d00fbe5a0800000000000000
+      internalID: -6490830498043761799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_7
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 1200
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a4bb6ae59b1aed9f0800000000000000
+      internalID: -441737895906722998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 900
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc3da23ea6ab46140800000000000000
+      internalID: 4712096078376915915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_9
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 900
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a178a1bb4ab58fc0800000000000000
+      internalID: -3493181101690031705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_10
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 900
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6ca00ad72b196e70800000000000000
+      internalID: 9108841579308690542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_11
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 900
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3222f7be4fa28f090800000000000000
+      internalID: -8000597506612321757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 600
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd7bea31b3a30bbd0800000000000000
+      internalID: -2616527358094559269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_13
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 600
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcb13f914d5f5d330800000000000000
+      internalID: 3735161757290929101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_14
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 600
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61a04e1db254949e0800000000000000
+      internalID: -1636700935065171434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_15
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 600
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d60290edbc66a5990800000000000000
+      internalID: -7396486412213084051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 300
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8a144447905eead0800000000000000
+      internalID: -2671108918368527734
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_17
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 300
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0abd7e8e400647c10800000000000000
+      internalID: 2050369304564063136
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_18
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 300
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5574cf16ae4cbd5d0800000000000000
+      internalID: -3036617012785952939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_19
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 300
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2d6d3bd74a036b50800000000000000
+      internalID: 6585118383882988845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56a8c2230078dde80800000000000000
+      internalID: -8152211315559200155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_21
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc8b4b98781e90060800000000000000
+      internalID: 6920310274678634699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_22
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5f8a1143115651e0800000000000000
+      internalID: -2209489424040161443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Sinigang_Spritesheet_23
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de2bccbdabfe95410800000000000000
+      internalID: 1466466739516388077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 34f334c7d55292a448afb94b0ed8564f
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":4.0,"y":6.0},"gridSpriteSize":{"x":300.0,"y":300.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      Sinigang_Spritesheet_0: 3743820430912728877
+      Sinigang_Spritesheet_1: -6881396547608306007
+      Sinigang_Spritesheet_10: 9108841579308690542
+      Sinigang_Spritesheet_11: -8000597506612321757
+      Sinigang_Spritesheet_12: -2616527358094559269
+      Sinigang_Spritesheet_13: 3735161757290929101
+      Sinigang_Spritesheet_14: -1636700935065171434
+      Sinigang_Spritesheet_15: -7396486412213084051
+      Sinigang_Spritesheet_16: -2671108918368527734
+      Sinigang_Spritesheet_17: 2050369304564063136
+      Sinigang_Spritesheet_18: -3036617012785952939
+      Sinigang_Spritesheet_19: 6585118383882988845
+      Sinigang_Spritesheet_2: -3811361139120002054
+      Sinigang_Spritesheet_20: -8152211315559200155
+      Sinigang_Spritesheet_21: 6920310274678634699
+      Sinigang_Spritesheet_22: -2209489424040161443
+      Sinigang_Spritesheet_23: 1466466739516388077
+      Sinigang_Spritesheet_3: -8874978209458453152
+      Sinigang_Spritesheet_4: -4482004515803265982
+      Sinigang_Spritesheet_5: -5944978757590939214
+      Sinigang_Spritesheet_6: -6490830498043761799
+      Sinigang_Spritesheet_7: -441737895906722998
+      Sinigang_Spritesheet_8: 4712096078376915915
+      Sinigang_Spritesheet_9: -3493181101690031705
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

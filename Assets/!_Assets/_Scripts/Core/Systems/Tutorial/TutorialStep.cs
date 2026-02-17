@@ -52,6 +52,7 @@ public enum TutorialTargetType
     OilBottle,
     SinigangMix,
     PlatedDish,
+    PlatingStation,
     Customer,
     ServingArea,
     OrderSlot,
@@ -88,7 +89,9 @@ public enum TutorialCompletionType
     ThreeChickensWashed,
     FaucetClosed,
     ChickenTransferred,
-    SaltAdded
+    SaltAdded,
+    ChickenAddedToPlate,     // Individual chicken placed on plating station
+    FriedChickenCompleted    // Fried chicken dish fully assembled
 }
 
 public enum TutorialActionType

@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 
 public class PauseManager : StaticInstance<PauseManager>
@@ -320,7 +321,7 @@ public class PauseManager : StaticInstance<PauseManager>
 
     public void LoadMainMenu()
     {
-        //GameManager.Instance.LoadScene("MainMenu");
+        SceneManager.LoadScene(0);
         Time.timeScale = 1f;
     }
 

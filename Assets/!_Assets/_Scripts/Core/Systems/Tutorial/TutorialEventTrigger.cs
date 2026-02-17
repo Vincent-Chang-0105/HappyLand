@@ -37,8 +37,8 @@ public class TutorialEventTrigger : MonoBehaviour
 
     public void TriggerEvent()
     {
-        Debug.Log($"TutorialEventTrigger: TriggerEvent called for {eventToTrigger}");
-        Debug.Log($"  HasInstance: {TutorialManager.HasInstance}");
+        //Debug.Log($"TutorialEventTrigger: TriggerEvent called for {eventToTrigger}");
+        //Debug.Log($"  HasInstance: {TutorialManager.HasInstance}");
 
         if (!TutorialManager.HasInstance)
         {
@@ -46,9 +46,9 @@ public class TutorialEventTrigger : MonoBehaviour
             return;
         }
 
-        Debug.Log($"  IsTutorialActive: {TutorialManager.Instance.IsTutorialActive}");
-        Debug.Log($"  CurrentStep: {TutorialManager.Instance.CurrentStep?.stepName ?? "null"}");
-        Debug.Log($"  CurrentStep CompletionType: {TutorialManager.Instance.CurrentStep?.completionType}");
+        //Debug.Log($"  IsTutorialActive: {TutorialManager.Instance.IsTutorialActive}");
+        //Debug.Log($"  CurrentStep: {TutorialManager.Instance.CurrentStep?.stepName ?? "null"}");
+        //Debug.Log($"  CurrentStep CompletionType: {TutorialManager.Instance.CurrentStep?.completionType}");
 
         if (!TutorialManager.Instance.IsTutorialActive)
         {
@@ -56,7 +56,7 @@ public class TutorialEventTrigger : MonoBehaviour
             return;
         }
 
-        Debug.Log($"TutorialEventTrigger: Firing event {eventToTrigger}");
+        //Debug.Log($"TutorialEventTrigger: Firing event {eventToTrigger}");
 
         switch (eventToTrigger)
         {

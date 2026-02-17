@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using AudioSystem;
 
 /// <summary>
 /// Detects circular stirring gestures from mouse input.
@@ -20,8 +21,12 @@ public class StirGestureDetector : MonoBehaviour
     public event Action OnStirComplete;
     public event Action<float> OnStirProgress; // Returns progress 0-1
 
+    [Header("Sounds")]
+    [SerializeField] private SoundData stirringLoopSound;
+
     // State
     private bool isTracking = false;
+    private SoundEmitter stirringLoopEmitter;
     private List<Vector2> mousePositions = new List<Vector2>();
     private float cumulativeAngle = 0f;
     private Vector2 lastMousePos;
@@ -66,6 +71,10 @@ public class StirGestureDetector : MonoBehaviour
         Vector2 worldPos = GetMouseWorldPosition();
         mousePositions.Add(worldPos);
         lastMousePos = worldPos;
+
+        // Start stirring loop sound
+        if (stirringLoopSound != null && SoundManager.Instance != null && stirringLoopEmitter == null)
+            stirringLoopEmitter = SoundManager.Instance.CreateSoundBuilder().Play(stirringLoopSound);
     }
 
     private void TrackMousePosition()
@@ -104,6 +113,13 @@ public class StirGestureDetector : MonoBehaviour
         mousePositions.Clear();
         cumulativeAngle = 0f;
         OnStirProgress?.Invoke(0f);
+
+        // Stop stirring loop sound
+        if (stirringLoopEmitter != null)
+        {
+            stirringLoopEmitter.FadeOutAndStop(0.15f);
+            stirringLoopEmitter = null;
+        }
     }
 
     private void CalculateAngleChange(Vector2 currentPos)
@@ -140,8 +156,14 @@ public class StirGestureDetector : MonoBehaviour
         mousePositions.Clear();
         cumulativeAngle = 0f;
         isTracking = false;
-
         OnStirProgress?.Invoke(0f);
+
+        // Stop stirring loop sound
+        if (stirringLoopEmitter != null)
+        {
+            stirringLoopEmitter.FadeOutAndStop(0.15f);
+            stirringLoopEmitter = null;
+        }
     }
 
     private Vector2 GetMouseWorldPosition()

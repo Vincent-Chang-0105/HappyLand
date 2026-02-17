@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using AudioSystem;
 
 /// <summary>
 /// Detects fast upward drag gestures (toss motion) from mouse input.
@@ -16,6 +17,9 @@ public class TossGestureDetector : MonoBehaviour
 
     [Header("Visual Feedback")]
     [SerializeField] private Transform tossOrigin; // The pan handle position
+
+    [Header("Sounds")]
+    [SerializeField] private SoundData tossSwooshSound;
 
     // Events
     public event Action OnTossComplete;
@@ -120,6 +124,10 @@ public class TossGestureDetector : MonoBehaviour
     private void CompleteToss()
     {
         Debug.Log("Toss detected!");
+
+        if (tossSwooshSound != null && SoundManager.Instance != null)
+            SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(tossSwooshSound);
+
         OnTossComplete?.Invoke();
 
         // Reset

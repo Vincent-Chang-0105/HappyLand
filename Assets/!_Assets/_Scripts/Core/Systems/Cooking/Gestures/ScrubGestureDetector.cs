@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using AudioSystem;
 
 /// <summary>
 /// Detects back-and-forth horizontal scrubbing gestures from mouse input.
@@ -18,8 +19,12 @@ public class ScrubGestureDetector : MonoBehaviour
     public event Action OnScrubCycleComplete;   // Single scrub cycle done
     public event Action OnAllScrubsComplete;    // All scrubs done
 
+    [Header("Sounds")]
+    [SerializeField] private SoundData scrubbingLoopSound;
+
     // State
     private bool isTracking = false;
+    private SoundEmitter scrubbingLoopEmitter;
     private Transform targetTransform;
     private Vector2 lastPosition;
     private Vector2 scrubStartPosition;
@@ -144,6 +149,10 @@ public class ScrubGestureDetector : MonoBehaviour
         scrubStartPosition = mousePos;
 
         OnScrubProgress?.Invoke(0f);
+
+        // Start scrubbing loop sound
+        if (scrubbingLoopSound != null && SoundManager.Instance != null)
+            scrubbingLoopEmitter = SoundManager.Instance.CreateSoundBuilder().Play(scrubbingLoopSound);
     }
 
     /// <summary>
@@ -153,6 +162,13 @@ public class ScrubGestureDetector : MonoBehaviour
     {
         isTracking = false;
         ResetCurrentScrub();
+
+        // Stop scrubbing loop sound
+        if (scrubbingLoopEmitter != null)
+        {
+            scrubbingLoopEmitter.FadeOutAndStop(0.15f);
+            scrubbingLoopEmitter = null;
+        }
     }
 
     /// <summary>
