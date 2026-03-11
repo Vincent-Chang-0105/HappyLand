@@ -130,7 +130,12 @@ public class PlatingStation : MonoBehaviour
         {
             GameObject chickenObj = ingredients[i];
             if (chickenObj == null) continue;
-            if (placedChickens.Count >= requiredChickens) break;
+            if (placedChickens.Count >= requiredChickens)
+            {
+                // Excess ingredient beyond plate capacity — destroy so it doesn't get stuck
+                Destroy(chickenObj);
+                continue;
+            }
 
             // Parent to plate
             chickenObj.transform.SetParent(transform);

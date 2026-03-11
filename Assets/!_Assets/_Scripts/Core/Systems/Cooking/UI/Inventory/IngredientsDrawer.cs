@@ -31,6 +31,7 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
 
     private bool isOpen = false;
     private bool isDragging = false;
+    private bool wasOpenWhenDragStarted = false;
     private Vector2 dragStartPosition;
     private Vector2 drawerStartPosition;
     private RectTransform handleRectTransform;
@@ -116,7 +117,8 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
             isDragging = true;
             dragStartPosition = eventData.position;
             drawerStartPosition = DrawerPanel.anchoredPosition;
-            
+            wasOpenWhenDragStarted = isOpen;
+
             // Stop any ongoing tween
             DrawerPanel.DOKill();
             
@@ -177,10 +179,18 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
             HandleImage.color = normalColor;
         }
         
-        // Calculate final position based on current position
-        Vector2 currentPosition = DrawerPanel.anchoredPosition;
-        bool shouldOpen = ShouldDrawerBeOpen(currentPosition);
-        
+        // If barely moved (tap), toggle the drawer
+        float dragDistance = Vector2.Distance(eventData.position, dragStartPosition);
+        bool shouldOpen;
+        if (dragDistance < dragThreshold)
+        {
+            shouldOpen = !wasOpenWhenDragStarted;
+        }
+        else
+        {
+            shouldOpen = ShouldDrawerBeOpen(DrawerPanel.anchoredPosition);
+        }
+
         // Animate to final position
         if (shouldOpen)
         {

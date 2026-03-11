@@ -77,13 +77,7 @@ public class MoneyManager : MonoBehaviour
                 return false;
             }
 
-            if (!CanAfford(amount))
-            {
-                OnInsufficientFunds?.Invoke();
-                return false;
-            }
-
-            currentMoney -= amount;
+                currentMoney -= amount;
             todayExpenses += amount; // Track daily expenses
             OnMoneyChanged?.Invoke(currentMoney);
             OnMoneySpent?.Invoke(amount);
@@ -98,7 +92,7 @@ public class MoneyManager : MonoBehaviour
         /// <returns>True if player has enough money</returns>
         public bool CanAfford(int amount)
         {
-            return currentMoney >= amount;
+            return true;
         }
 
         /// <summary>

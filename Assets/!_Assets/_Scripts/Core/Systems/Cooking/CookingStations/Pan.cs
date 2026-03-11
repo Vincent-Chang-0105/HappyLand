@@ -1646,5 +1646,18 @@ public class Pan : CookingStation
         transform.DOLocalRotateQuaternion(originalPanRotation, 0.3f).SetEase(Ease.OutQuad);
     }
 
+    public void Reset()
+    {
+        List<GameObject> toDestroy = new List<GameObject>(ingredientsInStation);
+        CompletePanPour();
+        foreach (GameObject ingredient in toDestroy)
+        {
+            if (ingredient != null)
+            {
+                Destroy(ingredient);
+            }
+        }
+    }
+
     #endregion
 }

@@ -3185,7 +3185,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 1687886557974091518}
   m_OnClick:
     m_PersistentCalls:
@@ -3780,7 +3780,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 455, y: -245.5}
+  m_AnchoredPosition: {x: 955, y: -245.5}
   m_SizeDelta: {x: 910, y: 299}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2624586181011651304
@@ -4379,7 +4379,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &2910725520450158255
 GameObject:
   m_ObjectHideFlags: 0
@@ -8221,7 +8221,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &7345166070694159033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9143,7 +9143,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 915, y: -245.5}
+  m_AnchoredPosition: {x: 455, y: -245.5}
   m_SizeDelta: {x: 910, y: 299}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &8003112572672269156

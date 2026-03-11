@@ -57,13 +57,11 @@ public class ChickenBowlInteraction : MonoBehaviour
         currentBowl = bowl;
         isInBowl = true;
 
-        if (col2D != null)
-        {
-            col2D.enabled = false; // Disable collider to prevent further interactions
-        }
+        // Disable all colliders so clicks pass through to the bowl beneath
+        foreach (Collider2D c in GetComponents<Collider2D>())
+            c.enabled = false;
 
         bowl.AddIngredient(gameObject);
-
     }
 
     public void ExitBowl()
@@ -74,11 +72,8 @@ public class ChickenBowlInteraction : MonoBehaviour
         currentBowl = null;
         isInBowl = false;
 
-        if (col2D != null)
-        {
-            col2D.enabled = true;
-        }
-
+        foreach (Collider2D c in GetComponents<Collider2D>())
+            c.enabled = true;
     }
 
     /// <summary>
@@ -90,10 +85,8 @@ public class ChickenBowlInteraction : MonoBehaviour
         currentBowl = null;
         isInBowl = false;
 
-        if (col2D != null)
-        {
-            col2D.enabled = true;
-        }
+        foreach (Collider2D c in GetComponents<Collider2D>())
+            c.enabled = true;
     }
 
     public void TeleportToNearestBowl()
