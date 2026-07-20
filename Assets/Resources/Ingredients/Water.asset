@@ -26,3 +26,4 @@ MonoBehaviour:
   usageType: 2
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
   cost: 3
+  ingredientRole: 50

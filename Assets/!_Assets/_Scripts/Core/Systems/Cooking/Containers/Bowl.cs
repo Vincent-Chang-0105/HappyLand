@@ -130,12 +130,17 @@ public class Bowl : MonoBehaviour
         {
             containedIngredients.Add(ingredient);
             
-            // Stop any dragging on the ingredient first
+            // Stop and lock dragging while inside the bowl
             ChickenDragBehavior dragBehavior = ingredient.GetComponent<ChickenDragBehavior>();
             if (dragBehavior != null)
             {
                 dragBehavior.EndDrag();
+                dragBehavior.enabled = false;
             }
+
+            // Disable all colliders so the chicken can't be grabbed or detected by other bowls
+            foreach (Collider2D col in ingredient.GetComponents<Collider2D>())
+                col.enabled = false;
             
             // Start DOTween animation to move ingredient to bowl
             MoveIngredientToBowlWithDOTween(ingredient);
@@ -189,12 +194,16 @@ public class Bowl : MonoBehaviour
         if (containedIngredients.Contains(ingredient))
         {
             containedIngredients.Remove(ingredient);
-            
+
             // Kill any ongoing tweens
             ingredient.transform.DOKill();
-            
+
             // Unparent the ingredient
             ingredient.transform.SetParent(null);
+
+            // Re-enable dragging — ChickenBowlInteraction.ExitBowl/ForceExitBowl handles colliders
+            ChickenDragBehavior dragBehavior = ingredient.GetComponent<ChickenDragBehavior>();
+            if (dragBehavior != null) dragBehavior.enabled = true;
             
             //Debug.Log($"🥣 Removed {ingredient.name} from bowl!");
         }
@@ -208,6 +217,21 @@ public class Bowl : MonoBehaviour
     public bool IsEmpty()
     {
         return containedIngredients.Count == 0;
+    }
+
+    public void Reset()
+    {
+        DOTween.Kill(transform);
+        foreach (GameObject ingredient in containedIngredients)
+        {
+            if (ingredient != null)
+                Destroy(ingredient);
+        }
+        containedIngredients.Clear();
+        transform.position = originalPosition;
+        transform.rotation = Quaternion.identity;
+        if (spriteRenderer != null)
+            spriteRenderer.color = normalColor;
     }
     #endregion
     

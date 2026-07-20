@@ -21,7 +21,7 @@ public abstract class CookingStation : MonoBehaviour
 
     [Header("Visual Feedback")]
     [SerializeField] protected Color normalColor = Color.white;
-    [SerializeField] protected Color canAcceptColor = Color.orange;
+    [SerializeField] protected Color canAcceptColor = Color.red;
     [SerializeField] protected ParticleSystem cookingEffect;
     [SerializeField] protected ParticleSystem steamEffect;
     [SerializeField] protected ParticleSystem ingredientDropEffect;
@@ -233,6 +233,13 @@ public abstract class CookingStation : MonoBehaviour
     {
         // Parent ingredient to station container
         ingredient.transform.SetParent(ingredientContainer);
+
+        // Lock the ingredient so it can't be dragged out or picked up by a bowl
+        ChickenDragBehavior drag = ingredient.GetComponent<ChickenDragBehavior>();
+        if (drag != null) drag.enabled = false;
+
+        foreach (Collider2D col in ingredient.GetComponents<Collider2D>())
+            col.enabled = false;
 
         // Play drop effect
         if (ingredientDropEffect != null)

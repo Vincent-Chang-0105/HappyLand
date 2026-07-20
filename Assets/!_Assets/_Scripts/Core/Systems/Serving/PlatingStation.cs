@@ -24,7 +24,7 @@ public class PlatingStation : MonoBehaviour
 
     // State
     private List<GameObject> placedChickens = new List<GameObject>();
-    private string currentDishType = null; // "FriedChicken", "Sinigang", or "NoodleChicken"
+    private DishType currentDishType = DishType.Unknown;
     private bool isProcessing = false;
 
     private void CompletePlating()
@@ -37,33 +37,29 @@ public class PlatingStation : MonoBehaviour
             {
                 if (chicken == null) continue;
 
-                if (currentDishType == "FriedChicken")
+                        switch (currentDishType)
                 {
-                    PlatingManager.Instance.RegisterFriedChicken(chicken);
-                }
-                else if (currentDishType == "Sinigang")
-                {
-                    PlatingManager.Instance.RegisterSinigangChicken(chicken);
-                }
-                else if (currentDishType == "NoodleChicken")
-                {
-                    // Chickens have INoodleable; the noodle object does not
-                    if (chicken.GetComponent<INoodleable>() != null)
-                        PlatingManager.Instance.RegisterNoodleChicken(chicken);
-                    else
-                        PlatingManager.Instance.RegisterNoodleIngredient(chicken);
-                }
-                else if (currentDishType == "Mechado")
-                {
-                    PlatingManager.Instance.RegisterMechadoChicken(chicken);
-                }
-                else if (currentDishType == "Adobo")
-                {
-                    PlatingManager.Instance.RegisterAdoboChicken(chicken);
+                    case DishType.FriedChicken:
+                        PlatingManager.Instance.RegisterFriedChicken(chicken);
+                        break;
+                    case DishType.Sinigang:
+                        PlatingManager.Instance.RegisterSinigangChicken(chicken);
+                        break;
+                    case DishType.NoodleChicken:
+                        if (chicken.GetComponent<INoodleable>() != null)
+                            PlatingManager.Instance.RegisterNoodleChicken(chicken);
+                        else
+                            PlatingManager.Instance.RegisterNoodleIngredient(chicken);
+                        break;
+                    case DishType.Mechado:
+                        PlatingManager.Instance.RegisterMechadoChicken(chicken);
+                        break;
+                    case DishType.Adobo:
+                        PlatingManager.Instance.RegisterAdoboChicken(chicken);
+                        break;
                 }
             }
-            // Fire dish-specific tutorial event once after all registrations
-            if (currentDishType == "FriedChicken")
+            if (currentDishType == DishType.FriedChicken)
                 TutorialEvents.FriedChickenCompleted();
         }
         else
@@ -90,7 +86,7 @@ public class PlatingStation : MonoBehaviour
         }
 
         placedChickens.Clear();
-        currentDishType = null;
+        currentDishType = DishType.Unknown;
         isProcessing = false;
 
         if (plateSprite != null)
@@ -112,11 +108,11 @@ public class PlatingStation : MonoBehaviour
     /// Accept a pour from a Pan. Receives all ingredients at once,
     /// animates them to plate slots, and triggers CompletePlating when full.
     /// </summary>
-    public void AcceptPour(List<GameObject> ingredients, string dishType)
+    public void AcceptPour(List<GameObject> ingredients, DishType dishType)
     {
         if (isProcessing || ingredients == null || ingredients.Count == 0) return;
 
-        if (currentDishType == null)
+        if (currentDishType == DishType.Unknown)
         {
             currentDishType = dishType;
         }

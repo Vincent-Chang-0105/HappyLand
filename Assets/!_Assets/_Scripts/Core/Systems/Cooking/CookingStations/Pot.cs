@@ -291,7 +291,7 @@ public class Pot : CookingStation
                 {
                     float progress = boilingTimer / boilDuration;
                     cookingProgressBar.fillAmount = progress;
-                    cookingProgressBar.color = Color.Lerp(Color.yellow, Color.orange, progress);
+                    cookingProgressBar.color = Color.Lerp(Color.yellow, Color.red, progress);
                 }
 
                 // After boiling time is up, request next stir or complete
@@ -855,6 +855,48 @@ public class Pot : CookingStation
     {
         transform.DOMove(potOriginalPosition, 0.3f).SetEase(Ease.OutQuad);
         transform.DORotateQuaternion(potOriginalRotation, 0.3f).SetEase(Ease.OutQuad);
+    }
+
+    public void Reset()
+    {
+        StopAllCoroutines();
+        DOTween.Kill(transform);
+        isCooking = false;
+        isPourable = false;
+        isPouring = false;
+        isWindingDown = false;
+        currentCookingPhase = PotCookingPhase.Initial;
+        currentSwirlSpeed = 0f;
+        orbitAngle = 0f;
+        ingredientOrbits.Clear();
+
+        if (boilingLoopEmitter != null)
+        {
+            boilingLoopEmitter.FadeOutAndStop(0.3f);
+            boilingLoopEmitter = null;
+        }
+
+        if (spriteRenderer != null)
+            spriteRenderer.color = normalColor;
+
+        if (ingredientContainer != null)
+        {
+            ingredientContainer.localRotation = Quaternion.identity;
+            ingredientContainer.localPosition = containerBasePosition;
+        }
+
+        HideStirPrompt();
+
+        if (cookingMeterUI != null)
+            cookingMeterUI.SetActive(false);
+
+        List<GameObject> toDestroy = new List<GameObject>(ingredientsInStation);
+        ingredientsInStation.Clear();
+        foreach (GameObject ingredient in toDestroy)
+        {
+            if (ingredient != null)
+                Destroy(ingredient);
+        }
     }
 
     #endregion

@@ -11,16 +11,16 @@ using System;
 public class PlatingManager : Singleton<PlatingManager>
 {
     [System.Serializable]
-    public class DishType
+    public class DishConfig
     {
-        public string dishName;
+        public DishType dishType;
         public GameObject platedDishPrefab;
         public int ingredientsPerPlate = 3;
         [HideInInspector] public List<GameObject> waitingIngredients = new List<GameObject>();
     }
 
     [Header("Supported Dishes")]
-    [SerializeField] private List<DishType> supportedDishes = new List<DishType>();
+    [SerializeField] private List<DishConfig> supportedDishes = new List<DishConfig>();
 
     [Header("Plate Spawning")]
     [SerializeField] private Transform servingArea;
@@ -46,7 +46,7 @@ public class PlatingManager : Singleton<PlatingManager>
     /// </summary>
     public void RegisterFriedChicken(GameObject chicken)
     {
-        RegisterIngredientForDish("FriedChicken", chicken,
+        RegisterIngredientForDish(DishType.FriedChicken, chicken,
             c => c.GetComponent<IFryable>()?.IsFried() ?? false);
     }
 
@@ -55,7 +55,7 @@ public class PlatingManager : Singleton<PlatingManager>
     /// </summary>
     public void RegisterSinigangChicken(GameObject chicken)
     {
-        RegisterIngredientForDish("Sinigang", chicken,
+        RegisterIngredientForDish(DishType.Sinigang, chicken,
             c => c.GetComponent<ISinigangable>()?.IsSiniganged() ?? false);
     }
 
@@ -64,7 +64,7 @@ public class PlatingManager : Singleton<PlatingManager>
     /// </summary>
     public void RegisterNoodleChicken(GameObject chicken)
     {
-        RegisterIngredientForDish("NoodleChicken", chicken,
+        RegisterIngredientForDish(DishType.NoodleChicken, chicken,
             c => c.GetComponent<INoodleable>()?.IsNoodled() ?? false);
     }
 
@@ -73,7 +73,7 @@ public class PlatingManager : Singleton<PlatingManager>
     /// </summary>
     public void RegisterMechadoChicken(GameObject chicken)
     {
-        RegisterIngredientForDish("Mechado", chicken,
+        RegisterIngredientForDish(DishType.Mechado, chicken,
             c => c.GetComponent<IMechadoable>()?.IsMechado() ?? false);
     }
 
@@ -82,7 +82,7 @@ public class PlatingManager : Singleton<PlatingManager>
     /// </summary>
     public void RegisterAdoboChicken(GameObject chicken)
     {
-        RegisterIngredientForDish("Adobo", chicken,
+        RegisterIngredientForDish(DishType.Adobo, chicken,
             c => c.GetComponent<IAdoboable>()?.IsAdobo() ?? false);
     }
 
@@ -91,54 +91,51 @@ public class PlatingManager : Singleton<PlatingManager>
     /// </summary>
     public void RegisterNoodleIngredient(GameObject ingredient)
     {
-        RegisterIngredientForDish("NoodleChicken", ingredient, _ => true);
+        RegisterIngredientForDish(DishType.NoodleChicken, ingredient, _ => true);
     }
 
-    private void RegisterIngredientForDish(string dishName, GameObject ingredient, System.Func<GameObject, bool> validator)
+    private void RegisterIngredientForDish(DishType dishType, GameObject ingredient, System.Func<GameObject, bool> validator)
     {
         if (ingredient == null) return;
 
-        // Find dish type
-        DishType dish = supportedDishes.Find(d => d.dishName == dishName);
+        DishConfig dish = supportedDishes.Find(d => d.dishType == dishType);
         if (dish == null)
         {
-            Debug.LogError($"Dish type '{dishName}' not configured in PlatingManager!");
+            Debug.LogError($"Dish type '{dishType}' not configured in PlatingManager!");
             return;
         }
 
-        // Validate ingredient state
         if (!validator(ingredient))
         {
-            Debug.LogWarning($"Attempted to register invalid ingredient for {dishName}: {ingredient.name}");
+            Debug.LogWarning($"Attempted to register invalid ingredient for {dishType}: {ingredient.name}");
             return;
         }
 
-        // Add to waiting list
         if (!dish.waitingIngredients.Contains(ingredient))
         {
             dish.waitingIngredients.Add(ingredient);
-            Debug.Log($"{dishName} ingredient registered. Waiting: {dish.waitingIngredients.Count}/{dish.ingredientsPerPlate}");
+            Debug.Log($"{dishType} ingredient registered. Waiting: {dish.waitingIngredients.Count}/{dish.ingredientsPerPlate}");
 
             CheckAndCreatePlate(dish);
         }
     }
 
-    private void CheckAndCreatePlate(DishType dish)
+    private void CheckAndCreatePlate(DishConfig dish)
     {
         dish.waitingIngredients.RemoveAll(i => i == null);
 
         if (dish.waitingIngredients.Count >= dish.ingredientsPerPlate)
         {
-            Debug.Log($"Creating {dish.dishName} plate with {dish.ingredientsPerPlate} ingredients!");
+            Debug.Log($"Creating {dish.dishType} plate with {dish.ingredientsPerPlate} ingredients!");
             CreatePlate(dish);
         }
     }
 
-    private void CreatePlate(DishType dish)
+    private void CreatePlate(DishConfig dish)
     {
         if (dish.platedDishPrefab == null || servingArea == null)
         {
-            Debug.LogError($"Cannot create {dish.dishName} plate: missing prefab or serving area");
+            Debug.LogError($"Cannot create {dish.dishType} plate: missing prefab or serving area");
             return;
         }
 
@@ -149,7 +146,7 @@ public class PlatingManager : Singleton<PlatingManager>
 
         if (ingredientsForPlate.Count < dish.ingredientsPerPlate)
         {
-            Debug.LogWarning($"Not enough ingredients for {dish.dishName}: {ingredientsForPlate.Count}/{dish.ingredientsPerPlate}");
+            Debug.LogWarning($"Not enough ingredients for {dish.dishType}: {ingredientsForPlate.Count}/{dish.ingredientsPerPlate}");
             return;
         }
 
@@ -159,7 +156,7 @@ public class PlatingManager : Singleton<PlatingManager>
 
         if (plate == null)
         {
-            Debug.LogError($"{dish.dishName} prefab missing PlatedDish component!");
+            Debug.LogError($"{dish.dishType} prefab missing PlatedDish component!");
             Destroy(plateObject);
             return;
         }
@@ -184,7 +181,7 @@ public class PlatingManager : Singleton<PlatingManager>
             dish.waitingIngredients.Remove(ingredient);
         }
 
-        Debug.Log($"✅ {dish.dishName} plate created! Remaining: {dish.waitingIngredients.Count}");
+        Debug.Log($"✅ {dish.dishType} plate created! Remaining: {dish.waitingIngredients.Count}");
         PlayPlateCreationEffect(plateObject);
 
         // Tutorial event
@@ -213,7 +210,7 @@ public class PlatingManager : Singleton<PlatingManager>
     /// </summary>
     public void ClearWaitingIngredients()
     {
-        foreach (DishType dish in supportedDishes)
+        foreach (DishConfig dish in supportedDishes)
         {
             dish.waitingIngredients.Clear();
         }

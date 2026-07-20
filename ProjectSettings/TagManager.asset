@@ -9,6 +9,7 @@ TagManager:
   - OrderSlot
   - CookStaging
   - CutBowl
+  - OrderTicket
   layers:
   - Default
   - TransparentFX

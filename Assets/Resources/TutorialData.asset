@@ -26,6 +26,7 @@ MonoBehaviour:
     showDelay: 0
     showArrow: 0
     arrowOffset: {x: 0, y: 0, z: 0}
+    highlightUITag: 
     actionOnComplete: 0
     actionParameter: 
     controlNavigation: 1
@@ -43,6 +44,7 @@ MonoBehaviour:
     showDelay: 0
     showArrow: 0
     arrowOffset: {x: 0, y: 0, z: 0}
+    highlightUITag: 
     actionOnComplete: 1
     actionParameter: FriedChicken
     controlNavigation: 1
@@ -60,6 +62,7 @@ MonoBehaviour:
     showDelay: 0
     showArrow: 1
     arrowOffset: {x: 0, y: 0, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 1
@@ -77,6 +80,7 @@ MonoBehaviour:
     showDelay: 0
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 1
@@ -91,14 +95,15 @@ MonoBehaviour:
     targetObjectName: 
     completionType: 0
     autoCompleteDelay: 0
-    showDelay: 0
+    showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: OrderTicket
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 5
     stepName: Give the order
     instructionText: they serve as the recipe of the dish!
@@ -111,11 +116,12 @@ MonoBehaviour:
     showDelay: 0
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 6
     stepName: Start Cooking
     instructionText: Lets start cooking! click on the washing button to start!
@@ -128,11 +134,12 @@ MonoBehaviour:
     showDelay: 0.5
     showArrow: 0
     arrowOffset: {x: -8.2, y: -18.3, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 1
     allowedDirections: 01000000
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 7
     stepName: Intro Cleaning
     instructionText: Now we need to clean the chicken!
@@ -145,11 +152,12 @@ MonoBehaviour:
     showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 8
     stepName: Opening the faucet
     instructionText: Start by opening the faucet!
@@ -162,11 +170,12 @@ MonoBehaviour:
     showDelay: 0
     showArrow: 1
     arrowOffset: {x: 0, y: 0, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 9
     stepName: Drag the Chicken
     instructionText: Drag the chicken into the sink and scrub the chicken
@@ -179,11 +188,12 @@ MonoBehaviour:
     showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 10
     stepName: drag chicken to the pan
     instructionText: Drag the chicken on the right pan to transfer it to the boil
@@ -197,11 +207,12 @@ MonoBehaviour:
     showDelay: 0.5
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 11
     stepName: Give the order
     instructionText: Now wash 2 more chicken since u need 3 for 1 dish!
@@ -214,11 +225,12 @@ MonoBehaviour:
     showDelay: 0.5
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 12
     stepName: Closing Faucet
     instructionText: After washing, you must close the faucet as this will drain
@@ -232,11 +244,12 @@ MonoBehaviour:
     showDelay: 2
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 13
     stepName: Go to Boil
     instructionText: Time to Boil, Click on the bottom right button to go to boil
@@ -250,11 +263,12 @@ MonoBehaviour:
     showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 1
     allowedDirections: 03000000
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 14
     stepName: Drag Bowl
     instructionText: Drag Bowl to Pot
@@ -267,11 +281,12 @@ MonoBehaviour:
     showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 15
     stepName: Stir Pot
     instructionText: Stir the pot, drag mouse in a circle fast motion!
@@ -284,11 +299,12 @@ MonoBehaviour:
     showDelay: 0.5
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 16
     stepName: Give the order
     instructionText: Drag Pot into fry pan to transfer the chicken to the Fry Screen
@@ -301,11 +317,12 @@ MonoBehaviour:
     showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 17
     stepName: Frying time
     instructionText: Time to Fry
@@ -318,11 +335,12 @@ MonoBehaviour:
     showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 18
     stepName: Cut screen
     instructionText: this is tue cutting screen. this where u cut things. go right
@@ -336,11 +354,12 @@ MonoBehaviour:
     showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 19
     stepName: Add Oil
     instructionText: Open the drawer by dragging it down
@@ -353,11 +372,12 @@ MonoBehaviour:
     showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 20
     stepName: Add Oil
     instructionText: Click the oil and drag it to the pan
@@ -370,11 +390,12 @@ MonoBehaviour:
     showDelay: 0
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 21
     stepName: Add Oil
     instructionText: Then add the chicken in the pan
@@ -387,11 +408,12 @@ MonoBehaviour:
     showDelay: 1.5
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 22
     stepName: Give the order
     instructionText: Add Salt to start tossing!
@@ -404,11 +426,12 @@ MonoBehaviour:
     showDelay: 0
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 23
     stepName: Toss Chicken
     instructionText: Time to toss! just flick up ur mouse to toss the pan!
@@ -421,11 +444,12 @@ MonoBehaviour:
     showDelay: 0.5
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 24
     stepName: Give the order
     instructionText: Drag the pan to the plate to make the dish!
@@ -438,11 +462,12 @@ MonoBehaviour:
     showDelay: 0
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 25
     stepName: Go back to Serve screen
     instructionText: Go back to serve screen to Serve the order!
@@ -455,11 +480,12 @@ MonoBehaviour:
     showDelay: 0.5
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 26
     stepName: Give the order
     instructionText: Give the order to the customer by dragging it to them
@@ -472,11 +498,12 @@ MonoBehaviour:
     showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 27
     stepName: Give the order
     instructionText: Congrats you have finished the tutorial!
@@ -489,11 +516,12 @@ MonoBehaviour:
     showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 28
     stepName: Give the order
     instructionText: Remember, In day you only have 5 minutes
@@ -506,11 +534,12 @@ MonoBehaviour:
     showDelay: 0
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 29
     stepName: Give the order
     instructionText: So try to make as much money as you can! Goodluck!
@@ -523,9 +552,10 @@ MonoBehaviour:
     showDelay: 0
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   autoStartFirstStep: 1

@@ -43,11 +43,15 @@ public class ScreenData
     
     [Header("List of UI Objects to show")]
     public List<GameObject> uiElements = new List<GameObject>();
-    
+
     [Header("UI Animation Settings")]
     public bool animateUIElements = true;
     public float uiAnimationDuration = 0.3f;
     public Ease uiAnimationEase = Ease.OutQuart;
+
+    [Header("Tutorial Event (fires when camera arrives at this screen)")]
+    public bool fireTutorialEventOnArrival = false;
+    public TutorialCompletionType arrivalTutorialEvent;
 }
 
 public class ScreenTransitionManager : MonoBehaviour
@@ -192,9 +196,13 @@ public class ScreenTransitionManager : MonoBehaviour
         mainCamera.Follow = targetScreen.screenTransform;
 
         yield return new WaitForSeconds(animationDuration);
-        
+
         currentGridPosition = targetScreen.gridPosition;
         currentScreen = targetScreen;
+
+        // Fire tutorial event now that the camera has arrived at the destination screen
+        if (targetScreen.fireTutorialEventOnArrival)
+            FireScreenArrivalEvent(targetScreen.arrivalTutorialEvent);
 
         // Show new screen UI after a small delay
         yield return new WaitForSeconds(uiTransitionDelay);
@@ -561,6 +569,18 @@ public class ScreenTransitionManager : MonoBehaviour
         if (downButton != null && downButton.gameObject.activeInHierarchy) downButton.interactable = true;
         if (leftButton != null && leftButton.gameObject.activeInHierarchy) leftButton.interactable = true;
         if (rightButton != null && rightButton.gameObject.activeInHierarchy) rightButton.interactable = true;
+    }
+
+    private void FireScreenArrivalEvent(TutorialCompletionType type)
+    {
+        switch (type)
+        {
+            case TutorialCompletionType.WashScreenEntered:  TutorialEvents.WashScreenEntered();  break;
+            case TutorialCompletionType.CookScreenEntered:  TutorialEvents.CookScreenEntered();  break;
+            case TutorialCompletionType.ServeScreenEntered: TutorialEvents.ServeScreenEntered(); break;
+            case TutorialCompletionType.BoilScreenEntered:  TutorialEvents.BoilScreenEntered();  break;
+            case TutorialCompletionType.CutScreenEntered:   TutorialEvents.CutScreenEntered();   break;
+        }
     }
 
     #endregion

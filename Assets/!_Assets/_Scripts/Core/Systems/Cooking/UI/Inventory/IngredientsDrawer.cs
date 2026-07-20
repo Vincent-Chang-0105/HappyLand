@@ -29,6 +29,10 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
     [SerializeField] private InventorySlot[] inventorySlots;
     [SerializeField] private List<IngredientStack> startingIngredients = new List<IngredientStack>();
 
+    [Header("Ingredient Unlocks (by Day)")]
+    [Tooltip("Ingredients added to the drawer on a specific day. All unlocks up to the current day are combined.")]
+    [SerializeField] private List<DayIngredientUnlock> ingredientUnlocks = new List<DayIngredientUnlock>();
+
     private bool isOpen = false;
     private bool isDragging = false;
     private bool wasOpenWhenDragStarted = false;
@@ -66,7 +70,58 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
         
         if (scrollRect != null) scrollRect.enabled = false;
 
-        InitializeInventory();
+        if (DayManager.Instance != null)
+        {
+            DayManager.Instance.OnDayStarted += ApplyIngredientUnlocks;
+            ApplyIngredientUnlocks(DayManager.Instance.CurrentDay);
+        }
+        else
+        {
+            InitializeInventory();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (DayManager.Instance != null)
+            DayManager.Instance.OnDayStarted -= ApplyIngredientUnlocks;
+    }
+
+    private void ApplyIngredientUnlocks(int day)
+    {
+        // Clear all slots
+        foreach (InventorySlot slot in inventorySlots)
+            slot.ClearSlot();
+
+        // Build the combined ingredient list for this day
+        List<IngredientStack> toAdd = new List<IngredientStack>(startingIngredients);
+        foreach (DayIngredientUnlock unlock in ingredientUnlocks)
+        {
+            if (unlock.unlockDay <= day)
+            {
+                foreach (IngredientStack stack in unlock.ingredients)
+                {
+                    if (stack.ingredient != null)
+                        toAdd.Add(stack);
+                }
+            }
+        }
+
+        // Populate slots
+        int slotIndex = 0;
+        foreach (IngredientStack stack in toAdd)
+        {
+            if (slotIndex >= inventorySlots.Length) break;
+            inventorySlots[slotIndex].SetIngredient(stack.ingredient, stack.quantity);
+            slotIndex++;
+        }
+
+        // Force scroll to top after layout is calculated
+        if (scrollRect != null)
+        {
+            Canvas.ForceUpdateCanvases();
+            scrollRect.verticalNormalizedPosition = 1f;
+        }
     }
 
     private void InitializeInventory()
@@ -86,6 +141,12 @@ public class IngredientsDrawer : MonoBehaviour, IPointerDownHandler, IPointerUpH
                 inventorySlots[slotIndex].SetIngredient(ingredientStack.ingredient, ingredientStack.quantity);
                 slotIndex++;
             }
+        }
+
+        if (scrollRect != null)
+        {
+            Canvas.ForceUpdateCanvases();
+            scrollRect.verticalNormalizedPosition = 1f;
         }
     }
 
@@ -315,4 +376,12 @@ public class IngredientStack
 {
     public Ingredient ingredient;
     public int quantity = 1;
+}
+
+[System.Serializable]
+public class DayIngredientUnlock
+{
+    [Tooltip("Ingredients become available in the drawer starting from this day")]
+    public int unlockDay = 1;
+    public List<IngredientStack> ingredients = new List<IngredientStack>();
 }

@@ -551,6 +551,7 @@ MonoBehaviour:
   tutorialData: {fileID: 11400000, guid: da68aebb4ddf4f2499837056b7cf6d3f, type: 2}
   uiPanel: {fileID: 1631300908}
   arrowIndicator: {fileID: 1539109646}
+  uiHighlighter: {fileID: 286472191}
   taskCompletionVFX: {fileID: 0}
   pauseGameDuringSteps: 1
   pauseDelay: 0.1
@@ -1030,6 +1031,7 @@ MonoBehaviour:
     quantity: 100
   - ingredient: {fileID: 11400000, guid: 33d3a5101728bf54ca773eb3e3b82027, type: 2}
     quantity: 100
+  ingredientUnlocks: []
 --- !u!1 &122644160
 GameObject:
   m_ObjectHideFlags: 0
@@ -1850,10 +1852,6 @@ PrefabInstance:
       propertyPath: cookingProgressBar
       value: 
       objectReference: {fileID: 1937867315}
-    - target: {fileID: 5524684573358364765, guid: acc6e2bbfbe9e314dbc2b8eecb823643, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6927589257665597568, guid: acc6e2bbfbe9e314dbc2b8eecb823643, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2090,6 +2088,7 @@ GameObject:
   - component: {fileID: 286472190}
   - component: {fileID: 286472189}
   - component: {fileID: 286472188}
+  - component: {fileID: 286472191}
   m_Layer: 0
   m_Name: TutorialCanvas
   m_TagString: Untagged
@@ -2180,6 +2179,24 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 100
   m_TargetDisplay: 0
+--- !u!114 &286472191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 286472186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dec6c1aef23ef1479014b64b391d9fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialUIHighlighter
+  highlightImage: {fileID: 1406777716}
+  highlightColor: {r: 1, g: 0.85, b: 0, a: 0.6}
+  padding: 12
+  pulseMinAlpha: 0.2
+  pulseMaxAlpha: 0.8
+  pulseDuration: 0.6
 --- !u!1 &298375851
 GameObject:
   m_ObjectHideFlags: 0
@@ -2213,7 +2230,7 @@ MonoBehaviour:
   ticketPrefab: {fileID: 8734877093004473705, guid: a66e201f1227eb1409220474e5ed43ff, type: 3}
   ticketSprites:
   - orderName: FriedChicken
-    ticketSprite: {fileID: 21300000, guid: 75495c5352659b34897f62a6e0a9f4cc, type: 3}
+    ticketSprite: {fileID: 21300000, guid: 5e13b6748f30eea4f966af5f2836ce07, type: 3}
   - orderName: Sinigang
     ticketSprite: {fileID: 21300000, guid: c6747ba431c365d47bcf6dd0913d1498, type: 3}
   spawnAnimationDuration: 0.5
@@ -2772,23 +2789,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Version: 4
   m_UsePipelineSettings: 1
   m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
   m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 1
-  m_RenderingLayersMask:
-    serializedVersion: 0
-    m_Bits: 1
-  m_ShadowRenderingLayersMask:
-    serializedVersion: 0
-    m_Bits: 1
-  m_Version: 4
-  m_LightLayerMask: 1
-  m_ShadowLayerMask: 1
-  m_RenderingLayers: 1
-  m_ShadowRenderingLayers: 1
 --- !u!1 &413994666
 GameObject:
   m_ObjectHideFlags: 0
@@ -2991,6 +3002,8 @@ MonoBehaviour:
     animateUIElements: 1
     uiAnimationDuration: 0.3
     uiAnimationEase: 12
+    fireTutorialEventOnArrival: 1
+    arrivalTutorialEvent: 19
   - screenName: Boil
     screenTransform: {fileID: 972961682}
     gridPosition: {x: 1, y: 0}
@@ -3013,6 +3026,8 @@ MonoBehaviour:
     animateUIElements: 1
     uiAnimationDuration: 0.3
     uiAnimationEase: 12
+    fireTutorialEventOnArrival: 1
+    arrivalTutorialEvent: 23
   - screenName: Cut
     screenTransform: {fileID: 825907236}
     gridPosition: {x: 2, y: 0}
@@ -3034,6 +3049,8 @@ MonoBehaviour:
     animateUIElements: 1
     uiAnimationDuration: 0.3
     uiAnimationEase: 12
+    fireTutorialEventOnArrival: 1
+    arrivalTutorialEvent: 24
   - screenName: Cook
     screenTransform: {fileID: 816753834}
     gridPosition: {x: 3, y: 0}
@@ -3056,6 +3073,8 @@ MonoBehaviour:
     animateUIElements: 1
     uiAnimationDuration: 0.3
     uiAnimationEase: 12
+    fireTutorialEventOnArrival: 1
+    arrivalTutorialEvent: 21
   - screenName: Serve
     screenTransform: {fileID: 934931521}
     gridPosition: {x: 0, y: 1}
@@ -3073,6 +3092,8 @@ MonoBehaviour:
     animateUIElements: 1
     uiAnimationDuration: 0.3
     uiAnimationEase: 12
+    fireTutorialEventOnArrival: 1
+    arrivalTutorialEvent: 22
   screenSpacing: {x: 19.2, y: 10.8}
   currentGridPosition: {x: 0, y: 1}
   animationDuration: 0.4
@@ -6480,6 +6501,126 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1054798114}
   m_CullTransparentMesh: 1
+--- !u!1 &1078557565
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1078557569}
+  - component: {fileID: 1078557568}
+  - component: {fileID: 1078557567}
+  - component: {fileID: 1078557566}
+  m_Layer: 0
+  m_Name: SkipButton
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1078557566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1078557565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1078557567}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &1078557567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1078557565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 52de4c97a8f505d47bc5ba088df75bfe, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1078557568
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1078557565}
+  m_CullTransparentMesh: 1
+--- !u!224 &1078557569
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1078557565}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.40000004, y: 0.40000004, z: 0.40000004}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1631300906}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 838, y: -428}
+  m_SizeDelta: {x: 591, y: 297}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1081195871
 GameObject:
   m_ObjectHideFlags: 0
@@ -8508,6 +8649,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DayManager
   dayDurationInSeconds: 300
   startingDay: 1
+  gameOverCheckDay: 5
   currentDay: 0
   currentTimeRemaining: 0
   isDayActive: 0
@@ -8646,6 +8788,81 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1405883112}
+  m_CullTransparentMesh: 1
+--- !u!1 &1406777714
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1406777715}
+  - component: {fileID: 1406777717}
+  - component: {fileID: 1406777716}
+  m_Layer: 0
+  m_Name: hightlightImage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1406777715
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406777714}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1631300906}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1406777716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406777714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1406777717
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1406777714}
   m_CullTransparentMesh: 1
 --- !u!1 &1408623273
 GameObject:
@@ -9222,7 +9439,6 @@ GameObject:
   - component: {fileID: 1507457766}
   - component: {fileID: 1507457765}
   - component: {fileID: 1507457764}
-  - component: {fileID: 1507457768}
   m_Layer: 5
   m_Name: DownButton
   m_TagString: Untagged
@@ -9286,18 +9502,6 @@ MonoBehaviour:
           m_StringArgument: Wash
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1507457768}
-        m_TargetAssemblyTypeName: TutorialEventTrigger, Assembly-CSharp
-        m_MethodName: TriggerEvent
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &1507457765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9355,20 +9559,6 @@ RectTransform:
   m_AnchoredPosition: {x: -821, y: -419}
   m_SizeDelta: {x: 390, y: 348}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1507457768
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1507457763}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e20a88dcde5b5744a9f3e68a2369238b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TutorialEventTrigger
-  eventToTrigger: 1
-  triggerOnStart: 0
 --- !u!1 &1511090188
 GameObject:
   m_ObjectHideFlags: 0
@@ -10129,6 +10319,8 @@ RectTransform:
   - {fileID: 581009201}
   - {fileID: 238577424}
   - {fileID: 712466539}
+  - {fileID: 1078557569}
+  - {fileID: 1406777715}
   m_Father: {fileID: 286472187}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -10354,8 +10546,6 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -10377,7 +10567,6 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
@@ -11733,12 +11922,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlatingManager
   supportedDishes:
-  - dishName: FriedChicken
+  - dishType: 1
     platedDishPrefab: {fileID: 1057112280502863167, guid: ccff29be3222e7340b09d6fd9d852e2e, type: 3}
-    ingredientsPerPlate: 3
-    waitingIngredients: []
-  - dishName: Sinigang
-    platedDishPrefab: {fileID: 1057112280502863167, guid: b7691a9c30543044589e8ab16d003bf6, type: 3}
     ingredientsPerPlate: 3
     waitingIngredients: []
   servingArea: {fileID: 285284861}
@@ -13707,8 +13892,6 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -13730,7 +13913,6 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -14100,8 +14282,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TutorialSceneSetup
   tutorialManager: {fileID: 53881120}
   customerGenerator: {fileID: 1117147608}
+  uiPanel: {fileID: 1631300908}
+  arrowIndicator: {fileID: 1539109646}
+  screenTransitionManager: {fileID: 425914701}
+  taskCompletionVFX: {fileID: 0}
   autoStartTutorial: 1
   startDelay: 0.5
+  skipButton: {fileID: 1078557566}
 --- !u!1 &2146329648
 GameObject:
   m_ObjectHideFlags: 0
@@ -14114,7 +14301,6 @@ GameObject:
   - component: {fileID: 2146329651}
   - component: {fileID: 2146329650}
   - component: {fileID: 2146329649}
-  - component: {fileID: 2146329653}
   m_Layer: 5
   m_Name: UpButton
   m_TagString: Untagged
@@ -14178,18 +14364,6 @@ MonoBehaviour:
           m_StringArgument: Serve
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 2146329653}
-        m_TargetAssemblyTypeName: TutorialEventTrigger, Assembly-CSharp
-        m_MethodName: TriggerEvent
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &2146329650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14247,20 +14421,6 @@ RectTransform:
   m_AnchoredPosition: {x: 826, y: -418}
   m_SizeDelta: {x: 390, y: 348}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2146329653
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2146329648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e20a88dcde5b5744a9f3e68a2369238b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TutorialEventTrigger
-  eventToTrigger: 4
-  triggerOnStart: 0
 --- !u!1 &2146485312
 GameObject:
   m_ObjectHideFlags: 0
@@ -15702,55 +15862,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 590570346258531023}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8907651233922098045}
-        m_TargetAssemblyTypeName: TutorialEventTrigger, Assembly-CSharp
-        m_MethodName: TriggerEvent
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 8907651233922098047}
-        m_TargetAssemblyTypeName: TutorialEventTrigger, Assembly-CSharp
-        m_MethodName: TriggerEvent
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 8907651233922098046}
-        m_TargetAssemblyTypeName: TutorialEventTrigger, Assembly-CSharp
-        m_MethodName: TriggerEvent
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 8907651233922098048}
-        m_TargetAssemblyTypeName: TutorialEventTrigger, Assembly-CSharp
-        m_MethodName: TriggerEvent
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!4 &6909343426497579813
 Transform:
   m_ObjectHideFlags: 0
@@ -15988,6 +16100,7 @@ MonoBehaviour:
   m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
+  m_Version: 2
   m_TaaSettings:
     m_Quality: 3
     m_FrameInfluence: 0.1
@@ -15995,7 +16108,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
-  m_Version: 2
 --- !u!114 &8356114583553274387
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16112,10 +16224,6 @@ GameObject:
   - component: {fileID: 801465921798775531}
   - component: {fileID: 590570346258531023}
   - component: {fileID: 6885528487914514808}
-  - component: {fileID: 8907651233922098045}
-  - component: {fileID: 8907651233922098047}
-  - component: {fileID: 8907651233922098046}
-  - component: {fileID: 8907651233922098048}
   m_Layer: 0
   m_Name: RightButton
   m_TagString: Untagged
@@ -16123,62 +16231,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &8907651233922098045
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8907651233922098044}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e20a88dcde5b5744a9f3e68a2369238b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TutorialEventTrigger
-  eventToTrigger: 5
-  triggerOnStart: 0
---- !u!114 &8907651233922098046
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8907651233922098044}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e20a88dcde5b5744a9f3e68a2369238b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TutorialEventTrigger
-  eventToTrigger: 3
-  triggerOnStart: 0
---- !u!114 &8907651233922098047
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8907651233922098044}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e20a88dcde5b5744a9f3e68a2369238b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TutorialEventTrigger
-  eventToTrigger: 6
-  triggerOnStart: 0
---- !u!114 &8907651233922098048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8907651233922098044}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e20a88dcde5b5744a9f3e68a2369238b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TutorialEventTrigger
-  eventToTrigger: 4
-  triggerOnStart: 0
 --- !u!4 &9010391879046967954
 Transform:
   m_ObjectHideFlags: 0

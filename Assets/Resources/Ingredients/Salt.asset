@@ -46,7 +46,8 @@ MonoBehaviour:
   - {fileID: -8841018612484913466, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
   - {fileID: -7273722367319917528, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
   - {fileID: 6668942184540811585, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
-  draggableIcon: {fileID: -2653825612140457106, guid: 596a722cb92daf54dad31d05493615b0, type: 3}
+  bowlVersionSprite: {fileID: 0}
   usageType: 0
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
   cost: 5
+  ingredientRole: 2

@@ -56,38 +56,27 @@ public class TransferZone : MonoBehaviour
             return;
         }
 
-        //Debug.Log($"TransferZone: Transferring {item.name} to {destinationTag}");
+        // If chicken was in a bowl, properly exit it so the next bowl can accept it
+        ChickenBowlInteraction bowlInteraction = item.GetComponent<ChickenBowlInteraction>();
+        if (bowlInteraction != null && bowlInteraction.IsInBowl)
+            bowlInteraction.ExitBowl();
 
-        // Disable dragging during transfer
+        // Disable dragging and all colliders during transfer to prevent re-triggering
         var dragBehavior = item.GetComponent<ChickenDragBehavior>();
-        if (dragBehavior != null)
-        {
-            dragBehavior.enabled = false;
-        }
+        if (dragBehavior != null) dragBehavior.enabled = false;
 
-        // Disable collider during transfer to prevent re-triggering
-        var collider = item.GetComponent<Collider2D>();
-        if (collider != null)
-        {
-            collider.enabled = false;
-        }
+        foreach (Collider2D col in item.GetComponents<Collider2D>())
+            col.enabled = false;
 
         // Animate to destination
         item.transform.DOMove(destination.transform.position, transferDuration)
             .SetEase(transferEase)
             .OnComplete(() => {
-                // Re-enable dragging after transfer
-                if (dragBehavior != null)
-                {
-                    dragBehavior.enabled = true;
-                }
-                // Re-enable collider
-                if (collider != null)
-                {
-                    collider.enabled = true;
-                }
+                // Re-enable dragging and ALL colliders so the destination bowl can detect the chicken
+                if (dragBehavior != null) dragBehavior.enabled = true;
 
-                //Debug.Log($"TransferZone: {item.name} arrived at staging area");
+                foreach (Collider2D col in item.GetComponents<Collider2D>())
+                    col.enabled = true;
             });
     }
 

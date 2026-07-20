@@ -84,9 +84,8 @@ public class ChickenBowlInteraction : MonoBehaviour
     {
         currentBowl = null;
         isInBowl = false;
-
-        foreach (Collider2D c in GetComponents<Collider2D>())
-            c.enabled = true;
+        // Colliders intentionally left disabled — the cooking station disables them
+        // in OnIngredientArrivedInStation, preventing the bowl from re-capturing mid-animation
     }
 
     public void TeleportToNearestBowl()

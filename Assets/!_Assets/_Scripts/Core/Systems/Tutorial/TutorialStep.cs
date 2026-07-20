@@ -26,6 +26,10 @@ public class TutorialStep
     public bool showArrow = true;
     public Vector3 arrowOffset = new Vector3(0, 1f, 0);
 
+    [Header("UI Highlight")]
+    [Tooltip("Tag of a UI GameObject to pulse/glow during this step. Resolved at runtime so it works with instantiated objects.")]
+    public string highlightUITag;
+
     [Header("Action On Complete")]
     public TutorialActionType actionOnComplete = TutorialActionType.None;
     public string actionParameter; // e.g., "Fried Chicken" for SpawnCustomerWithOrder

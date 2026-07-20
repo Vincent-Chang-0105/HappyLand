@@ -39,6 +39,7 @@ public class ExpenseManager : MonoBehaviour
     public int TotalFixedExpenses => ElectricityCost + WaterCost + RentCost;
     public int TotalVariableExpenses => MedicineCost + HouseRepairsCost;
     public int TotalDailyExpenses => TotalFixedExpenses + TotalVariableExpenses;
+    public int TotalUnpaidBills => unpaidElectricity + unpaidWater + unpaidMedicine + unpaidRepairs + unpaidRent;
 
     // Events
     public event Action<int> OnExpensesGenerated;

@@ -10,7 +10,7 @@ using DG.Tweening;
 public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [Header("Dish Contents")]
-    [SerializeField] private string dishType = ""; // Will auto-detect if empty
+    [SerializeField] private DishType dishType = DishType.Unknown;
     [SerializeField] private List<GameObject> containedChickens = new List<GameObject>();
     [SerializeField] private int requiredChickenCount = 3;
 
@@ -29,7 +29,8 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
     private bool isDragging = false;
 
     // Dish information
-    public string DishName => dishType;
+    public DishType Dish => dishType;
+    public string DishName => dishType.ToString();
     public int ChickenCount => containedChickens.Count;
     public bool IsComplete => containedChickens.Count >= requiredChickenCount;
 
@@ -85,63 +86,58 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
             IFryable fryable = chicken.GetComponent<IFryable>();
             ISinigangable sinigang = chicken.GetComponent<ISinigangable>();
 
-            // Validate based on dish type
-            if (dishType == "Sinigang")
+            switch (dishType)
             {
-                if (sinigang == null || !sinigang.IsSiniganged())
-                {
-                    Debug.LogWarning($"Invalid sinigang chicken in plate: {chicken.name}");
-                    return false;
-                }
-            }
-            else if (dishType == "FriedChicken")
-            {
-                if (fryable == null || !fryable.IsFried())
-                {
-                    Debug.LogWarning($"Invalid fried chicken in plate: {chicken.name}");
-                    return false;
-                }
-            }
-            else if (dishType == "Mechado")
-            {
-                IMechadoable mechadoable = chicken.GetComponent<IMechadoable>();
-                if (mechadoable == null || !mechadoable.IsMechado())
-                {
-                    Debug.LogWarning($"Chicken in Mechado plate is not mechado-cooked: {chicken.name}");
-                    return false;
-                }
-            }
-            else if (dishType == "Adobo")
-            {
-                IAdoboable adoboable = chicken.GetComponent<IAdoboable>();
-                if (adoboable == null || !adoboable.IsAdobo())
-                {
-                    Debug.LogWarning($"Chicken in Adobo plate is not adobo-cooked: {chicken.name}");
-                    return false;
-                }
-            }
-            else if (dishType == "NoodleChicken")
-            {
-                INoodleable noodleable = chicken.GetComponent<INoodleable>();
-                if (noodleable == null) continue; // noodle object, not a chicken — always valid
-                if (!noodleable.IsNoodled())
-                {
-                    Debug.LogWarning($"Chicken in NoodleChicken plate is not noodled: {chicken.name}");
-                    return false;
-                }
-            }
-            else
-            {
-                // Fallback: If dishType is not set or unknown, check if chicken is cooked in any way
-                INoodleable noodleable = chicken.GetComponent<INoodleable>();
-                bool isCooked = (fryable != null && fryable.IsFried()) ||
-                                (sinigang != null && sinigang.IsSiniganged()) ||
-                                (noodleable != null && noodleable.IsNoodled());
-                if (!isCooked)
-                {
-                    Debug.LogWarning($"Plate contains uncooked chicken: {chicken.name}");
-                    return false;
-                }
+                case DishType.Sinigang:
+                    if (sinigang == null || !sinigang.IsSiniganged())
+                    {
+                        Debug.LogWarning($"Invalid sinigang chicken in plate: {chicken.name}");
+                        return false;
+                    }
+                    break;
+                case DishType.FriedChicken:
+                    if (fryable == null || !fryable.IsFried())
+                    {
+                        Debug.LogWarning($"Invalid fried chicken in plate: {chicken.name}");
+                        return false;
+                    }
+                    break;
+                case DishType.Mechado:
+                    IMechadoable mechadoable = chicken.GetComponent<IMechadoable>();
+                    if (mechadoable == null || !mechadoable.IsMechado())
+                    {
+                        Debug.LogWarning($"Chicken in Mechado plate is not mechado-cooked: {chicken.name}");
+                        return false;
+                    }
+                    break;
+                case DishType.Adobo:
+                    IAdoboable adoboable = chicken.GetComponent<IAdoboable>();
+                    if (adoboable == null || !adoboable.IsAdobo())
+                    {
+                        Debug.LogWarning($"Chicken in Adobo plate is not adobo-cooked: {chicken.name}");
+                        return false;
+                    }
+                    break;
+                case DishType.NoodleChicken:
+                    INoodleable noodleable = chicken.GetComponent<INoodleable>();
+                    if (noodleable == null) continue;
+                    if (!noodleable.IsNoodled())
+                    {
+                        Debug.LogWarning($"Chicken in NoodleChicken plate is not noodled: {chicken.name}");
+                        return false;
+                    }
+                    break;
+                default:
+                    INoodleable nl = chicken.GetComponent<INoodleable>();
+                    bool isCooked = (fryable != null && fryable.IsFried()) ||
+                                    (sinigang != null && sinigang.IsSiniganged()) ||
+                                    (nl != null && nl.IsNoodled());
+                    if (!isCooked)
+                    {
+                        Debug.LogWarning($"Plate contains uncooked chicken: {chicken.name}");
+                        return false;
+                    }
+                    break;
             }
         }
 

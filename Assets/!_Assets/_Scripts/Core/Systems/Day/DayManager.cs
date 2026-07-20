@@ -8,6 +8,8 @@ public class DayManager : MonoBehaviour
     [Header("Day Settings")]
     [SerializeField] private float dayDurationInSeconds = 300f; // 5 minutes
     [SerializeField] private int startingDay = 1;
+    [Tooltip("Game over is checked at the end of this day. Set to 5 for prototype, 20 for final.")]
+    [SerializeField] private int gameOverCheckDay = 5;
 
     [Header("Current Day Info")]
     [SerializeField] private int currentDay = 1;
@@ -19,6 +21,7 @@ public class DayManager : MonoBehaviour
     public event Action<int> OnDayEnded;
     public event Action<float> OnTimerUpdated; // Passes time remaining in seconds
     public event Action OnOneMinuteWarning;
+    public event Action OnGameOver; // Fired when game over condition is met at the check day
 
     // Properties
     public int CurrentDay => currentDay;
@@ -152,8 +155,35 @@ public class DayManager : MonoBehaviour
 
     public void ContinueToNextDay()
     {
+        // Check game over condition at the designated day
+        if (currentDay >= gameOverCheckDay)
+        {
+            bool hasUnpaidBills = ExpenseManager.Instance != null && ExpenseManager.Instance.TotalUnpaidBills > 0;
+            bool hasNoMoney = MoneyManager.Instance != null && MoneyManager.Instance.CurrentMoney <= 0;
+
+            if (hasUnpaidBills || hasNoMoney)
+            {
+                Debug.Log($"[DayManager] Game Over triggered on Day {currentDay}. Unpaid bills: {ExpenseManager.Instance?.TotalUnpaidBills}, Money: {MoneyManager.Instance?.CurrentMoney}");
+                OnGameOver?.Invoke();
+                return;
+            }
+        }
+
         currentDay++;
+        ResetCookingStations();
         StartDay();
+    }
+
+    private void ResetCookingStations()
+    {
+        foreach (Pan pan in FindObjectsOfType<Pan>())
+            pan.Reset();
+
+        foreach (Pot pot in FindObjectsOfType<Pot>())
+            pot.Reset();
+
+        foreach (Bowl bowl in FindObjectsOfType<Bowl>())
+            bowl.Reset();
     }
 
     public string GetFormattedTimeRemaining()

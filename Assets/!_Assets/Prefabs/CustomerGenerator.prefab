@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7078803588547696650}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -55,13 +55,13 @@ MonoBehaviour:
     happyExpression: {fileID: 21300000, guid: a5786aa78a0652e48b27404585accb3b, type: 3}
     angryExpression: {fileID: 21300000, guid: 474288d7df73b9b4c8305fe6970da9fa, type: 3}
   - npcNumber: 3
-    defaultExpression: {fileID: 21300000, guid: f641497838f81dc48b4d7de34156206d, type: 3}
-    happyExpression: {fileID: 21300000, guid: 672c315b26c49fe4aaf19e8c241c77f7, type: 3}
-    angryExpression: {fileID: 21300000, guid: c014c7d7db913e84db7dc365b4157246, type: 3}
+    defaultExpression: {fileID: 21300000, guid: 42c52ce2d6691f54b8c43b5e45e00ac0, type: 3}
+    happyExpression: {fileID: 21300000, guid: f0e2082e9519076468eca3f67a37fe8a, type: 3}
+    angryExpression: {fileID: 21300000, guid: eeb28bf16a6c8d9478d860578e01f459, type: 3}
   - npcNumber: 4
-    defaultExpression: {fileID: 21300000, guid: 7703a1e7d0572ed4c90367545b8b10a5, type: 3}
-    happyExpression: {fileID: 21300000, guid: 038f86f0c5bffd94b8380f0a1de27d3a, type: 3}
-    angryExpression: {fileID: 21300000, guid: 083836600066e6144b2a49f4a4cfa6cb, type: 3}
+    defaultExpression: {fileID: 21300000, guid: 6b841e0bf431e854e84f075a63e2450c, type: 3}
+    happyExpression: {fileID: 21300000, guid: d92100749568f9941a3772624b17fd16, type: 3}
+    angryExpression: {fileID: 21300000, guid: f6200bd5531638f4c8eb7ec32add861e, type: 3}
   - npcNumber: 5
     defaultExpression: {fileID: 21300000, guid: 1de6acb8b809e2a43982bf27d11b5157, type: 3}
     happyExpression: {fileID: 21300000, guid: cdd3cefc100ac6241900f210a84942ea, type: 3}
@@ -75,17 +75,17 @@ MonoBehaviour:
     happyExpression: {fileID: 21300000, guid: 0be8c25a04650ac4c9ff32b29d55b85d, type: 3}
     angryExpression: {fileID: 21300000, guid: a5c9a9574e0af1d479a1a179acddc24c, type: 3}
   - npcNumber: 8
-    defaultExpression: {fileID: 21300000, guid: 8c7e31520ae5d604f9d624986aa1395e, type: 3}
-    happyExpression: {fileID: 21300000, guid: 3e996ecb187bd7e48a01771149576dd0, type: 3}
-    angryExpression: {fileID: 21300000, guid: 6b8a4532a06af5e4191eec7b1d5fd872, type: 3}
+    defaultExpression: {fileID: 21300000, guid: f46f9c25605f3604b9550a30ade7ca0a, type: 3}
+    happyExpression: {fileID: 21300000, guid: 4ff9f60b5cdfab345b9cc1fbce6cad1d, type: 3}
+    angryExpression: {fileID: 21300000, guid: 95cd2f1d8997bc649a4be4f579dc0ecb, type: 3}
   - npcNumber: 9
-    defaultExpression: {fileID: 21300000, guid: c0bb29b13646c114f9e851a70bc630fd, type: 3}
-    happyExpression: {fileID: 21300000, guid: ce7c49afdf4a31840a3313faef2ca5fc, type: 3}
-    angryExpression: {fileID: 21300000, guid: 5dd24bff05817884ead62648d99960ff, type: 3}
+    defaultExpression: {fileID: 21300000, guid: ceec4871bd96085428895c3ba60f70d2, type: 3}
+    happyExpression: {fileID: 21300000, guid: dca9d15f8f633454fb20653a9c5818dc, type: 3}
+    angryExpression: {fileID: 21300000, guid: 06119fb4f453cb94d91a2cc49c5c1252, type: 3}
   - npcNumber: 10
-    defaultExpression: {fileID: 21300000, guid: c0bb29b13646c114f9e851a70bc630fd, type: 3}
-    happyExpression: {fileID: 21300000, guid: ce7c49afdf4a31840a3313faef2ca5fc, type: 3}
-    angryExpression: {fileID: 21300000, guid: 5dd24bff05817884ead62648d99960ff, type: 3}
+    defaultExpression: {fileID: 21300000, guid: 8ed119e20aaa4c54d9de7678b41d7cd8, type: 3}
+    happyExpression: {fileID: 21300000, guid: 476692cb129eea84bbf9ec711e83e735, type: 3}
+    angryExpression: {fileID: 21300000, guid: 2ec5ec5f108281f4f9f80583c31c55c7, type: 3}
   spawnPoint: {fileID: 0}
   orderingPoints:
   - {fileID: 0}
@@ -100,5 +100,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0999600b67f534e429abfca1556f9678, type: 2}
   minOrdersPerCustomer: 1
   maxOrdersPerCustomer: 3
+  menuUnlocks: []
   todaySalesIncome: 0
   disableAutoGenerateInTutorial: 1

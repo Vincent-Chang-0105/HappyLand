@@ -88,7 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0296cc5d5a33a5e4a85eda995a495c48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlatedDish
-  dishType: NoodleChicken
+  dishType: 5
   containedChickens: []
   requiredChickenCount: 3
   canvas: {fileID: 0}

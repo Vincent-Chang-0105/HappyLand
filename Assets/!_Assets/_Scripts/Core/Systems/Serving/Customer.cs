@@ -245,45 +245,39 @@ public class Customer : MonoBehaviour
                 return false;
             }
 
-            // Flexible order matching
-            string orderLower = currentOrder.orderName.ToLower();
-            string dishLower = plate.DishName.ToLower();
-
-            // Direct match or substring match
-            if (dishLower.Contains(orderLower) || orderLower.Contains(dishLower))
+            DishType expected = ParseOrderToDishType(currentOrder.orderName);
+            if (expected == DishType.Unknown)
             {
-                //Debug.Log($"✅ Customer accepted plated dish: {plate.DishName}");
-                return true;
+                // Fallback for any order names not in the enum map
+                bool match = plate.DishName.ToLower() == currentOrder.orderName.ToLower();
+                if (!match)
+                    Debug.LogWarning($"❌ Dish '{plate.DishName}' doesn't match order '{currentOrder.orderName}'");
+                return match;
             }
 
-            // Specific dish matching
-            if (orderLower.Contains("sinigang") && dishLower.Contains("sinigang"))
+            if (plate.Dish != expected)
             {
-                //Debug.Log($"✅ Customer accepted sinigang dish");
-                return true;
+                Debug.LogWarning($"❌ Dish '{plate.Dish}' is wrong type for order '{currentOrder.orderName}'");
+                return false;
             }
-
-            if (orderLower.Contains("fried") && dishLower.Contains("fried"))
-            {
-                //Debug.Log($"✅ Customer accepted fried chicken");
-                return true;
-            }
-
-            if (orderLower.Contains("chicken") && dishLower.Contains("chicken"))
-            {
-                //Debug.Log($"✅ Customer accepted chicken dish");
-                return true;
-            }
-
-            Debug.LogWarning($"❌ Dish name '{plate.DishName}' doesn't match order '{currentOrder.orderName}'");
-            return false;
+            return true;
         }
 
         // Fallback: Original name-based check for other food items
         bool matches = deliveredFood.name.Contains(currentOrder.orderName);
-        //Debug.Log($"Customer validation (name check): {deliveredFood.name} vs {currentOrder.orderName} = {matches}");
         return matches;
     }
+
+    private static DishType ParseOrderToDishType(string orderName) =>
+        orderName.ToLower().Replace(" ", "") switch
+        {
+            "friedchicken" => DishType.FriedChicken,
+            "adobo"        => DishType.Adobo,
+            "mechado"      => DishType.Mechado,
+            "sinigang"     => DishType.Sinigang,
+            "noodlechicken" or "chickennoodle" => DishType.NoodleChicken,
+            _              => DishType.Unknown,
+        };
     
     private IEnumerator ReactToOrder(bool wasCorrect)
     {

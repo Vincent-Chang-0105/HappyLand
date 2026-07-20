@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class TutorialManager : PersistentSingleton<TutorialManager>
+public class TutorialManager : ImpersistentSingleton<TutorialManager>
 {
     [Header("Tutorial Data")]
     [SerializeField] private TutorialData tutorialData;
@@ -9,6 +9,7 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
     [Header("UI References")]
     [SerializeField] private TutorialUIPanel uiPanel;
     [SerializeField] private TutorialArrowIndicator arrowIndicator;
+    [SerializeField] private TutorialUIHighlighter uiHighlighter;
 
     [Header("VFX")]
     [SerializeField] private ParticleSystem taskCompletionVFX;
@@ -25,11 +26,11 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
     private TutorialStep currentStep;
     private int currentStepIndex = -1;
     private bool isTutorialActive = false;
-    private bool isWaitingForAcknowledge = false;
     private float previousTimeScale = 1f;
 
     // Counters for progress tracking
     private int chickensWashedCount = 0;
+
 
     // Events
     public event System.Action<TutorialStep> OnStepStarted;
@@ -40,14 +41,27 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
     public bool IsTutorialActive => isTutorialActive;
     public TutorialStep CurrentStep => currentStep;
 
+    /// <summary>
+    /// Called by TutorialSceneSetup each time the Tutorial scene loads to refresh stale scene references.
+    /// Required because TutorialManager persists across scenes as a PersistentSingleton.
+    /// </summary>
+    public void RefreshSceneReferences(TutorialUIPanel panel, TutorialArrowIndicator arrow, ScreenTransitionManager stm, ParticleSystem vfx = null)
+    {
+        uiPanel = panel;
+        arrowIndicator = arrow;
+        screenTransitionManager = stm;
+        if (vfx != null) taskCompletionVFX = vfx;
+    }
+
     protected override void Awake()
     {
         base.Awake();
         SubscribeToGameEvents();
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         UnsubscribeFromGameEvents();
     }
 
@@ -150,16 +164,30 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
 
         // Silent step - just wait for event, no UI/pause
         if (!step.showUI)
-        {
-            isWaitingForAcknowledge = false;
-            // Game keeps running, waiting for event to trigger completion
             return;
-        }
 
         // Show UI
         if (uiPanel != null)
         {
             uiPanel.ShowInstruction(step.instructionText);
+        }
+
+        // Show UI highlight if a tag is specified
+        if (uiHighlighter != null)
+        {
+            if (!string.IsNullOrEmpty(step.highlightUITag))
+            {
+                GameObject highlightObj = GameObject.FindWithTag(step.highlightUITag);
+                RectTransform highlightRect = highlightObj != null ? highlightObj.GetComponent<RectTransform>() : null;
+                if (highlightRect != null)
+                    uiHighlighter.Show(highlightRect);
+                else
+                    uiHighlighter.Hide();
+            }
+            else
+            {
+                uiHighlighter.Hide();
+            }
         }
 
         // Show arrow pointing to target
@@ -182,20 +210,16 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
             StartCoroutine(PauseAfterDelay());
         }
 
+        // Skip steps the player already completed out of order
+        if (step.isCompleted)
+        {
+            ShowStep(stepIndex + 1);
+            return;
+        }
+
         // Handle completion type
-        if (step.completionType == TutorialCompletionType.ButtonPress)
-        {
-            isWaitingForAcknowledge = true;
-        }
-        else if (step.autoCompleteDelay > 0)
-        {
+        if (step.autoCompleteDelay > 0)
             StartCoroutine(AutoCompleteAfterDelay(step.autoCompleteDelay));
-        }
-        else
-        {
-            // Waiting for game event to complete this step
-            isWaitingForAcknowledge = false;
-        }
     }
 
     private IEnumerator PauseAfterDelay()
@@ -219,7 +243,6 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
         // For ButtonPress completion, complete the step immediately
         if (currentStep.completionType == TutorialCompletionType.ButtonPress)
         {
-            isWaitingForAcknowledge = false;
             ResumeGame();
             CompleteCurrentStep();
         }
@@ -344,14 +367,13 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
     private void HideCurrentStep()
     {
         if (uiPanel != null)
-        {
             uiPanel.HideInstruction();
-        }
 
         if (arrowIndicator != null)
-        {
             arrowIndicator.HideArrow();
-        }
+
+        if (uiHighlighter != null)
+            uiHighlighter.Hide();
     }
 
     #endregion
@@ -539,10 +561,29 @@ public class TutorialManager : PersistentSingleton<TutorialManager>
     private void CheckAndCompleteStep(TutorialCompletionType completionType)
     {
         if (!isTutorialActive || currentStep == null) return;
+
         if (currentStep.completionType == completionType)
         {
-            ResumeGame(); // Resume before completing so next step can pause again
+            ResumeGame();
             CompleteCurrentStep();
+        }
+        else
+        {
+            // Mark the matching future step as done so it gets skipped when we reach it
+            MarkFutureStepCompleted(completionType);
+        }
+    }
+
+    private void MarkFutureStepCompleted(TutorialCompletionType completionType)
+    {
+        if (tutorialData == null) return;
+        for (int i = currentStepIndex + 1; i < tutorialData.steps.Length; i++)
+        {
+            if (tutorialData.steps[i].completionType == completionType)
+            {
+                tutorialData.steps[i].isCompleted = true;
+                return;
+            }
         }
     }
 
