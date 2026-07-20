@@ -72,11 +72,26 @@ public class TransferZone : MonoBehaviour
         item.transform.DOMove(destination.transform.position, transferDuration)
             .SetEase(transferEase)
             .OnComplete(() => {
-                // Re-enable dragging and ALL colliders so the destination bowl can detect the chicken
-                if (dragBehavior != null) dragBehavior.enabled = true;
+                // Don't rely on OnTriggerEnter2D — re-enabling colliders while already inside a trigger
+                // won't fire the event. Explicitly enter the nearest valid bowl instead.
+                if (bowlInteraction != null)
+                {
+                    bowlInteraction.TeleportToNearestBowl();
 
-                foreach (Collider2D col in item.GetComponents<Collider2D>())
-                    col.enabled = true;
+                    // If no bowl accepted it, re-enable drag/colliders so player can place manually
+                    if (!bowlInteraction.IsInBowl)
+                    {
+                        if (dragBehavior != null) dragBehavior.enabled = true;
+                        foreach (Collider2D col in item.GetComponents<Collider2D>())
+                            col.enabled = true;
+                    }
+                }
+                else
+                {
+                    if (dragBehavior != null) dragBehavior.enabled = true;
+                    foreach (Collider2D col in item.GetComponents<Collider2D>())
+                        col.enabled = true;
+                }
             });
     }
 

@@ -26,7 +26,18 @@ public class PlatingManager : Singleton<PlatingManager>
     [SerializeField] private Transform servingArea;
     [SerializeField] private float plateSpawnDelay = 0.5f;
     [SerializeField] private Vector2 plateSpawnOffset = Vector2.zero;
+    [SerializeField] private Vector2 plateSpacing = new Vector2(220f, 0f);
+    [SerializeField] private int maxVisiblePlates = 3;
     [SerializeField] private ParticleSystem plateCompleteEffect;
+
+    private int activePlateCount = 0;
+
+    private class QueuedPlate
+    {
+        public DishConfig dish;
+        public List<GameObject> ingredients;
+    }
+    private readonly Queue<QueuedPlate> plateQueue = new Queue<QueuedPlate>();
 
     private void Start()
     {
@@ -139,10 +150,7 @@ public class PlatingManager : Singleton<PlatingManager>
             return;
         }
 
-        // Take ingredients for this plate
-        List<GameObject> ingredientsForPlate = dish.waitingIngredients
-            .Take(dish.ingredientsPerPlate)
-            .ToList();
+        List<GameObject> ingredientsForPlate = dish.waitingIngredients.Take(dish.ingredientsPerPlate).ToList();
 
         if (ingredientsForPlate.Count < dish.ingredientsPerPlate)
         {
@@ -150,7 +158,25 @@ public class PlatingManager : Singleton<PlatingManager>
             return;
         }
 
-        // Spawn plated dish
+        // Remove from waiting list immediately so they aren't double-counted
+        foreach (GameObject ingredient in ingredientsForPlate)
+            dish.waitingIngredients.Remove(ingredient);
+
+        if (activePlateCount >= maxVisiblePlates)
+        {
+            plateQueue.Enqueue(new QueuedPlate { dish = dish, ingredients = ingredientsForPlate });
+            Debug.Log($"{dish.dishType} plate queued ({plateQueue.Count} in queue)");
+            return;
+        }
+
+        SpawnPlate(dish, ingredientsForPlate);
+    }
+
+    private void SpawnPlate(DishConfig dish, List<GameObject> ingredients)
+    {
+        int plateIndex = activePlateCount;
+        activePlateCount++;
+
         GameObject plateObject = Instantiate(dish.platedDishPrefab, servingArea);
         PlatedDish plate = plateObject.GetComponent<PlatedDish>();
 
@@ -158,34 +184,37 @@ public class PlatingManager : Singleton<PlatingManager>
         {
             Debug.LogError($"{dish.dishType} prefab missing PlatedDish component!");
             Destroy(plateObject);
+            activePlateCount--;
             return;
         }
 
-        // Apply spawn settings
         RectTransform plateRect = plateObject.GetComponent<RectTransform>();
         if (plateRect != null)
         {
-            plateRect.anchoredPosition = plateSpawnOffset;
+            plateRect.anchoredPosition = plateSpawnOffset + plateSpacing * plateIndex;
             plateRect.localScale = Vector3.one;
         }
 
-        // Add ingredients to plate
-        foreach (GameObject ingredient in ingredientsForPlate)
-        {
-            plate.AddChicken(ingredient); // Method name is generic despite name
-        }
+        foreach (GameObject ingredient in ingredients)
+            plate.AddChicken(ingredient);
 
-        // Remove from waiting list
-        foreach (GameObject ingredient in ingredientsForPlate)
-        {
-            dish.waitingIngredients.Remove(ingredient);
-        }
-
-        Debug.Log($"✅ {dish.dishType} plate created! Remaining: {dish.waitingIngredients.Count}");
+        Debug.Log($"✅ {dish.dishType} plate created! ({activePlateCount}/{maxVisiblePlates} active, {plateQueue.Count} queued)");
         PlayPlateCreationEffect(plateObject);
-
-        // Tutorial event
         TutorialEvents.DishPlated();
+    }
+
+    /// <summary>
+    /// Called by PlatedDish when it is served to a customer. Frees a slot and spawns the next queued plate.
+    /// </summary>
+    public void NotifyPlateServed()
+    {
+        activePlateCount = Mathf.Max(0, activePlateCount - 1);
+
+        if (plateQueue.Count > 0)
+        {
+            QueuedPlate next = plateQueue.Dequeue();
+            SpawnPlate(next.dish, next.ingredients);
+        }
     }
 
     /// <summary>
@@ -214,6 +243,25 @@ public class PlatingManager : Singleton<PlatingManager>
         {
             dish.waitingIngredients.Clear();
         }
-        //Debug.Log("Cleared all waiting ingredients");
+    }
+
+    /// <summary>
+    /// Destroys all active plates on screen, clears the queue, and resets state.
+    /// Call this at the end of each day.
+    /// </summary>
+    public void ClearAllPlates()
+    {
+        // Destroy every PlatedDish currently on the serving area
+        if (servingArea != null)
+        {
+            foreach (Transform child in servingArea)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        plateQueue.Clear();
+        activePlateCount = 0;
+        ClearWaitingIngredients();
     }
 }

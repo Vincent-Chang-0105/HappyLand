@@ -126,7 +126,11 @@ namespace AudioSystem {
             isPaused = false;
             isResuming = true;
             pauseFading = 0.001f;
-            
+
+            // Unpause audio sources immediately so volume fade-in is audible
+            if (current) current.UnPause();
+            if (previous) previous.UnPause();
+
             Debug.Log("Music resumed");
         }
 
@@ -201,8 +205,8 @@ namespace AudioSystem {
 
         void HandleCrossFade() {
             if (fading <= 0f || isPaused || isStopping) return;
-            
-            fading += Time.deltaTime;
+
+            fading += Time.unscaledDeltaTime;
 
             float fraction = Mathf.Clamp01(fading / crossFadeTime);
 
@@ -225,7 +229,7 @@ namespace AudioSystem {
         void HandlePauseResume() {
             if (pauseFading <= 0f) return;
 
-            pauseFading += Time.deltaTime;
+            pauseFading += Time.unscaledDeltaTime;
             float fraction = Mathf.Clamp01(pauseFading / pauseFadeTime);
 
             if (isPaused) {
@@ -243,12 +247,6 @@ namespace AudioSystem {
             }
             else if (isResuming) {
                 // Fading in from pause
-                if (fraction == 0.001f / Time.deltaTime) {
-                    // First frame of resume - unpause the audio sources
-                    if (current) current.UnPause();
-                    if (previous) previous.UnPause();
-                }
-
                 audioSourceA.volume = pausedVolumeA * fraction;
                 audioSourceB.volume = pausedVolumeB * fraction;
 

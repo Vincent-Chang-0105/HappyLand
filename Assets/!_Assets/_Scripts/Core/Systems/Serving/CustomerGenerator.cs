@@ -182,10 +182,28 @@ public class CustomerGenerator : MonoBehaviour
         {
             InitializeCustomerQueue(); // Refill queue when empty
         }
-        
+
         return customerNameQueue.Dequeue();
     }
-    
+
+    private FacialExpressionSet PickExpressionSet()
+    {
+        List<FacialExpressionSet> available = npcExpressionSets
+            .Where(set => !usedExpressionSets.Contains(set))
+            .ToList();
+
+        // Fallback: all sets currently in use (more customers than sets) — pick randomly but warn
+        if (available.Count == 0)
+        {
+            Debug.LogWarning("CustomerGenerator: All expression sets in use — duplicate sprite unavoidable. Add more FacialExpressionSets.");
+            available = new List<FacialExpressionSet>(npcExpressionSets);
+        }
+
+        FacialExpressionSet chosen = available[Random.Range(0, available.Count)];
+        usedExpressionSets.Add(chosen);
+        return chosen;
+    }
+
     #endregion
     #region Customer Generation
     
@@ -238,22 +256,7 @@ public class CustomerGenerator : MonoBehaviour
             return;
         }
 
-        // Get available expression sets (not currently in use)
-        List<FacialExpressionSet> availableSets = npcExpressionSets
-            .Where(set => !usedExpressionSets.Contains(set))
-            .ToList();
-
-        // If all sets are in use, allow reuse (fallback)
-        if (availableSets.Count == 0)
-        {
-            availableSets = new List<FacialExpressionSet>(npcExpressionSets);
-        }
-
-        // Select a random facial expression set from available ones
-        FacialExpressionSet expressionSet = availableSets[Random.Range(0, availableSets.Count)];
-        
-        // Mark this expression set as in use
-        usedExpressionSets.Add(expressionSet);
+        FacialExpressionSet expressionSet = PickExpressionSet();
 
         // Instantiate single customer prefab
         GameObject customerObj = Instantiate(customerPrefab, spawnPoint.position, spawnPoint.rotation);
@@ -462,22 +465,7 @@ public class CustomerGenerator : MonoBehaviour
             return;
         }
 
-        // Get available expression sets (not currently in use)
-        List<FacialExpressionSet> availableSets = npcExpressionSets
-            .Where(set => !usedExpressionSets.Contains(set))
-            .ToList();
-
-        // If all sets are in use, allow reuse (fallback)
-        if (availableSets.Count == 0)
-        {
-            availableSets = new List<FacialExpressionSet>(npcExpressionSets);
-        }
-
-        // Select a random facial expression set from available ones
-        FacialExpressionSet expressionSet = availableSets[Random.Range(0, availableSets.Count)];
-
-        // Mark this expression set as in use
-        usedExpressionSets.Add(expressionSet);
+        FacialExpressionSet expressionSet = PickExpressionSet();
 
         // Instantiate single customer prefab
         GameObject customerObj = Instantiate(customerPrefab, spawnPoint.position, spawnPoint.rotation);
@@ -544,6 +532,6 @@ public class CustomerGenerator : MonoBehaviour
     public void ResetDailySales()
     {
         todaySalesIncome = 0;
-        //Debug.Log("Daily sales tracking reset.");
+        usedExpressionSets.Clear();
     }
 }

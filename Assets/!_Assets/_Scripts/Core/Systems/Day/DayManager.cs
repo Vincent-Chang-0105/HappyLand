@@ -184,6 +184,9 @@ public class DayManager : MonoBehaviour
 
         foreach (Bowl bowl in FindObjectsOfType<Bowl>())
             bowl.Reset();
+
+        if (PlatingManager.Instance != null)
+            PlatingManager.Instance.ClearAllPlates();
     }
 
     public string GetFormattedTimeRemaining()

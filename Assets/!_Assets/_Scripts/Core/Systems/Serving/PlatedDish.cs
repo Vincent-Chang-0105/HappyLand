@@ -269,6 +269,9 @@ public class PlatedDish : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
         if (orderAccepted)
         {
+            // Free the slot immediately so the next queued plate can appear
+            PlatingManager.Instance?.NotifyPlateServed();
+
             // Pop and shrink away before destroying
             transform.DOKill();
             transform.DOPunchScale(Vector3.one * 0.25f, 0.2f, 4, 0.5f)

@@ -3016,44 +3016,22 @@ MonoBehaviour:
       targetGridPosition: {x: 0, y: 0}
       targetScreenName: Wash
     - buttonDirection: 3
-      buttonSprite: {fileID: 21300000, guid: db185663bd7e8fb4694f4f8a8c21d464, type: 3}
-      hoverSprite: {fileID: 21300000, guid: 8e130ace0fcc79049a2ee6539166b755, type: 3}
+      buttonSprite: {fileID: 21300000, guid: cec88cfb783556c43818a4d068970523, type: 3}
+      hoverSprite: {fileID: 21300000, guid: 0e9ee25b4e445f34796dd89863374ee3, type: 3}
       pressedSprite: {fileID: 0}
       targetGridPosition: {x: 2, y: 0}
-      targetScreenName: Cut
+      targetScreenName: Cook
     uiElements:
     - {fileID: 122074559}
+    - {fileID: 1860713568}
     animateUIElements: 1
     uiAnimationDuration: 0.3
     uiAnimationEase: 12
     fireTutorialEventOnArrival: 1
     arrivalTutorialEvent: 23
-  - screenName: Cut
-    screenTransform: {fileID: 825907236}
-    gridPosition: {x: 2, y: 0}
-    worldPosition: {x: 0, y: 0}
-    navigationButtons:
-    - buttonDirection: 2
-      buttonSprite: {fileID: 21300000, guid: ed23bfaa04bbd974094a2b85122271bb, type: 3}
-      hoverSprite: {fileID: 21300000, guid: 7b6dfe613d5961049b67020a445f56ba, type: 3}
-      pressedSprite: {fileID: 0}
-      targetGridPosition: {x: 1, y: 0}
-      targetScreenName: Boil
-    - buttonDirection: 3
-      buttonSprite: {fileID: 21300000, guid: cec88cfb783556c43818a4d068970523, type: 3}
-      hoverSprite: {fileID: 21300000, guid: 0e9ee25b4e445f34796dd89863374ee3, type: 3}
-      pressedSprite: {fileID: 0}
-      targetGridPosition: {x: 3, y: 0}
-      targetScreenName: Cook
-    uiElements: []
-    animateUIElements: 1
-    uiAnimationDuration: 0.3
-    uiAnimationEase: 12
-    fireTutorialEventOnArrival: 1
-    arrivalTutorialEvent: 24
   - screenName: Cook
     screenTransform: {fileID: 816753834}
-    gridPosition: {x: 3, y: 0}
+    gridPosition: {x: 2, y: 0}
     worldPosition: {x: 0, y: 0}
     navigationButtons:
     - buttonDirection: 2
@@ -3070,6 +3048,7 @@ MonoBehaviour:
       targetScreenName: Serve
     uiElements:
     - {fileID: 122074559}
+    - {fileID: 595467563}
     animateUIElements: 1
     uiAnimationDuration: 0.3
     uiAnimationEase: 12
@@ -3842,6 +3821,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 587597646}
   m_CullTransparentMesh: 1
+--- !u!1 &595467563 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5675622742738278098, guid: acc6e2bbfbe9e314dbc2b8eecb823643, type: 3}
+  m_PrefabInstance: {fileID: 240187862}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &602933534 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7100847042337654626, guid: b3e9746ae3a30fe4791e72700a093672, type: 3}
@@ -4652,11 +4636,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 825260829}
   m_CullTransparentMesh: 1
---- !u!4 &825907236 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6797532891007954855, guid: acc6e2bbfbe9e314dbc2b8eecb823643, type: 3}
-  m_PrefabInstance: {fileID: 240187862}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &826654772
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11929,6 +11908,8 @@ MonoBehaviour:
   servingArea: {fileID: 285284861}
   plateSpawnDelay: 0.5
   plateSpawnOffset: {x: 0, y: 0}
+  plateSpacing: {x: 490, y: 0}
+  maxVisiblePlates: 3
   plateCompleteEffect: {fileID: 0}
 --- !u!1 &1836304130
 GameObject:
@@ -12102,6 +12083,11 @@ RectTransform:
   m_AnchoredPosition: {x: 2.5, y: 0}
   m_SizeDelta: {x: -5, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1860713568 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7312480485903765460, guid: acc6e2bbfbe9e314dbc2b8eecb823643, type: 3}
+  m_PrefabInstance: {fileID: 240187862}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1876363761
 GameObject:
   m_ObjectHideFlags: 0

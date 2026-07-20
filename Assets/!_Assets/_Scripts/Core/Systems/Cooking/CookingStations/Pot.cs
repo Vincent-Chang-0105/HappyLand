@@ -782,20 +782,37 @@ public class Pot : CookingStation
                 TutorialEvents.ChickenTransferred();
             }
 
-            // Re-enable dragging
             var drag = ingredient.GetComponent<ChickenDragBehavior>();
-            if (drag != null)
-                drag.enabled = true;
 
-            // Re-enable collider
-            var col = ingredient.GetComponent<Collider2D>();
-            if (col != null)
-                col.enabled = true;
+            // Keep drag and colliders disabled during the pour flight.
+            // OnComplete will enter the nearest bowl and restore interactivity only if needed.
 
             // Animate to destination with stagger
             ingredient.transform.DOMove(destination.transform.position, pourZone.PourDuration)
                 .SetDelay(count * 0.1f)
-                .SetEase(Ease.OutQuad);
+                .SetEase(Ease.OutQuad)
+                .OnComplete(() =>
+                {
+                    ChickenBowlInteraction bowlInteraction = ingredient.GetComponent<ChickenBowlInteraction>();
+                    if (bowlInteraction != null)
+                    {
+                        bowlInteraction.TeleportToNearestBowl();
+
+                        // If no bowl accepted it, re-enable drag/colliders for manual placement
+                        if (!bowlInteraction.IsInBowl)
+                        {
+                            if (drag != null) drag.enabled = true;
+                            foreach (Collider2D c in ingredient.GetComponents<Collider2D>())
+                                c.enabled = true;
+                        }
+                    }
+                    else
+                    {
+                        if (drag != null) drag.enabled = true;
+                        foreach (Collider2D c in ingredient.GetComponents<Collider2D>())
+                            c.enabled = true;
+                    }
+                });
 
             // Reset rotation
             ingredient.transform.DORotate(Vector3.zero, pourZone.PourDuration)
