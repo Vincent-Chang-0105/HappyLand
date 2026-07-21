@@ -88,12 +88,12 @@ public class GameOverScreen : MonoBehaviour
     private void OnRetry()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneTransitionManager.Instance.ReloadCurrentScene();
     }
 
     private void OnQuit()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(0); // Assuming main menu is at index 0
+        SceneTransitionManager.Instance.LoadScene(0);
     }
 }

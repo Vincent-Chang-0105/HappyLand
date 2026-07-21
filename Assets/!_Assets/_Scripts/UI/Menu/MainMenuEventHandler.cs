@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using AudioSystem;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
@@ -52,12 +51,12 @@ public class MainMenuEventHandler : ColorChangeMenuHandler
     // Add game functionality methods
     public void StartGame()
     {
-        SceneManager.LoadScene("Tutorial");
+        SceneTransitionManager.Instance.LoadScene("Tutorial");
     }
 
     public void SkipTutorial()
     {
-        SceneManager.LoadScene("Level1");
+        SceneTransitionManager.Instance.LoadScene("Level1");
     }
 
     public void OpenSettings()

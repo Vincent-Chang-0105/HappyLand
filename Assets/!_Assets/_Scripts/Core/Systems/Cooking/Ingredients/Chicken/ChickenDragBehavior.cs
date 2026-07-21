@@ -25,6 +25,7 @@ public class ChickenDragBehavior : MonoBehaviour
 
     public void StartDrag()
     {
+        if (Time.timeScale == 0f) return;
         if (CanDrag != null && !CanDrag()) return;
 
         isDragging = true;
@@ -50,6 +51,7 @@ public class ChickenDragBehavior : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (Time.timeScale == 0f) return;
         if (CanDrag != null && !CanDrag()) return;
 
         Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);

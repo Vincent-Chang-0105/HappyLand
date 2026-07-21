@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.SceneManagement;
 
 namespace AudioSystem {
     public class SoundManager : PersistentSingleton<SoundManager> {
@@ -16,6 +17,43 @@ namespace AudioSystem {
 
         void Start() {
             InitializePool();
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            SubscribeToPauseManager();
+        }
+
+        void OnDestroy() {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+            if (PauseManager.Instance != null) {
+                PauseManager.Instance.OnGamePaused -= PauseLoopingSounds;
+                PauseManager.Instance.OnGameResumed -= ResumeLoopingSounds;
+            }
+        }
+
+        void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+            SubscribeToPauseManager();
+        }
+
+        void SubscribeToPauseManager() {
+            if (PauseManager.Instance == null) return;
+            // Unsubscribe first to avoid double-subscription across scene reloads
+            PauseManager.Instance.OnGamePaused -= PauseLoopingSounds;
+            PauseManager.Instance.OnGameResumed -= ResumeLoopingSounds;
+            PauseManager.Instance.OnGamePaused += PauseLoopingSounds;
+            PauseManager.Instance.OnGameResumed += ResumeLoopingSounds;
+        }
+
+        public void PauseLoopingSounds() {
+            foreach (var emitter in activeSoundEmitters) {
+                if (emitter.Data != null && emitter.Data.loop)
+                    emitter.Pause();
+            }
+        }
+
+        public void ResumeLoopingSounds() {
+            foreach (var emitter in activeSoundEmitters) {
+                if (emitter.Data != null && emitter.Data.loop)
+                    emitter.Resume();
+            }
         }
 
         public SoundBuilder CreateSoundBuilder() => new SoundBuilder(this);

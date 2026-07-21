@@ -12,6 +12,7 @@ namespace AudioSystem {
 
         AudioSource audioSource;
         Coroutine playingCoroutine;
+        bool isPaused = false;
 
         void Awake()
         {
@@ -62,8 +63,23 @@ namespace AudioSystem {
 
         IEnumerator WaitForSoundToEnd()
         {
-            yield return new WaitWhile(() => audioSource.isPlaying);
+            // isPaused keeps the coroutine alive while the AudioSource is paused
+            yield return new WaitWhile(() => audioSource.isPlaying || isPaused);
             Stop();
+        }
+
+        public void Pause()
+        {
+            if (!audioSource.isPlaying) return;
+            isPaused = true;       // set before Pause() so coroutine sees it immediately
+            audioSource.Pause();
+        }
+
+        public void Resume()
+        {
+            if (!isPaused) return;
+            isPaused = false;
+            audioSource.UnPause();
         }
 
         public void Stop()

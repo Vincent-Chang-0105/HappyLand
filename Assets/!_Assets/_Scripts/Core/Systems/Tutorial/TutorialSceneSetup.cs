@@ -108,6 +108,6 @@ public class TutorialSceneSetup : MonoBehaviour
     public void EndTutorialAndLoadGame()
     {
         // Load the main game scene when tutorial is complete
-        UnityEngine.SceneManagement.SceneManager.LoadScene("Level1");
+        SceneTransitionManager.Instance.LoadScene("Level1");
     }
 }

@@ -1,76 +1,67 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using DG.Tweening;
 
 public class SceneTransitionManager : PersistentSingleton<SceneTransitionManager>
 {
-    [Header("Transition Settings")]
-    [SerializeField] private GameObject transitionCanvas;
-    [SerializeField] private Animator transitionAnimator;
-    [SerializeField] private float transitionTime = 1f;
-    
-    [Header("Player Spawn Settings")]
-    [SerializeField] private string playerSpawnPointTag = "PlayerSpawn";
+    [Header("Loading Screen UI")]
+    [SerializeField] private CanvasGroup loadingCanvasGroup;
+    [SerializeField] private Image progressBar;
 
-    public void TransitionToScene(string sceneName, string spawnPointName = "")
+    [Header("Settings")]
+    [SerializeField] private float fadeDuration = 0.3f;
+    [SerializeField] private float minLoadTime = 0.8f;
+
+    public void LoadScene(string sceneName)
     {
-        StartCoroutine(TransitionCoroutine(sceneName, spawnPointName));
+        StartCoroutine(LoadAsync(() => SceneManager.LoadSceneAsync(sceneName)));
     }
-    
-    private IEnumerator TransitionCoroutine(string sceneName, string spawnPointName)
+
+    public void LoadScene(int buildIndex)
     {
-        // Start transition animation (fade out)
-        if (transitionAnimator != null)
-        {
-            transitionCanvas.SetActive(true);
-            transitionAnimator.SetTrigger("FadeOut");
-        }
-        
-        yield return new WaitForSeconds(transitionTime / 2f);
-        
-        // Load new scene
-        SceneManager.LoadScene(sceneName);
-        
-        yield return new WaitForSeconds(0.1f); // Small delay for scene to load
-        
-        // Position player at spawn point
-        PositionPlayerAtSpawnPoint(spawnPointName);
-        
-        yield return new WaitForSeconds(transitionTime / 2f);
-        
-        // End transition animation (fade in)
-        if (transitionAnimator != null)
-        {
-            transitionAnimator.SetTrigger("FadeIn");
-        }
-        
-        yield return new WaitForSeconds(transitionTime / 2f);
-        
-        if (transitionCanvas != null)
-            transitionCanvas.SetActive(false);
+        StartCoroutine(LoadAsync(() => SceneManager.LoadSceneAsync(buildIndex)));
     }
-    
-    private void PositionPlayerAtSpawnPoint(string spawnPointName)
+
+    public void ReloadCurrentScene()
     {
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player == null) return;
-        
-        GameObject spawnPoint = null;
-        
-        if (!string.IsNullOrEmpty(spawnPointName))
+        LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private IEnumerator LoadAsync(System.Func<AsyncOperation> loadOperation)
+    {
+        if (progressBar != null) progressBar.fillAmount = 0f;
+
+        loadingCanvasGroup.gameObject.SetActive(true);
+        loadingCanvasGroup.alpha = 0f;
+        yield return loadingCanvasGroup.DOFade(1f, fadeDuration)
+            .SetUpdate(true)
+            .WaitForCompletion();
+
+        AsyncOperation op = loadOperation();
+        op.allowSceneActivation = false;
+
+        float elapsed = 0f;
+        float displayProgress = 0f;
+        while (!op.isDone)
         {
-            spawnPoint = GameObject.Find(spawnPointName);
+            elapsed += Time.unscaledDeltaTime;
+
+            float targetProgress = Mathf.Clamp01(op.progress / 0.9f);
+            displayProgress = Mathf.MoveTowards(displayProgress, targetProgress, Time.unscaledDeltaTime * 0.8f);
+            if (progressBar != null)
+                progressBar.fillAmount = displayProgress;
+
+            if (op.progress >= 0.9f && elapsed >= minLoadTime)
+                op.allowSceneActivation = true;
+
+            yield return null;
         }
-        
-        if (spawnPoint == null)
-        {
-            spawnPoint = GameObject.FindGameObjectWithTag(playerSpawnPointTag);
-        }
-        
-        if (spawnPoint != null)
-        {
-            player.transform.position = spawnPoint.transform.position;
-            player.transform.rotation = spawnPoint.transform.rotation;
-        }
+
+        yield return loadingCanvasGroup.DOFade(0f, fadeDuration)
+            .SetUpdate(true)
+            .WaitForCompletion();
+        loadingCanvasGroup.gameObject.SetActive(false);
     }
 }

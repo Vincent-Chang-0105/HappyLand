@@ -2,7 +2,7 @@ using UnityEngine;
 using DG.Tweening;
 using AudioSystem;
 
-public class Faucet : MonoBehaviour, IInteractable
+public class Faucet : MonoBehaviour
 {
     [Header("Faucet Settings")]
     [SerializeField] private Transform faucetHandle;
@@ -31,25 +31,17 @@ public class Faucet : MonoBehaviour, IInteractable
     private SpriteRenderer waterSpriteRenderer;
     private SoundEmitter waterLoopEmitter;
     
-    #region IInteractable Implementation
-    public void OnInteract()
+    private void OnMouseDown()
     {
+        if (Time.timeScale == 0f) return;
+
+        // Only block turning ON if can't afford — always allow turning OFF
+        if (!isOn && MoneyManager.Instance != null && !MoneyManager.Instance.CanAfford(1))
+            return;
+
         ToggleFaucet();
     }
-    
-    public bool CanInteract()
-    {
-        // Always allow turning OFF
-        if (isOn) return true;
 
-        // If off, check if player can afford to turn on
-        if (MoneyManager.Instance != null && !MoneyManager.Instance.CanAfford(1))
-            return false;
-
-        return true;
-    }
-    #endregion
-    
     public void ToggleFaucet()
     {
         isOn = !isOn;

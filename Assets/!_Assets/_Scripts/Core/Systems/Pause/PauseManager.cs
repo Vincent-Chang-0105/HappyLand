@@ -321,8 +321,8 @@ public class PauseManager : StaticInstance<PauseManager>
 
     public void LoadMainMenu()
     {
-        SceneManager.LoadScene(0);
         Time.timeScale = 1f;
+        SceneTransitionManager.Instance.LoadScene(0);
     }
 
     public void OpenSettingsMenuFromButton()
