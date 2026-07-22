@@ -20,6 +20,7 @@ public class TutorialUIPanel : MonoBehaviour, IPointerClickHandler
 
     private Coroutine typingCoroutine;
     private bool isTypingComplete = false;
+    private string currentFullText = "";
 
     private void Start()
     {
@@ -101,6 +102,8 @@ public class TutorialUIPanel : MonoBehaviour, IPointerClickHandler
 
     private IEnumerator TypeText(string fullText)
     {
+        currentFullText = fullText;
+
         if (instructionText != null)
         {
             instructionText.text = "";
@@ -130,18 +133,21 @@ public class TutorialUIPanel : MonoBehaviour, IPointerClickHandler
 
     private void OnContinueClicked()
     {
-        //Debug.Log("TutorialUIPanel: Panel clicked - continuing tutorial");
-
         if (!isTypingComplete)
         {
-            // Skip typing animation
+            // First click: complete typing instantly, wait for second click
             if (typingCoroutine != null)
             {
                 StopCoroutine(typingCoroutine);
                 typingCoroutine = null;
             }
-            // Show full text immediately
-            // The TutorialManager handles the actual progression
+
+            if (instructionText != null)
+                instructionText.text = currentFullText;
+
+            isTypingComplete = true;
+            tapHintText?.gameObject.SetActive(true);
+            return;
         }
 
         if (TutorialManager.Instance == null)

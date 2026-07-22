@@ -33,13 +33,21 @@ public class TutorialUIHighlighter : MonoBehaviour
     {
         if (highlightImage == null || highlightRect == null || target == null) return;
 
-        // Become a child of the target, stretching to fill it with padding
-        highlightRect.SetParent(target, false);
-        highlightRect.anchorMin = Vector2.zero;
-        highlightRect.anchorMax = Vector2.one;
-        highlightRect.anchoredPosition = Vector2.zero;
-        highlightRect.sizeDelta = Vector2.one * padding * 2f;
-        highlightRect.pivot = new Vector2(0.5f, 0.5f);
+        // Become a sibling of the target (same parent) so it renders behind it
+        // The highlight GameObject needs a LayoutElement with Ignore Layout = true
+        // so layout groups on the parent don't reposition it
+        highlightRect.SetParent(target.parent, false);
+
+        // Match the target's transform exactly, then add padding
+        highlightRect.localScale = target.localScale;
+        highlightRect.anchorMin = target.anchorMin;
+        highlightRect.anchorMax = target.anchorMax;
+        highlightRect.pivot = target.pivot;
+        highlightRect.anchoredPosition = target.anchoredPosition;
+        highlightRect.sizeDelta = target.sizeDelta + Vector2.one * padding * 2f;
+
+        // Place just before the target in sibling order → renders behind it
+        highlightRect.SetSiblingIndex(target.GetSiblingIndex());
 
         highlightImage.color = new Color(highlightColor.r, highlightColor.g, highlightColor.b, pulseMinAlpha);
         highlightImage.gameObject.SetActive(true);

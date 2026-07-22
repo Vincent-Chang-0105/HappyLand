@@ -808,6 +808,7 @@ GameObject:
   - component: {fileID: 8256853075595712437}
   - component: {fileID: 8112934460836353881}
   - component: {fileID: 3718093403757641593}
+  - component: {fileID: 9026296529222437749}
   m_Layer: 5
   m_Name: DialogueManager
   m_TagString: Untagged
@@ -917,6 +918,19 @@ MonoBehaviour:
   isDialogueActive: 0
   typingSpeed: 0.01
   animator: {fileID: 0}
+--- !u!114 &9026296529222437749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6001919754861175894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc622cbdcd447604cb3e9543fdd30edc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvasesToBlock: []
 --- !u!1 &7139565819934079297
 GameObject:
   m_ObjectHideFlags: 0

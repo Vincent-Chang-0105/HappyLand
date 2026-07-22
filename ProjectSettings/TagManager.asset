@@ -10,6 +10,8 @@ TagManager:
   - CookStaging
   - CutBowl
   - OrderTicket
+  - DownButton
+  - OrderButton
   layers:
   - Default
   - TransparentFX

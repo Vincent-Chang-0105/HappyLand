@@ -581,6 +581,7 @@ public class TutorialManager : ImpersistentSingleton<TutorialManager>
         {
             if (tutorialData.steps[i].completionType == completionType)
             {
+                if (!tutorialData.steps[i].allowEarlyCompletion) return;
                 tutorialData.steps[i].isCompleted = true;
                 return;
             }

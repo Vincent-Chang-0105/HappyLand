@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
@@ -15,6 +16,12 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
     private Queue<DialogueLine> lines;
 
     public bool isDialogueActive = false;
+    public bool isTyping = false;
+
+    public event Action OnDialogueStarted;
+    public event Action OnDialogueEnded;
+
+    private string currentFullLine = "";
 
     public float typingSpeed = 0.2f;
 
@@ -31,6 +38,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
     public void StartDialogue(Dialogue dialogue)
     {
         isDialogueActive = true;
+        OnDialogueStarted?.Invoke();
 
         currentDialogue = dialogue;
 
@@ -72,18 +80,39 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
 
     IEnumerator TypeSentence(DialogueLine dialogueLine)
     {
+        isTyping = true;
+        currentFullLine = dialogueLine.line;
         dialogueArea.text = "";
+
         foreach (char letter in dialogueLine.line.ToCharArray())
         {
             dialogueArea.text += letter;
             yield return new WaitForSeconds(typingSpeed);
         }
 
-        // Wait for 1 second after the line finishes typing
-        yield return new WaitForSeconds(2f);
+        isTyping = false;
+        // Wait for player to click — handled by HandleDialogueClick()
+    }
 
-        // Call DisplayNextDialogueLine to continue or end dialogue
-        DisplayNextDialogueLine();
+    /// <summary>
+    /// Call this from the dialogue box button (instead of DisplayNextDialogueLine directly).
+    /// First click completes typing; second click advances to the next line.
+    /// </summary>
+    public void HandleDialogueClick()
+    {
+        if (!isDialogueActive) return;
+
+        if (isTyping)
+        {
+            // Complete the current line instantly
+            StopAllCoroutines();
+            dialogueArea.text = currentFullLine;
+            isTyping = false;
+        }
+        else
+        {
+            DisplayNextDialogueLine();
+        }
     }
 
     public IEnumerator EndDialogueWithDelay()
@@ -96,6 +125,7 @@ public class DialogueManager : PersistentSingleton<DialogueManager>
     private void EndDialogue()
     {
         isDialogueActive = false;
+        OnDialogueEnded?.Invoke();
         dialogueBox.SetActive(false);
 
         currentDialogue?.OnDialogueEnd?.Invoke();

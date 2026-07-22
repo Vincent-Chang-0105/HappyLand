@@ -18,6 +18,8 @@ public class TutorialStep
     [Header("Completion Condition")]
     public TutorialCompletionType completionType;
     public float autoCompleteDelay = 0f;
+    [Tooltip("If false, this step won't be pre-completed when its event fires while a different step is active")]
+    public bool allowEarlyCompletion = true;
 
     [Header("Timing")]
     public float showDelay = 0f; // Delay before showing this step's UI (in seconds)

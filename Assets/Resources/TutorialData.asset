@@ -23,6 +23,7 @@ MonoBehaviour:
     targetObjectName: 
     completionType: 0
     autoCompleteDelay: 0
+    allowEarlyCompletion: 1
     showDelay: 0
     showArrow: 0
     arrowOffset: {x: 0, y: 0, z: 0}
@@ -41,6 +42,7 @@ MonoBehaviour:
     targetObjectName: 
     completionType: 0
     autoCompleteDelay: 0
+    allowEarlyCompletion: 1
     showDelay: 0
     showArrow: 0
     arrowOffset: {x: 0, y: 0, z: 0}
@@ -59,6 +61,7 @@ MonoBehaviour:
     targetObjectName: 
     completionType: 17
     autoCompleteDelay: 0
+    allowEarlyCompletion: 1
     showDelay: 0
     showArrow: 1
     arrowOffset: {x: 0, y: 0, z: 0}
@@ -77,10 +80,11 @@ MonoBehaviour:
     targetObjectName: 
     completionType: 18
     autoCompleteDelay: 0
+    allowEarlyCompletion: 1
     showDelay: 0
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
-    highlightUITag: 
+    highlightUITag: OrderButton
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 1
@@ -95,6 +99,7 @@ MonoBehaviour:
     targetObjectName: 
     completionType: 0
     autoCompleteDelay: 0
+    allowEarlyCompletion: 1
     showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
@@ -113,6 +118,7 @@ MonoBehaviour:
     targetObjectName: 
     completionType: 0
     autoCompleteDelay: 0
+    allowEarlyCompletion: 1
     showDelay: 0
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
@@ -131,10 +137,11 @@ MonoBehaviour:
     targetObjectName: 
     completionType: 19
     autoCompleteDelay: 0
+    allowEarlyCompletion: 1
     showDelay: 0.5
     showArrow: 0
     arrowOffset: {x: -8.2, y: -18.3, z: 0}
-    highlightUITag: 
+    highlightUITag: DownButton
     actionOnComplete: 2
     actionParameter: 
     controlNavigation: 1
@@ -149,6 +156,7 @@ MonoBehaviour:
     targetObjectName: 
     completionType: 0
     autoCompleteDelay: 0
+    allowEarlyCompletion: 1
     showDelay: 0.5
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
@@ -167,6 +175,7 @@ MonoBehaviour:
     targetObjectName: Faucet
     completionType: 20
     autoCompleteDelay: 0
+    allowEarlyCompletion: 1
     showDelay: 0
     showArrow: 1
     arrowOffset: {x: 0, y: 0, z: 0}
@@ -185,6 +194,7 @@ MonoBehaviour:
     targetObjectName: 
     completionType: 2
     autoCompleteDelay: 0
+    allowEarlyCompletion: 1
     showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
@@ -196,14 +206,15 @@ MonoBehaviour:
     isCompleted: 1
   - stepId: 10
     stepName: drag chicken to the pan
-    instructionText: Drag the chicken on the right pan to transfer it to the boil
-      screen!
+    instructionText: Drag the chicken to the bowl on the right to transfer it to
+      the boil screen!
     showUI: 1
     targetType: 0
     targetObjectTag: 
     targetObjectName: TransferZone_ToBoil
     completionType: 27
     autoCompleteDelay: 0
+    allowEarlyCompletion: 1
     showDelay: 0.5
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
@@ -215,13 +226,14 @@ MonoBehaviour:
     isCompleted: 1
   - stepId: 11
     stepName: Give the order
-    instructionText: Now wash 2 more chicken since u need 3 for 1 dish!
+    instructionText: Now wash 2 more chicken since you need 3 for 1 dish!
     showUI: 1
     targetType: 0
     targetObjectTag: 
     targetObjectName: 
     completionType: 25
     autoCompleteDelay: 0
+    allowEarlyCompletion: 1
     showDelay: 0.5
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
@@ -232,15 +244,15 @@ MonoBehaviour:
     allowedDirections: 
     isCompleted: 1
   - stepId: 12
-    stepName: Closing Faucet
-    instructionText: After washing, you must close the faucet as this will drain
-      your money!
+    stepName: remind money
+    instructionText: Remember! Each ingredient costs money! Don't waste them!
     showUI: 1
     targetType: 0
     targetObjectTag: 
     targetObjectName: 
-    completionType: 26
+    completionType: 0
     autoCompleteDelay: 0
+    allowEarlyCompletion: 0
     showDelay: 0.5
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
@@ -251,6 +263,26 @@ MonoBehaviour:
     allowedDirections: 
     isCompleted: 1
   - stepId: 13
+    stepName: Closing Faucet
+    instructionText: After washing, you must close the faucet as this will drain
+      your money!
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 26
+    autoCompleteDelay: 0
+    allowEarlyCompletion: 1
+    showDelay: 0.5
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
+    actionOnComplete: 2
+    actionParameter: 
+    controlNavigation: 0
+    allowedDirections: 
+    isCompleted: 0
+  - stepId: 14
     stepName: Go to Boil
     instructionText: Time to Boil, Click on the bottom right button to go to boil
       screen!
@@ -260,6 +292,7 @@ MonoBehaviour:
     targetObjectName: 
     completionType: 23
     autoCompleteDelay: 0
+    allowEarlyCompletion: 1
     showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
@@ -268,8 +301,8 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 1
     allowedDirections: 03000000
-    isCompleted: 1
-  - stepId: 14
+    isCompleted: 0
+  - stepId: 15
     stepName: Drag Bowl
     instructionText: Drag Bowl to Pot
     showUI: 1
@@ -278,42 +311,7 @@ MonoBehaviour:
     targetObjectName: 
     completionType: 4
     autoCompleteDelay: 0
-    showDelay: 1
-    showArrow: 1
-    arrowOffset: {x: -2.2, y: 1, z: 0}
-    highlightUITag: 
-    actionOnComplete: 2
-    actionParameter: 
-    controlNavigation: 0
-    allowedDirections: 
-    isCompleted: 1
-  - stepId: 15
-    stepName: Stir Pot
-    instructionText: Stir the pot, drag mouse in a circle fast motion!
-    showUI: 1
-    targetType: 5
-    targetObjectTag: 
-    targetObjectName: 
-    completionType: 6
-    autoCompleteDelay: 0
-    showDelay: 0.5
-    showArrow: 1
-    arrowOffset: {x: -2.2, y: 1, z: 0}
-    highlightUITag: 
-    actionOnComplete: 2
-    actionParameter: 
-    controlNavigation: 0
-    allowedDirections: 
-    isCompleted: 1
-  - stepId: 16
-    stepName: Give the order
-    instructionText: Drag Pot into fry pan to transfer the chicken to the Fry Screen
-    showUI: 1
-    targetType: 0
-    targetObjectTag: 
-    targetObjectName: 
-    completionType: 27
-    autoCompleteDelay: 0
+    allowEarlyCompletion: 1
     showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
@@ -323,15 +321,38 @@ MonoBehaviour:
     controlNavigation: 0
     allowedDirections: 
     isCompleted: 0
+  - stepId: 16
+    stepName: Stir Pot
+    instructionText: 'Stir the pot!
+
+
+      drag mouse in a circle fast motion!'
+    showUI: 1
+    targetType: 5
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 6
+    autoCompleteDelay: 0
+    allowEarlyCompletion: 1
+    showDelay: 0.5
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
+    actionOnComplete: 2
+    actionParameter: 
+    controlNavigation: 0
+    allowedDirections: 
+    isCompleted: 0
   - stepId: 17
-    stepName: Frying time
-    instructionText: Time to Fry
+    stepName: Give the order
+    instructionText: Drag Pot into fry pan to transfer the chicken to the Fry Screen
     showUI: 1
     targetType: 0
     targetObjectTag: 
     targetObjectName: 
-    completionType: 21
+    completionType: 27
     autoCompleteDelay: 0
+    allowEarlyCompletion: 0
     showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
@@ -340,16 +361,17 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
+    isCompleted: 0
   - stepId: 18
-    stepName: Add Oil
-    instructionText: Open the drawer by dragging it down
+    stepName: Frying time
+    instructionText: Time to Fry
     showUI: 1
     targetType: 0
     targetObjectTag: 
     targetObjectName: 
-    completionType: 0
+    completionType: 21
     autoCompleteDelay: 0
+    allowEarlyCompletion: 1
     showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
@@ -361,121 +383,14 @@ MonoBehaviour:
     isCompleted: 0
   - stepId: 19
     stepName: Add Oil
-    instructionText: Click the oil and drag it to the pan
+    instructionText: Open the drawer by dragging it down
     showUI: 1
     targetType: 0
     targetObjectTag: 
     targetObjectName: 
-    completionType: 7
+    completionType: 0
     autoCompleteDelay: 0
-    showDelay: 0
-    showArrow: 1
-    arrowOffset: {x: -2.2, y: 1, z: 0}
-    highlightUITag: 
-    actionOnComplete: 2
-    actionParameter: 
-    controlNavigation: 0
-    allowedDirections: 
-    isCompleted: 1
-  - stepId: 20
-    stepName: Add Oil
-    instructionText: Then add the chicken in the pan
-    showUI: 1
-    targetType: 0
-    targetObjectTag: 
-    targetObjectName: 
-    completionType: 9
-    autoCompleteDelay: 0
-    showDelay: 1.5
-    showArrow: 1
-    arrowOffset: {x: -2.2, y: 1, z: 0}
-    highlightUITag: 
-    actionOnComplete: 2
-    actionParameter: 
-    controlNavigation: 0
-    allowedDirections: 
-    isCompleted: 1
-  - stepId: 21
-    stepName: Give the order
-    instructionText: Add Salt to start tossing!
-    showUI: 1
-    targetType: 0
-    targetObjectTag: 
-    targetObjectName: 
-    completionType: 28
-    autoCompleteDelay: 0
-    showDelay: 0
-    showArrow: 1
-    arrowOffset: {x: -2.2, y: 1, z: 0}
-    highlightUITag: 
-    actionOnComplete: 2
-    actionParameter: 
-    controlNavigation: 0
-    allowedDirections: 
-    isCompleted: 1
-  - stepId: 22
-    stepName: Toss Chicken
-    instructionText: Time to toss! just flick up ur mouse to toss the pan!
-    showUI: 1
-    targetType: 0
-    targetObjectTag: 
-    targetObjectName: 
-    completionType: 11
-    autoCompleteDelay: 0
-    showDelay: 0.5
-    showArrow: 1
-    arrowOffset: {x: -2.2, y: 1, z: 0}
-    highlightUITag: 
-    actionOnComplete: 2
-    actionParameter: 
-    controlNavigation: 0
-    allowedDirections: 
-    isCompleted: 1
-  - stepId: 23
-    stepName: Give the order
-    instructionText: Drag the pan to the plate to make the dish!
-    showUI: 1
-    targetType: 0
-    targetObjectTag: 
-    targetObjectName: 
-    completionType: 30
-    autoCompleteDelay: 0
-    showDelay: 0
-    showArrow: 1
-    arrowOffset: {x: -2.2, y: 1, z: 0}
-    highlightUITag: 
-    actionOnComplete: 2
-    actionParameter: 
-    controlNavigation: 0
-    allowedDirections: 
-    isCompleted: 1
-  - stepId: 24
-    stepName: Go back to Serve screen
-    instructionText: Go back to serve screen to Serve the order!
-    showUI: 1
-    targetType: 0
-    targetObjectTag: 
-    targetObjectName: 
-    completionType: 22
-    autoCompleteDelay: 0
-    showDelay: 0.5
-    showArrow: 1
-    arrowOffset: {x: -2.2, y: 1, z: 0}
-    highlightUITag: 
-    actionOnComplete: 2
-    actionParameter: 
-    controlNavigation: 0
-    allowedDirections: 
-    isCompleted: 1
-  - stepId: 25
-    stepName: Give the order
-    instructionText: Give the order to the customer by dragging it to them
-    showUI: 1
-    targetType: 0
-    targetObjectTag: 
-    targetObjectName: 
-    completionType: 15
-    autoCompleteDelay: 0
+    allowEarlyCompletion: 1
     showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
@@ -484,16 +399,131 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 1
-  - stepId: 26
-    stepName: Give the order
-    instructionText: Congrats you have finished the tutorial!
+    isCompleted: 0
+  - stepId: 20
+    stepName: Add Oil
+    instructionText: Click the oil and drag it to the pan
     showUI: 1
     targetType: 0
     targetObjectTag: 
     targetObjectName: 
-    completionType: 0
+    completionType: 7
     autoCompleteDelay: 0
+    allowEarlyCompletion: 1
+    showDelay: 0
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
+    actionOnComplete: 2
+    actionParameter: 
+    controlNavigation: 0
+    allowedDirections: 
+    isCompleted: 0
+  - stepId: 21
+    stepName: Add Oil
+    instructionText: Then add the chicken in the pan
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 9
+    autoCompleteDelay: 0
+    allowEarlyCompletion: 1
+    showDelay: 1.5
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
+    actionOnComplete: 2
+    actionParameter: 
+    controlNavigation: 0
+    allowedDirections: 
+    isCompleted: 0
+  - stepId: 22
+    stepName: Give the order
+    instructionText: Add Salt to start tossing!
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 28
+    autoCompleteDelay: 0
+    allowEarlyCompletion: 1
+    showDelay: 0
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
+    actionOnComplete: 2
+    actionParameter: 
+    controlNavigation: 0
+    allowedDirections: 
+    isCompleted: 0
+  - stepId: 23
+    stepName: Toss Chicken
+    instructionText: Time to toss! just flick up ur mouse to toss the pan!
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 11
+    autoCompleteDelay: 0
+    allowEarlyCompletion: 1
+    showDelay: 0.5
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
+    actionOnComplete: 2
+    actionParameter: 
+    controlNavigation: 0
+    allowedDirections: 
+    isCompleted: 0
+  - stepId: 24
+    stepName: Give the order
+    instructionText: Drag the pan to the plate to make the dish!
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 30
+    autoCompleteDelay: 0
+    allowEarlyCompletion: 1
+    showDelay: 0
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
+    actionOnComplete: 2
+    actionParameter: 
+    controlNavigation: 0
+    allowedDirections: 
+    isCompleted: 0
+  - stepId: 25
+    stepName: Go back to Serve screen
+    instructionText: Go back to serve screen to Serve the order!
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 22
+    autoCompleteDelay: 0
+    allowEarlyCompletion: 1
+    showDelay: 0.5
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
+    actionOnComplete: 2
+    actionParameter: 
+    controlNavigation: 0
+    allowedDirections: 
+    isCompleted: 0
+  - stepId: 26
+    stepName: Give the order
+    instructionText: Give the order to the customer by dragging it to them
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 15
+    autoCompleteDelay: 0
+    allowEarlyCompletion: 1
     showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
@@ -505,14 +535,15 @@ MonoBehaviour:
     isCompleted: 0
   - stepId: 27
     stepName: Give the order
-    instructionText: Remember, In day you only have 5 minutes
+    instructionText: Congrats you have finished the tutorial!
     showUI: 1
     targetType: 0
     targetObjectTag: 
     targetObjectName: 
     completionType: 0
     autoCompleteDelay: 0
-    showDelay: 0
+    allowEarlyCompletion: 1
+    showDelay: 1
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
     highlightUITag: 
@@ -523,6 +554,25 @@ MonoBehaviour:
     isCompleted: 0
   - stepId: 28
     stepName: Give the order
+    instructionText: Remember, In day you only have 5 minutes
+    showUI: 1
+    targetType: 0
+    targetObjectTag: 
+    targetObjectName: 
+    completionType: 0
+    autoCompleteDelay: 0
+    allowEarlyCompletion: 1
+    showDelay: 0
+    showArrow: 1
+    arrowOffset: {x: -2.2, y: 1, z: 0}
+    highlightUITag: 
+    actionOnComplete: 2
+    actionParameter: 
+    controlNavigation: 0
+    allowedDirections: 
+    isCompleted: 0
+  - stepId: 29
+    stepName: Give the order
     instructionText: So try to make as much money as you can! Goodluck!
     showUI: 1
     targetType: 0
@@ -530,6 +580,7 @@ MonoBehaviour:
     targetObjectName: 
     completionType: 0
     autoCompleteDelay: 0
+    allowEarlyCompletion: 1
     showDelay: 0
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
