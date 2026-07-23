@@ -74,6 +74,7 @@ public class WaterCostTracker : MonoBehaviour
                 }
 
                 totalWaterCostToday += toDeduct;
+                MoneyManager.Instance.TrackWaterExpense(toDeduct);
                 OnWaterCostChanged?.Invoke(totalWaterCostToday);
             }
         }

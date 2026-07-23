@@ -149,8 +149,48 @@ public class DayManager : MonoBehaviour
 
         OnDayEnded?.Invoke(currentDay);
         Debug.Log($"Day {currentDay} ended!");
+        LogDailySummary();
 
         // End of day report will be shown by EndOfDayUI listening to OnDayEnded event
+    }
+
+    private void LogDailySummary()
+    {
+        if (MoneyManager.Instance == null) return;
+
+        int income      = MoneyManager.Instance.TodayIncome;
+        int chicken     = MoneyManager.Instance.ChickenSpentToday;
+        int ingredients = MoneyManager.Instance.IngredientSpentToday;
+        int water       = MoneyManager.Instance.WaterSpentToday;
+        int totalSpent  = MoneyManager.Instance.TodayExpenses;
+        int net         = income - totalSpent;
+        int served      = customerGenerator != null ? customerGenerator.GetCustomersServedToday() : 0;
+
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"=== DAY {currentDay} ECONOMY SUMMARY ===");
+        sb.AppendLine($"Customers served:   {served}");
+        sb.AppendLine($"Sales income:       ₱{income}");
+        sb.AppendLine($"Expenses:");
+        sb.AppendLine($"  Chicken:          ₱{chicken}");
+        sb.AppendLine($"  Water:            ₱{water}");
+        sb.AppendLine($"  Ingredients:      ₱{ingredients}");
+
+        var breakdown = MoneyManager.Instance.GetIngredientBreakdown();
+        if (breakdown.Count > 0)
+        {
+            foreach (var kv in breakdown)
+                sb.AppendLine($"    {kv.Key}: x{kv.Value.count}  ₱{kv.Value.totalCost}");
+        }
+
+        int other = totalSpent - chicken - ingredients - water;
+        if (other > 0)
+            sb.AppendLine($"  Other:            ₱{other}");
+
+        sb.AppendLine($"Total spent:        ₱{totalSpent}");
+        sb.AppendLine($"Net profit/loss:    ₱{net}");
+        sb.AppendLine($"Balance:            ₱{MoneyManager.Instance.CurrentMoney}");
+
+        Debug.Log(sb.ToString());
     }
 
     public void ContinueToNextDay()

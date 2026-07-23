@@ -119,6 +119,7 @@ public class Chicken : MonoBehaviour, IWashable, IBoilable, IFryable, ISiniganga
             return false;
         }
 
+        MoneyManager.Instance.TrackChickenExpense(chickenCost);
         hasPaidForChicken = true;
         return true;
     }

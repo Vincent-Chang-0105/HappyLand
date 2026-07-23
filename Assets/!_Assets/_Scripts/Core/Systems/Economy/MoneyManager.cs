@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class MoneyManager : MonoBehaviour
 {
@@ -14,6 +15,12 @@ public class MoneyManager : MonoBehaviour
         [Header("Daily Tracking")]
         [SerializeField] private int todayIncome = 0;
         [SerializeField] private int todayExpenses = 0;
+        [SerializeField] private int chickenSpentToday = 0;
+        [SerializeField] private int ingredientSpentToday = 0;
+        [SerializeField] private int waterSpentToday = 0;
+
+        // Per-ingredient breakdown: name → (count bought, total cost)
+        private Dictionary<string, (int count, int totalCost)> ingredientBreakdown = new Dictionary<string, (int, int)>();
 
         // Events
         public event Action<int> OnMoneyChanged;
@@ -25,6 +32,9 @@ public class MoneyManager : MonoBehaviour
         public int CurrentMoney => currentMoney;
         public int TodayIncome => todayIncome;
         public int TodayExpenses => todayExpenses;
+        public int ChickenSpentToday => chickenSpentToday;
+        public int IngredientSpentToday => ingredientSpentToday;
+        public int WaterSpentToday => waterSpentToday;
 
         private void Awake()
         {
@@ -120,6 +130,20 @@ public class MoneyManager : MonoBehaviour
             return todayExpenses;
         }
 
+        public void TrackChickenExpense(int amount) { chickenSpentToday += amount; }
+        public void TrackWaterExpense(int amount) { waterSpentToday += amount; }
+
+        public void TrackIngredientExpense(string ingredientName, int quantity, int cost)
+        {
+            ingredientSpentToday += cost;
+            if (ingredientBreakdown.TryGetValue(ingredientName, out var existing))
+                ingredientBreakdown[ingredientName] = (existing.count + quantity, existing.totalCost + cost);
+            else
+                ingredientBreakdown[ingredientName] = (quantity, cost);
+        }
+
+        public Dictionary<string, (int count, int totalCost)> GetIngredientBreakdown() => ingredientBreakdown;
+
         /// <summary>
         /// Resets daily tracking for new day
         /// </summary>
@@ -127,6 +151,10 @@ public class MoneyManager : MonoBehaviour
         {
             todayIncome = 0;
             todayExpenses = 0;
+            chickenSpentToday = 0;
+            ingredientSpentToday = 0;
+            waterSpentToday = 0;
+            ingredientBreakdown.Clear();
         }
 
         // Debug methods for testing

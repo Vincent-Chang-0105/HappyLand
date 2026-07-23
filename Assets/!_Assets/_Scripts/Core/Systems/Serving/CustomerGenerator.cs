@@ -46,6 +46,7 @@ public class CustomerGenerator : MonoBehaviour
 
     [Header("Daily Sales Tracking")]
     [SerializeField] private int todaySalesIncome = 0;
+    private int customersServedToday = 0;
 
     // Events
     public System.Action<Customer> OnCustomerSpawned;
@@ -368,6 +369,7 @@ public class CustomerGenerator : MonoBehaviour
             {
                 Debug.LogError("MoneyManager not found! Cannot award money.");
             }
+            customersServedToday++;
         }
         else
         {
@@ -532,6 +534,9 @@ public class CustomerGenerator : MonoBehaviour
     public void ResetDailySales()
     {
         todaySalesIncome = 0;
+        customersServedToday = 0;
         usedExpressionSets.Clear();
     }
+
+    public int GetCustomersServedToday() => customersServedToday;
 }

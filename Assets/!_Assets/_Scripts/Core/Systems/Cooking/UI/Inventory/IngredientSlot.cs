@@ -161,6 +161,8 @@ public class InventorySlot : MonoBehaviour, IPointerDownHandler
                     Debug.LogWarning("Failed to spend money for ingredient.");
                     return;
                 }
+
+                MoneyManager.Instance.TrackIngredientExpense(currentIngredient.ingredientName, 1, ingredientCost);
             }
 
             // Instantiate as UI element in the canvas
