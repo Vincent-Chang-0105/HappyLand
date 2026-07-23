@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f368cac3d6fb034997583ae95b01ac3, type: 3}
   m_Name: NoodleMode
   m_EditorClassIdentifier: 
-  requiredGestures: 3
-  gestureCookInterval: 2.5
+  requiredGestures: 2
+  gestureCookInterval: 1.5
   outputDish: 5
   gestureCompleteSound:
     clip: {fileID: 0}

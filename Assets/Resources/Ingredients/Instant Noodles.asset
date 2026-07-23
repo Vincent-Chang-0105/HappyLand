@@ -48,5 +48,5 @@ MonoBehaviour:
   bowlVersionSprite: {fileID: 21300000, guid: 11071ce790c26714cbbb764b8787cd6d, type: 3}
   usageType: 0
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
-  cost: 12
+  cost: 10
   ingredientRole: 40

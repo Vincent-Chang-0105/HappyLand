@@ -12,7 +12,10 @@ public class GestureStateMachine : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private TossGestureDetector gestureDetector;
-    [SerializeField] private TossPrompt prompt;
+    [SerializeField] private FrameAnimatedPrompt prompt;
+
+    [Header("Sounds")]
+    [SerializeField] private SoundData tossCompleteSound;
 
     [Header("Toss Animation")]
     [SerializeField] private float tossHeight = 0.5f;
@@ -134,8 +137,11 @@ public class GestureStateMachine : MonoBehaviour
         completedGestures++;
         TutorialEvents.TossCompleted();
 
+        if (tossCompleteSound != null && SoundManager.Instance != null)
+            SoundManager.Instance.CreateSoundBuilder().Play(tossCompleteSound);
+
         prompt?.ShowTossSuccess();
-        HidePrompt();
+        DOVirtual.DelayedCall(0.5f, HidePrompt);
 
         currentState = State.GestureAnimating;
         PlayTossAnimation();

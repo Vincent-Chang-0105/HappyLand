@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc01eb6ee2291c24ebf7186543b6d95e, type: 3}
   m_Name: MechadoMode
   m_EditorClassIdentifier: 
-  requiredGestures: 3
-  gestureCookInterval: 2.5
+  requiredGestures: 2
+  gestureCookInterval: 1.5
   outputDish: 3
   gestureCompleteSound:
     clip: {fileID: 0}

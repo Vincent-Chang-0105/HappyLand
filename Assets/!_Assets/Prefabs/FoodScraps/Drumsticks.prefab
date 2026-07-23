@@ -105,7 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6e10197d6b1a074bb9911aa3f6b63a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chicken
-  chickenCost: 5
+  chickenCost: 2
 --- !u!50 &844975040494577828
 Rigidbody2D:
   serializedVersion: 5

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7539945ddce1287499f3eed523d6ac8f, type: 3}
   m_Name: SinigangMode
   m_EditorClassIdentifier: 
-  requiredGestures: 3
-  gestureCookInterval: 2.5
+  requiredGestures: 2
+  gestureCookInterval: 1.5
   outputDish: 4
   gestureCompleteSound:
     clip: {fileID: 0}

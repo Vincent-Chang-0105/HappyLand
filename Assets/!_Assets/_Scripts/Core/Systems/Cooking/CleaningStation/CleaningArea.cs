@@ -17,7 +17,7 @@ public class CleaningArea : MonoBehaviour
 
     [Header("Scrubbing")]
     [SerializeField] private ScrubGestureDetector gestureDetector;
-    [SerializeField] private ScrubPrompt scrubPrompt;
+    [SerializeField] private FrameAnimatedPrompt scrubPrompt;
     [SerializeField] private int requiredScrubs = 4;
 
     [Header("Scrub Movement")]

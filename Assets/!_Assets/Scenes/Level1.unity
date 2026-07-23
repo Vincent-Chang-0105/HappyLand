@@ -1396,6 +1396,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8035509927548910683, guid: acc6e2bbfbe9e314dbc2b8eecb823643, type: 3}
+      propertyPath: requiredStirs
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8035509927548910683, guid: acc6e2bbfbe9e314dbc2b8eecb823643, type: 3}
       propertyPath: cookingMeterUI
       value: 
       objectReference: {fileID: 2087903798}
@@ -1403,6 +1407,10 @@ PrefabInstance:
       propertyPath: cookingProgressBar
       value: 
       objectReference: {fileID: 1937867315}
+    - target: {fileID: 8035509927548910683, guid: acc6e2bbfbe9e314dbc2b8eecb823643, type: 3}
+      propertyPath: boilingDurationBetweenStirs
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8941197010846119282, guid: acc6e2bbfbe9e314dbc2b8eecb823643, type: 3}
       propertyPath: costText
       value: 

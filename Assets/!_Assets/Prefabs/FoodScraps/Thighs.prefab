@@ -58,8 +58,6 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -81,7 +79,6 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -1343387823
   m_SortingLayer: 6
   m_SortingOrder: 0
@@ -108,7 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6e10197d6b1a074bb9911aa3f6b63a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chicken
-  chickenCost: 5
+  chickenCost: 2
 --- !u!58 &2641088626977132748
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -204,6 +201,9 @@ MonoBehaviour:
   boiledVersionSprite: {fileID: 21300000, guid: d152b0f205312b8409393d1882855f6e, type: 3}
   friedVersionSprite: {fileID: 21300000, guid: ff0fc92a31af6b9478548fbaac3e0a62, type: 3}
   sinigangVersionSprite: {fileID: 21300000, guid: d7472afa158b20941b5597c7b2d16114, type: 3}
+  noodledVersionSprite: {fileID: 0}
+  mechadoVersionSprite: {fileID: 0}
+  adoboVersionSprite: {fileID: 0}
   autoTeleportToBowl: 1
   boilBowlTag: BoilBowl
   fryBowlTag: FryBowl

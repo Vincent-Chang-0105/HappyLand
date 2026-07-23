@@ -16,7 +16,7 @@ public class Pot : CookingStation
     [SerializeField] private int requiredStirs = 3;
     [SerializeField] private float boilingDurationBetweenStirs = 2.5f;
     [SerializeField] private StirGestureDetector gestureDetector;
-    [SerializeField] private StirPrompt stirPrompt;
+    [SerializeField] private FrameAnimatedPrompt stirPrompt;
 
     [Header("Boiling Motion")]
     [SerializeField] private float boilingSwirlSpeed = 40f;  // Degrees per second for passive swirl
@@ -123,11 +123,11 @@ public class Pot : CookingStation
         if (useGestureStirring && stirPrompt == null)
         {
             // Try to find existing stir prompt in children
-            stirPrompt = GetComponentInChildren<StirPrompt>(true);
+            stirPrompt = GetComponentInChildren<FrameAnimatedPrompt>(true);
 
             if (stirPrompt == null)
             {
-                Debug.LogWarning("Pot: No StirPrompt component found. Please add a StirPrompt UI to the pot.");
+                Debug.LogWarning("Pot: No FrameAnimatedPrompt component found. Please add a FrameAnimatedPrompt UI to the pot.");
             }
         }
     }
@@ -456,14 +456,16 @@ public class Pot : CookingStation
         if (stirCycleCompleteSound != null && SoundManager.Instance != null)
             SoundManager.Instance.CreateSoundBuilder().WithRandomPitch().Play(stirCycleCompleteSound);
 
-        // Show success feedback
+        // Show success feedback, then hide after a short delay so VFX can play
         if (stirPrompt != null)
         {
             stirPrompt.ShowStirSuccess();
+            DOVirtual.DelayedCall(0.5f, HideStirPrompt);
         }
-
-        // Hide prompt after a short delay
-        HideStirPrompt();
+        else
+        {
+            HideStirPrompt();
+        }
 
         // Start boiling
         currentStirState = StirringState.Boiling;

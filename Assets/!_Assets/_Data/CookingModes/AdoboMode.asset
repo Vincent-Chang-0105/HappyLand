@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2f9e0a5825476642871785e7ff02211, type: 3}
   m_Name: AdoboMode
   m_EditorClassIdentifier: 
-  requiredGestures: 3
-  gestureCookInterval: 2.5
+  requiredGestures: 2
+  gestureCookInterval: 1.5
   outputDish: 2
   gestureCompleteSound:
     clip: {fileID: 0}

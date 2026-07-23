@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ba48144d9ecc80488eff9bfa5fa5bce, type: 3}
   m_Name: FryingMode
   m_EditorClassIdentifier: 
-  requiredGestures: 3
-  gestureCookInterval: 2.5
+  requiredGestures: 2
+  gestureCookInterval: 1.5
   outputDish: 1
   gestureCompleteSound:
     clip: {fileID: 0}

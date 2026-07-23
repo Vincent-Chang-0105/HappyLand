@@ -16,7 +16,7 @@ MonoBehaviour:
   orderDescription: 
   requiredIngredients: []
   requiredSteps: []
-  correctOrderReward: 50
+  correctOrderReward: 55
   incorrectOrderPenalty: -10
   timeLimit: 60
   orderSprite: {fileID: 21300000, guid: 838e90dc369608a468c29df290e062bc, type: 3}

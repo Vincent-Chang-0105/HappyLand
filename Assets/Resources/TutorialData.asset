@@ -281,7 +281,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 14
     stepName: Go to Boil
     instructionText: Time to Boil, Click on the bottom right button to go to boil
@@ -301,7 +301,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 1
     allowedDirections: 03000000
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 15
     stepName: Drag Bowl
     instructionText: Drag Bowl to Pot
@@ -320,7 +320,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 16
     stepName: Stir Pot
     instructionText: 'Stir the pot!
@@ -342,7 +342,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 17
     stepName: Give the order
     instructionText: Drag Pot into fry pan to transfer the chicken to the Fry Screen
@@ -353,7 +353,7 @@ MonoBehaviour:
     completionType: 27
     autoCompleteDelay: 0
     allowEarlyCompletion: 0
-    showDelay: 1
+    showDelay: 0.5
     showArrow: 1
     arrowOffset: {x: -2.2, y: 1, z: 0}
     highlightUITag: 
@@ -361,7 +361,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 18
     stepName: Frying time
     instructionText: Time to Fry
@@ -380,7 +380,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 19
     stepName: Add Oil
     instructionText: Open the drawer by dragging it down
@@ -399,7 +399,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 20
     stepName: Add Oil
     instructionText: Click the oil and drag it to the pan
@@ -418,7 +418,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 21
     stepName: Add Oil
     instructionText: Then add the chicken in the pan
@@ -437,7 +437,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 22
     stepName: Give the order
     instructionText: Add Salt to start tossing!
@@ -456,7 +456,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 23
     stepName: Toss Chicken
     instructionText: Time to toss! just flick up ur mouse to toss the pan!
@@ -475,7 +475,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 24
     stepName: Give the order
     instructionText: Drag the pan to the plate to make the dish!
@@ -494,7 +494,7 @@ MonoBehaviour:
     actionParameter: 
     controlNavigation: 0
     allowedDirections: 
-    isCompleted: 0
+    isCompleted: 1
   - stepId: 25
     stepName: Go back to Serve screen
     instructionText: Go back to serve screen to Serve the order!
