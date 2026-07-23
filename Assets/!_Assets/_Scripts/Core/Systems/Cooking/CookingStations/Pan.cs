@@ -81,8 +81,9 @@ public class Pan : CookingStation
     protected override bool AdditionalBowlAcceptanceCheck()
     {
         if (isPouring || isPourable) return false;
-        // Need at least one mode unlocked
-        return activeMode != null;
+        // Chicken can be dropped in before any mode is unlocked — StartCooking()
+        // gets retried once an ingredient unlocks a mode (see AddIngredient/AddNoodles).
+        return true;
     }
 
     protected override string GetCookingProcessName()
@@ -138,11 +139,13 @@ public class Pan : CookingStation
         if (isPourable || isPouring) return false;
         if (addedRoles.Contains(role)) return false;
 
-        // After chicken arrives we're in "waiting for seasoning" — only accept post-bowl roles
+        // After chicken arrives we're in "waiting for seasoning" — any remaining role for the
+        // active mode can be added here, not just post-bowl ones (ingredient order doesn't matter)
         if (isCooking)
         {
             if (!currentTossStateIsWaitingForSeasoning) return false;
-            return activeMode != null && activeMode.PostBowlRoles.Contains(role);
+            if (activeMode == null) return false;
+            return activeMode.UnlockRoles.Contains(role) || activeMode.PostBowlRoles.Contains(role);
         }
 
         return modes != null && modes.Any(m => m.AcceptsRole(role, addedRoles));
@@ -174,6 +177,11 @@ public class Pan : CookingStation
             if (activeMode.IsFullySeasoned(addedRoles))
                 StartCooking();
         }
+        // Chicken may have landed before any mode was unlocked — try starting now
+        else if (!isCooking)
+        {
+            CheckIfReadyToStartCooking();
+        }
     }
 
     // Noodle is special: a full GameObject is handed into the pan
@@ -189,6 +197,12 @@ public class Pan : CookingStation
         PlayIngredientAddSound();
         RefreshActiveMode();
         visuals?.OnRoleAdded(IngredientRole.NoodleIngredient, activeMode);
+
+        // Chicken may have landed before any mode was unlocked — try starting now
+        if (!isCooking)
+        {
+            CheckIfReadyToStartCooking();
+        }
 
         // Animate noodle into pan
         Transform container = ingredientContainer != null ? ingredientContainer : transform;
@@ -431,6 +445,13 @@ public class Pan : CookingStation
         if (cookingMeterUI != null) cookingMeterUI.SetActive(false);
         if (cookingEffect  != null) cookingEffect.Stop();
 
+        // Normally these are stopped by CompleteCooking()/OnGestureComplete(), but Reset()
+        // (day-end) can call CompletePanPour() mid-cook, bypassing both — stop them explicitly
+        // so the sizzle shake/bob loop and sizzle sound don't keep running into the next day.
+        StopSizzleSound();
+        StopSizzleAnimation();
+        StopPanBobAnimation();
+
         transform.DOKill();
         SnapBackToOriginal();
     }
@@ -444,9 +465,23 @@ public class Pan : CookingStation
     public void Reset()
     {
         var toDestroy = new List<GameObject>(ingredientsInStation);
+        GameObject noodleToDestroy = noodleObject;
         CompletePanPour();
+
+        // Kill any mid-toss ingredient tweens before destroying (they aren't targeted by
+        // the transform.DOKill() above, which only kills the pan's own tween)
         foreach (var ingredient in toDestroy)
-            if (ingredient != null) Destroy(ingredient);
+        {
+            if (ingredient == null) continue;
+            ingredient.transform.DOKill();
+            Destroy(ingredient);
+        }
+
+        if (noodleToDestroy != null)
+        {
+            noodleToDestroy.transform.DOKill();
+            Destroy(noodleToDestroy);
+        }
     }
 
     #endregion

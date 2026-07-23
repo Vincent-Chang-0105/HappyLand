@@ -158,6 +158,7 @@ public class CleaningArea : MonoBehaviour
         if (washablesInArea.Count > 0 && gestureDetector != null)
         {
             isTrackingActive = true;
+            GestureLock.Lock();
             gestureDetector.SetActive(true);
             gestureDetector.StartTracking();
         }
@@ -177,6 +178,11 @@ public class CleaningArea : MonoBehaviour
         {
             gestureDetector.StopTracking();
             gestureDetector.SetActive(false);
+        }
+
+        if (isTrackingActive)
+        {
+            GestureLock.Unlock();
         }
 
         isTrackingActive = false;

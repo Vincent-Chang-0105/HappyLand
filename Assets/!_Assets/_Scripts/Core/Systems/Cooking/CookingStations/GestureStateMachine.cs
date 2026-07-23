@@ -41,6 +41,7 @@ public class GestureStateMachine : MonoBehaviour
     private int requiredGestures;
     private float cookInterval;
     private float cookTimer;
+    private bool hasGestureLock;
 
     // Pan reference for animation (set by Pan on Begin)
     private Transform panTransform;
@@ -96,6 +97,12 @@ public class GestureStateMachine : MonoBehaviour
         originalPanRotation = panOrigRot;
         ingredients        = ingredientList;
 
+        if (!hasGestureLock)
+        {
+            GestureLock.Lock();
+            hasGestureLock = true;
+        }
+
         ShowPrompt();
     }
 
@@ -104,6 +111,12 @@ public class GestureStateMachine : MonoBehaviour
         currentState = State.Idle;
         HidePrompt();
         gestureDetector?.SetActive(false);
+
+        if (hasGestureLock)
+        {
+            GestureLock.Unlock();
+            hasGestureLock = false;
+        }
     }
 
     public void Reset()
@@ -179,6 +192,13 @@ public class GestureStateMachine : MonoBehaviour
         else
         {
             currentState = State.Idle;
+
+            if (hasGestureLock)
+            {
+                GestureLock.Unlock();
+                hasGestureLock = false;
+            }
+
             OnAllGesturesComplete?.Invoke();
         }
     }

@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 231955075148383790}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -91,6 +91,9 @@ MonoBehaviour:
   currentMoney: 0
   todayIncome: 0
   todayExpenses: 0
+  chickenSpentToday: 0
+  ingredientSpentToday: 0
+  waterSpentToday: 0
 --- !u!1 &2415005369357547718
 GameObject:
   m_ObjectHideFlags: 0
@@ -386,11 +389,11 @@ MonoBehaviour:
   - orderName: FriedChicken
     ticketSprite: {fileID: 21300000, guid: 15efefaede4481d4ea1cbcc2d00c9ff1, type: 3}
   - orderName: Sinigang
-    ticketSprite: {fileID: 21300000, guid: 5d2855774e49ce7459d6d5f442a59d8c, type: 3}
+    ticketSprite: {fileID: 21300000, guid: f848fe381d705934ca14faad28a8a84a, type: 3}
   - orderName: NoodleChicken
-    ticketSprite: {fileID: 21300000, guid: 248d940f3ffd1e54c8742ad056fbe815, type: 3}
+    ticketSprite: {fileID: 21300000, guid: 7eda6a8c94c96f84f9264698b9754436, type: 3}
   - orderName: Mechado
-    ticketSprite: {fileID: 21300000, guid: 5b323d8674eb306449d1ec5c8d9766a5, type: 3}
+    ticketSprite: {fileID: 21300000, guid: d7c1d4658fb337c44ad9b1ec03559f5f, type: 3}
   - orderName: Adobo
     ticketSprite: {fileID: 21300000, guid: 34361e22651ae434987e167b55bfbc82, type: 3}
   spawnAnimationDuration: 0.5
@@ -623,16 +626,16 @@ MonoBehaviour:
   AutoUnparentOnAwake: 0
   cutscenes:
   - dayNumber: 1
-    clip: {fileID: 32900000, guid: c02cdfd11c769ca48a55a0f50965a811, type: 3}
+    clip: {fileID: 32900000, guid: c2c9683aab95f534cb8ba8e48f6032dd, type: 3}
     timing: 0
   - dayNumber: 3
-    clip: {fileID: 32900000, guid: e3a987d8af42a6c48899525eeeee92fc, type: 3}
+    clip: {fileID: 32900000, guid: 9f301264b78baf145922547b08305977, type: 3}
     timing: 2
   - dayNumber: 5
-    clip: {fileID: 32900000, guid: 566df44e07874364aaebabb9db5c2fc8, type: 3}
+    clip: {fileID: 32900000, guid: 18d9647310c2fec48a405bc4c8059539, type: 3}
     timing: 2
   - dayNumber: 4
-    clip: {fileID: 32900000, guid: c8e4253f57b38064588db56bbd653ea4, type: 3}
+    clip: {fileID: 32900000, guid: eb0950ec894ed38478e45f838bcfc9b8, type: 3}
     timing: 1
   cutsceneCanvasGroup: {fileID: 2859591722450550766}
   videoDisplay: {fileID: 5838840566304329932}

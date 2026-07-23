@@ -82,7 +82,23 @@ public class ScreenTransitionManager : MonoBehaviour
     
     private bool isTransitioning = false;
     private ScreenData currentScreen;
-    
+
+    private void OnEnable()
+    {
+        GestureLock.OnLockChanged += HandleGestureLockChanged;
+    }
+
+    private void OnDisable()
+    {
+        GestureLock.OnLockChanged -= HandleGestureLockChanged;
+    }
+
+    private void HandleGestureLockChanged()
+    {
+        if (!tutorialModeActive)
+            UpdateButtonStates();
+    }
+
     void Start()
     {
         SetupButtonListeners();
@@ -145,7 +161,7 @@ public class ScreenTransitionManager : MonoBehaviour
     
     public void MoveToScreen(Vector2 direction)
     {
-        if (isTransitioning) return;
+        if (isTransitioning || GestureLock.IsLocked) return;
         
         Vector2 targetGridPos = currentGridPosition + direction;
         ScreenData targetScreen = GetScreenAtGridPosition(targetGridPos);
@@ -158,7 +174,7 @@ public class ScreenTransitionManager : MonoBehaviour
     
     public void MoveToScreenDirect(Vector2 gridPosition)
     {
-        if (isTransitioning) return;
+        if (isTransitioning || GestureLock.IsLocked) return;
         
         ScreenData targetScreen = GetScreenAtGridPosition(gridPosition);
         if (targetScreen != null)
@@ -169,7 +185,7 @@ public class ScreenTransitionManager : MonoBehaviour
     
     public void MoveToScreenByName(string screenName)
     {
-        if (isTransitioning) return;
+        if (isTransitioning || GestureLock.IsLocked) return;
         
         ScreenData targetScreen = screens.Find(s => s.screenName == screenName);
         if (targetScreen != null)
@@ -358,14 +374,17 @@ public class ScreenTransitionManager : MonoBehaviour
 
         // Enable/disable global navigation buttons based on available screens
         if (upButton != null)
+        {
             // Show upButton when in bottom row (y = 0) to go to serving screen (y = 1)
             upButton.gameObject.SetActive(currentGridPosition.y == 0);
+            upButton.interactable = !GestureLock.IsLocked;
+        }
         if (downButton != null)
-            downButton.interactable = GetScreenAtGridPosition(currentGridPosition + Vector2.down) != null;
+            downButton.interactable = !GestureLock.IsLocked && GetScreenAtGridPosition(currentGridPosition + Vector2.down) != null;
         if (leftButton != null)
-            leftButton.interactable = GetScreenAtGridPosition(currentGridPosition + Vector2.left) != null;
+            leftButton.interactable = !GestureLock.IsLocked && GetScreenAtGridPosition(currentGridPosition + Vector2.left) != null;
         if (rightButton != null)
-            rightButton.interactable = GetScreenAtGridPosition(currentGridPosition + Vector2.right) != null;
+            rightButton.interactable = !GestureLock.IsLocked && GetScreenAtGridPosition(currentGridPosition + Vector2.right) != null;
             
         // Update screen-specific button states
         UpdateScreenSpecificButtonStates();
@@ -421,7 +440,7 @@ public class ScreenTransitionManager : MonoBehaviour
                         targetExists = GetScreenAtGridPosition(navButton.targetGridPosition) != null;
                     }
                     
-                    targetButton.interactable = targetExists;
+                    targetButton.interactable = targetExists && !GestureLock.IsLocked;
                 }
             }
         }
@@ -557,7 +576,7 @@ public class ScreenTransitionManager : MonoBehaviour
             Button targetButton = GetDirectionalButton(direction);
             if (targetButton != null && targetButton.gameObject.activeInHierarchy)
             {
-                targetButton.interactable = true;
+                targetButton.interactable = !GestureLock.IsLocked;
             }
         }
 
@@ -565,10 +584,11 @@ public class ScreenTransitionManager : MonoBehaviour
 
     public void EnableAllNavigationButtons()
     {
-        if (upButton != null && upButton.gameObject.activeInHierarchy) upButton.interactable = true;
-        if (downButton != null && downButton.gameObject.activeInHierarchy) downButton.interactable = true;
-        if (leftButton != null && leftButton.gameObject.activeInHierarchy) leftButton.interactable = true;
-        if (rightButton != null && rightButton.gameObject.activeInHierarchy) rightButton.interactable = true;
+        bool interactable = !GestureLock.IsLocked;
+        if (upButton != null && upButton.gameObject.activeInHierarchy) upButton.interactable = interactable;
+        if (downButton != null && downButton.gameObject.activeInHierarchy) downButton.interactable = interactable;
+        if (leftButton != null && leftButton.gameObject.activeInHierarchy) leftButton.interactable = interactable;
+        if (rightButton != null && rightButton.gameObject.activeInHierarchy) rightButton.interactable = interactable;
     }
 
     private void FireScreenArrivalEvent(TutorialCompletionType type)

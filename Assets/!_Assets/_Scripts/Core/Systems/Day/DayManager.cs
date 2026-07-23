@@ -22,6 +22,7 @@ public class DayManager : MonoBehaviour
     public event Action<float> OnTimerUpdated; // Passes time remaining in seconds
     public event Action OnOneMinuteWarning;
     public event Action OnGameOver; // Fired when game over condition is met at the check day
+    public event Action OnGameWon; // Fired when all bills are settled at the check day
 
     // Properties
     public int CurrentDay => currentDay;
@@ -207,6 +208,10 @@ public class DayManager : MonoBehaviour
                 OnGameOver?.Invoke();
                 return;
             }
+
+            Debug.Log($"[DayManager] Victory! All bills settled on Day {currentDay}. Money: {MoneyManager.Instance?.CurrentMoney}");
+            OnGameWon?.Invoke();
+            return;
         }
 
         currentDay++;

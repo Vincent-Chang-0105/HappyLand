@@ -743,6 +743,9 @@ MonoBehaviour:
   currentMoney: 0
   todayIncome: 0
   todayExpenses: 0
+  chickenSpentToday: 0
+  ingredientSpentToday: 0
+  waterSpentToday: 0
 --- !u!1 &5693349767631372858
 GameObject:
   m_ObjectHideFlags: 0

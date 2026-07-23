@@ -832,6 +832,10 @@ PrefabInstance:
       propertyPath: masterVolumeSlider
       value: 
       objectReference: {fileID: 2437678246750892263}
+    - target: {fileID: 9006608183189627258, guid: c9fd30d014ea85048a6519765bfc3686, type: 3}
+      propertyPath: m_VideoClip
+      value: 
+      objectReference: {fileID: 32900000, guid: 1939c5a47e637834bb562dcee6cdb2b4, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

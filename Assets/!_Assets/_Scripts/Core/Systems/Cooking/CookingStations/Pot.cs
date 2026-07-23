@@ -98,6 +98,7 @@ public class Pot : CookingStation
     private PourZone nearbyPourZone;
     private bool isDraggingPot = false;
     private bool isWindingDown = false;
+    private bool hasGestureLock = false;
 
     #region Unity Lifecycle
 
@@ -238,6 +239,12 @@ public class Pot : CookingStation
         currentStirState = StirringState.WaitingForStir;
         currentCookingPhase = PotCookingPhase.Boiling;
 
+        if (!hasGestureLock)
+        {
+            GestureLock.Lock();
+            hasGestureLock = true;
+        }
+
         // Store container base position for bobbing
         if (ingredientContainer != null)
         {
@@ -261,6 +268,19 @@ public class Pot : CookingStation
 
         // Show first stir prompt
         ShowStirPrompt();
+    }
+
+    protected override void StopCooking()
+    {
+        if (hasGestureLock)
+        {
+            GestureLock.Unlock();
+            hasGestureLock = false;
+        }
+
+        currentStirState = StirringState.NotStarted;
+
+        base.StopCooking();
     }
 
     protected override void UpdateCooking()
@@ -303,6 +323,12 @@ public class Pot : CookingStation
                         currentStirState = StirringState.WaitingForStir;
                         boilingTimer = 0f;
                         ShowStirPrompt();
+
+                        if (!hasGestureLock)
+                        {
+                            GestureLock.Lock();
+                            hasGestureLock = true;
+                        }
                     }
                     else
                     {
@@ -470,6 +496,12 @@ public class Pot : CookingStation
         // Start boiling
         currentStirState = StirringState.Boiling;
         boilingTimer = 0f;
+
+        if (hasGestureLock)
+        {
+            GestureLock.Unlock();
+            hasGestureLock = false;
+        }
 
         // Start boiling loop sound (only once, not on every stir)
         if (boilingLoopSound != null && SoundManager.Instance != null && boilingLoopEmitter == null)
@@ -888,6 +920,19 @@ public class Pot : CookingStation
         currentSwirlSpeed = 0f;
         orbitAngle = 0f;
         ingredientOrbits.Clear();
+
+        // Mid-gesture cleanup: without this, a Pot reset while WaitingForStir leaves the
+        // GestureLock held forever (it's a global counter shared by every station), which
+        // silently soft-locks screen navigation from then on.
+        currentStirState = StirringState.NotStarted;
+        completedStirs = 0;
+        boilingTimer = 0f;
+        gestureDetector?.SetActive(false);
+        if (hasGestureLock)
+        {
+            GestureLock.Unlock();
+            hasGestureLock = false;
+        }
 
         if (boilingLoopEmitter != null)
         {
