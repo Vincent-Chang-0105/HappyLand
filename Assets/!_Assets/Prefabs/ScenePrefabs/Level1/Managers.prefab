@@ -384,15 +384,15 @@ MonoBehaviour:
   ticketPrefab: {fileID: 8734877093004473705, guid: a66e201f1227eb1409220474e5ed43ff, type: 3}
   ticketSprites:
   - orderName: FriedChicken
-    ticketSprite: {fileID: 21300000, guid: 75495c5352659b34897f62a6e0a9f4cc, type: 3}
+    ticketSprite: {fileID: 21300000, guid: 15efefaede4481d4ea1cbcc2d00c9ff1, type: 3}
   - orderName: Sinigang
-    ticketSprite: {fileID: 21300000, guid: c6747ba431c365d47bcf6dd0913d1498, type: 3}
+    ticketSprite: {fileID: 21300000, guid: 5d2855774e49ce7459d6d5f442a59d8c, type: 3}
   - orderName: NoodleChicken
-    ticketSprite: {fileID: 21300000, guid: f61a56ee91f1cac4b95515c8b6d441e7, type: 3}
+    ticketSprite: {fileID: 21300000, guid: 248d940f3ffd1e54c8742ad056fbe815, type: 3}
   - orderName: Mechado
-    ticketSprite: {fileID: 21300000, guid: 58a4fd482d4cbb443a7426e9813ad4db, type: 3}
+    ticketSprite: {fileID: 21300000, guid: 5b323d8674eb306449d1ec5c8d9766a5, type: 3}
   - orderName: Adobo
-    ticketSprite: {fileID: 21300000, guid: cb5224f3eccbd8643b56253d3f36fb44, type: 3}
+    ticketSprite: {fileID: 21300000, guid: 34361e22651ae434987e167b55bfbc82, type: 3}
   spawnAnimationDuration: 0.5
 --- !u!1 &4245769073547456204
 GameObject:

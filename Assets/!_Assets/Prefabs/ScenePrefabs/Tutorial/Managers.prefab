@@ -791,9 +791,9 @@ MonoBehaviour:
   ticketPrefab: {fileID: 8734877093004473705, guid: a66e201f1227eb1409220474e5ed43ff, type: 3}
   ticketSprites:
   - orderName: FriedChicken
-    ticketSprite: {fileID: 21300000, guid: 5e13b6748f30eea4f966af5f2836ce07, type: 3}
+    ticketSprite: {fileID: 21300000, guid: 15efefaede4481d4ea1cbcc2d00c9ff1, type: 3}
   - orderName: Sinigang
-    ticketSprite: {fileID: 21300000, guid: c6747ba431c365d47bcf6dd0913d1498, type: 3}
+    ticketSprite: {fileID: 21300000, guid: 5d2855774e49ce7459d6d5f442a59d8c, type: 3}
   spawnAnimationDuration: 0.5
 --- !u!1 &6001919754861175894
 GameObject:
@@ -916,6 +916,7 @@ MonoBehaviour:
   dialogueArea: {fileID: 4389462373555158119}
   dialogueBox: {fileID: 1951250135654297677}
   isDialogueActive: 0
+  isTyping: 0
   typingSpeed: 0.01
   animator: {fileID: 0}
 --- !u!114 &9026296529222437749
@@ -930,7 +931,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc622cbdcd447604cb3e9543fdd30edc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvasesToBlock: []
+  canvasesToBlock:
+  - {fileID: 0}
 --- !u!1 &7139565819934079297
 GameObject:
   m_ObjectHideFlags: 0
@@ -1152,7 +1154,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8439197630636094452}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

@@ -43,9 +43,10 @@ public class TicketManager : MonoBehaviour
             ticketImage.sprite = ticketSprite;
         }
 
-        // Animate ticket spawn (scale only — HorizontalLayoutGroup handles positioning)
+        // Animate ticket spawn — preserve prefab scale as the target
+        Vector3 targetScale = ticketPrefab.transform.localScale;
         ticket.transform.localScale = Vector3.zero;
-        ticket.transform.DOScale(Vector3.one, spawnAnimationDuration)
+        ticket.transform.DOScale(targetScale, spawnAnimationDuration)
                .SetEase(Ease.OutBack);
 
         // Track ticket
