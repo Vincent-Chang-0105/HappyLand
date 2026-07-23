@@ -1,15 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using DG.Tweening;
 using TMPro;
 using UnityEngine.Audio;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
+using UnityEngine.SceneManagement;
+
 
 public class PauseManager : StaticInstance<PauseManager>
 {
@@ -36,13 +32,6 @@ public class PauseManager : StaticInstance<PauseManager>
     [SerializeField] private Slider masterVolumeSlider;
     [SerializeField] private Slider sfxVolumeSlider;
     [SerializeField] private Slider musicVolumeSlider;
-
-    [Header("Visual Settings")]
-    [SerializeField] private Slider brightnessSlider;
-    [SerializeField] private Volume postProcessVolume; // Assign your global post-process volume
-    [SerializeField] private Light directionalLight; // Optional: for adjusting light intensity
-    [SerializeField] private Color MaxBrightColor = new Color(1f, 1f, 1f, 1f); // Max brightness color
-    [SerializeField] private Color MinBrightColor = new Color(0.5f, 0.5f, 0.5f, 1f); // Min brightness color
 
     [Header("Slider Value Display")]
     [SerializeField] private TextMeshProUGUI masterVolumeText;
@@ -88,7 +77,6 @@ public class PauseManager : StaticInstance<PauseManager>
         InputSystem.Instance.EscapeKeyEvent += TogglePause;
 
         InitializeAudioSettings();
-        InitializeBrightnessSettings();
     }
 
     private void OnDestroy()
@@ -105,8 +93,6 @@ public class PauseManager : StaticInstance<PauseManager>
             sfxVolumeSlider.onValueChanged.RemoveListener(SetSFXVolume);
         if (musicVolumeSlider != null)
             musicVolumeSlider.onValueChanged.RemoveListener(SetMusicVolume);
-        if (brightnessSlider != null)
-            brightnessSlider.onValueChanged.RemoveListener(SetBrightness);
 
         // Save all settings
         PlayerPrefs.Save();
@@ -140,24 +126,8 @@ public class PauseManager : StaticInstance<PauseManager>
         }
     }
 
-    private void InitializeBrightnessSettings()
-    {
-        if (brightnessSlider != null)
-        {
-            brightnessSlider.onValueChanged.AddListener(SetBrightness);
-            float savedBrightness = PlayerPrefs.GetFloat("Brightness", 0.5f);
-            brightnessSlider.value = savedBrightness;
-            SetBrightness(savedBrightness);
-        }
-    }
-
     public void TogglePause()
     {
-        // // Don't allow pausing during videos or cutscenes
-        // if (VideoManager.Instance?.isPlayingVideo == true ||
-        //     CutsceneManager.Instance?.IsPlayingCutscene == true)
-        //     return;
-
         if (isMainMenu)
         {
             ToggleSettingsMenu();
@@ -214,7 +184,6 @@ public class PauseManager : StaticInstance<PauseManager>
         // Don't disable input in main menu
         if (!isMainMenu && InputSystem.Instance != null)
         {
-            InputSystem.Instance.SetInputState(false);
         }
 
         // Only invoke pause event if not in main menu
@@ -240,7 +209,6 @@ public class PauseManager : StaticInstance<PauseManager>
         // Don't re-enable input in main menu (it should stay enabled)
         if (!isMainMenu && InputSystem.Instance != null)
         {
-            InputSystem.Instance.SetInputState(true);
         }
 
         // Only invoke resume event if not in main menu
@@ -260,7 +228,6 @@ public class PauseManager : StaticInstance<PauseManager>
 
         if (InputSystem.Instance != null)
         {
-            InputSystem.Instance.SetInputState(false);
         }
 
         // Invoke pause event for subscribers
@@ -279,7 +246,6 @@ public class PauseManager : StaticInstance<PauseManager>
 
         if (InputSystem.Instance != null)
         {
-            InputSystem.Instance.SetInputState(true);
         }
 
         // Invoke resume event for subscribers
@@ -355,8 +321,7 @@ public class PauseManager : StaticInstance<PauseManager>
 
     public void LoadMainMenu()
     {
-        InputSystem.Instance.SetInputState(false);
-        //GameManager.Instance.LoadScene("MainMenu");
+        SceneManager.LoadScene(0);
         Time.timeScale = 1f;
     }
 
@@ -420,67 +385,24 @@ public class PauseManager : StaticInstance<PauseManager>
         }
     }
 
-    // Brightness method
-    public void SetBrightness(float brightness)
-    {
-        if(directionalLight != null)
-        {
-            // Adjust directional light intensity based on brightness
-            //directionalLight.intensity = Mathf.Lerp(0.5f, 2f, brightness);
-            
-            // Change light color from black to mid-white based on brightness
-            Color blackColor = Color.black;
-            Color midWhiteColor = new Color(0.35f, 0.35f, 0.35f, 1f); // Mid-white color
-            directionalLight.color = Color.Lerp(MinBrightColor, MaxBrightColor, brightness);
-        }
-        
-        // Save brightness setting
-        PlayerPrefs.SetFloat("Brightness", brightness);
-        // if (postProcessVolume != null && postProcessVolume.profile != null)
-        // {
-        //     // Try to get ColorAdjustments effect
-        //     if (postProcessVolume.profile.TryGet<ColorAdjustments>(out var colorAdjustments))
-        //     {
-        //         // Make sure the override is enabled
-        //         colorAdjustments.postExposure.overrideState = true;
-
-        //         // Map slider value (0-1) to a reasonable brightness range
-        //         // Post exposure typically works well between -2 to 2
-        //         float brightnessValue = Mathf.Lerp(-1f, 2f, brightness);
-        //         colorAdjustments.postExposure.value = brightnessValue;
-
-        //         Debug.Log($"Setting brightness to: {brightnessValue}");
-        //     }
-        //     else
-        //     {
-        //         Debug.LogError("ColorAdjustments not found in the post-process profile!");
-        //     }
-
-        //     PlayerPrefs.SetFloat("Brightness", brightness);
-        // }
-        // else
-        // {
-        //     Debug.LogError("Post Process Volume or Profile is null!");
-
-        //     // Fallback: adjust screen brightness via RenderSettings
-        //     RenderSettings.ambientIntensity = Mathf.Lerp(0.5f, 1.5f, brightness);
-        //     PlayerPrefs.SetFloat("Brightness", brightness);
-        // }
-
-        // Update display text (0-10)
-        if (brightnessText != null)
-        {
-            int displayValue = Mathf.RoundToInt(brightness * 10);
-            brightnessText.text = displayValue.ToString();
-        }
-    }
-
     // Convert linear volume (0-1) to decibel (-80 to 0)
     private float VolumeToDecibel(float volume)
     {
         if (volume <= 0)
             return -80f;
-        
+
         return Mathf.Log10(volume) * 20f;
+    }
+    
+    //Debug
+    public void EndDay()
+    {
+        DayManager.Instance.EndDay();
+
+
+        if (Time.timeScale == 0f)
+        {
+            ResumeGame();
+        }
     }
 }

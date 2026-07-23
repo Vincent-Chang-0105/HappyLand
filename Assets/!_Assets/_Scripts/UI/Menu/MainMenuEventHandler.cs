@@ -52,14 +52,14 @@ public class MainMenuEventHandler : ColorChangeMenuHandler
     // Add game functionality methods
     public void StartGame()
     {
-        Debug.Log("Starting game...");
+        SceneManager.LoadScene("Tutorial");
     }
-    
-    public void LevelSelect()
+
+    public void SkipTutorial()
     {
-        
+        SceneManager.LoadScene("Level1");
     }
-    
+
     public void OpenSettings()
     {
         Debug.Log("Opening settings...");
@@ -68,5 +68,10 @@ public class MainMenuEventHandler : ColorChangeMenuHandler
     public void ExitGame()
     {
         Debug.Log("Exiting game...");
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }

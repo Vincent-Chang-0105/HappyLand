@@ -12,13 +12,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3eef437ae844b4b478bbaf51f966a5dc, type: 3}
   m_Name: Instant Noodles
   m_EditorClassIdentifier: Assembly-CSharp::Ingredient
-  ingredientName: 
-  ingredientIcon: {fileID: 0}
-  description: 
+  ingredientName: Instant Noodles
+  ingredientIcon: {fileID: 21300000, guid: 3ccc11776303ca14ab0c103ac1b43bea, type: 3}
+  description: lucky me
   isStackable: 1
   maxStackSize: 99
   ingredientType: 0
   cookingTime: 1
   requiresCutting: 0
   requiresWashing: 0
+  animationFrames:
+  - {fileID: -948658839804332945, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: -7698641416309376198, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: -4082507815654344556, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: -4060195603935384377, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: 5067099241055746073, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: -3378113196054017512, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: 5647775436021212073, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: 2475354028612135756, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: 2147426039447130495, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: -3803784367319237984, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: 8435766603664334174, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: 6461810192627703818, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: -1023515336647193930, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: 4482143301027713361, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: 9039417561951063793, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: -5739700948276138467, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: -1686979611253445344, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: 2794360174377043071, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: -509713382358159655, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: -7221212724814663404, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: 3187400515445095456, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: -2587701304878457584, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  - {fileID: -2414480135521198836, guid: 8e1402398027db747b95402392be2dda, type: 3}
+  bowlVersionSprite: {fileID: 21300000, guid: 11071ce790c26714cbbb764b8787cd6d, type: 3}
+  usageType: 0
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  cost: 12
+  ingredientRole: 40

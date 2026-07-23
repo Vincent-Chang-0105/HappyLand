@@ -1,0 +1,749 @@
+fileFormatVersion: 2
+guid: 089fc25ad12090e4aa40e59a247631cd
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8668521263330674647
+    second: Oil In Bowl Sprite Sheet Ver.2_0
+  - first:
+      213: 1472021828684505866
+    second: Oil In Bowl Sprite Sheet Ver.2_1
+  - first:
+      213: -8950335057903930796
+    second: Oil In Bowl Sprite Sheet Ver.2_2
+  - first:
+      213: 4647555862945513088
+    second: Oil In Bowl Sprite Sheet Ver.2_3
+  - first:
+      213: -4741410847588067462
+    second: Oil In Bowl Sprite Sheet Ver.2_4
+  - first:
+      213: 6440611504624187092
+    second: Oil In Bowl Sprite Sheet Ver.2_5
+  - first:
+      213: 6535433852109436492
+    second: Oil In Bowl Sprite Sheet Ver.2_6
+  - first:
+      213: -50781991556271552
+    second: Oil In Bowl Sprite Sheet Ver.2_7
+  - first:
+      213: -331864660820573130
+    second: Oil In Bowl Sprite Sheet Ver.2_8
+  - first:
+      213: 5806795522502177876
+    second: Oil In Bowl Sprite Sheet Ver.2_9
+  - first:
+      213: 3481618586963602878
+    second: Oil In Bowl Sprite Sheet Ver.2_10
+  - first:
+      213: 3276251227654802929
+    second: Oil In Bowl Sprite Sheet Ver.2_11
+  - first:
+      213: -2316049080925103672
+    second: Oil In Bowl Sprite Sheet Ver.2_12
+  - first:
+      213: -5231763836439076101
+    second: Oil In Bowl Sprite Sheet Ver.2_13
+  - first:
+      213: -9178656714209222928
+    second: Oil In Bowl Sprite Sheet Ver.2_14
+  - first:
+      213: 5782910064504662363
+    second: Oil In Bowl Sprite Sheet Ver.2_15
+  - first:
+      213: -913270633709410533
+    second: Oil In Bowl Sprite Sheet Ver.2_16
+  - first:
+      213: 3120126418693359642
+    second: Oil In Bowl Sprite Sheet Ver.2_17
+  - first:
+      213: -5323978173056389958
+    second: Oil In Bowl Sprite Sheet Ver.2_18
+  - first:
+      213: -6789195244281929644
+    second: Oil In Bowl Sprite Sheet Ver.2_19
+  - first:
+      213: 7013110770700028039
+    second: Oil In Bowl Sprite Sheet Ver.2_20
+  - first:
+      213: -5282776119461832809
+    second: Oil In Bowl Sprite Sheet Ver.2_21
+  - first:
+      213: -4098202446373793321
+    second: Oil In Bowl Sprite Sheet Ver.2_22
+  - first:
+      213: -185618715241227378
+    second: Oil In Bowl Sprite Sheet Ver.2_23
+  - first:
+      213: -6057804756047711429
+    second: Oil In Bowl Sprite Sheet Ver.2_24
+  - first:
+      213: 8460505695334214862
+    second: Oil In Bowl Sprite Sheet Ver.2_25
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1500
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 928314bb6d933b780800000000000000
+      internalID: -8668521263330674647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_1
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 1500
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a036c58dd0cad6410800000000000000
+      internalID: 1472021828684505866
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_2
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 1500
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45239ec8fa50ac380800000000000000
+      internalID: -8950335057903930796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_3
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 1500
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08eb6acfe6f6f7040800000000000000
+      internalID: 4647555862945513088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1200
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a77545784ff133eb0800000000000000
+      internalID: -4741410847588067462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_5
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 1200
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d63b652a06a16950800000000000000
+      internalID: 6440611504624187092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_6
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 1200
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c46bb08567682ba50800000000000000
+      internalID: 6535433852109436492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_7
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 1200
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0423d483c069b4ff0800000000000000
+      internalID: -50781991556271552
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 900
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 634c84a69daf46bf0800000000000000
+      internalID: -331864660820573130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_9
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 900
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 454321213c1e59050800000000000000
+      internalID: 5806795522502177876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_10
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 900
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ebdec5f88a1315030800000000000000
+      internalID: 3481618586963602878
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_11
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 900
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1fd4d4b1225977d20800000000000000
+      internalID: 3276251227654802929
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 600
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c9d611c1adbbdfd0800000000000000
+      internalID: -2316049080925103672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_13
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 600
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf26054828a0567b0800000000000000
+      internalID: -5231763836439076101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_14
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 600
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0fe1e4a595cde9080800000000000000
+      internalID: -9178656714209222928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_15
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 600
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b59e4d28016014050800000000000000
+      internalID: 5782910064504662363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 300
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1764f582396353f0800000000000000
+      internalID: -913270633709410533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_17
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 300
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a188788527aec4b20800000000000000
+      internalID: 3120126418693359642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_18
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 300
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: abc6a0b2f0e6d16b0800000000000000
+      internalID: -5323978173056389958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_19
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 300
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 450edc165eee7c1a0800000000000000
+      internalID: -6789195244281929644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7888a02c613935160800000000000000
+      internalID: 7013110770700028039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_21
+      rect:
+        serializedVersion: 2
+        x: 300
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7979f83db1fcfa6b0800000000000000
+      internalID: -5282776119461832809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_22
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d1d04696924027c0800000000000000
+      internalID: -4098202446373793321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Oil In Bowl Sprite Sheet Ver.2_23
+      rect:
+        serializedVersion: 2
+        x: 900
+        y: 0
+        width: 300
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8bd16e03cc8c6df0800000000000000
+      internalID: -185618715241227378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 1d1bbdb0b204337439adf44b4a938329
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":4.0,"y":6.0},"gridSpriteSize":{"x":300.0,"y":300.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+    nameFileIdTable:
+      Oil In Bowl Sprite Sheet Ver.2_0: -8668521263330674647
+      Oil In Bowl Sprite Sheet Ver.2_1: 1472021828684505866
+      Oil In Bowl Sprite Sheet Ver.2_10: 3481618586963602878
+      Oil In Bowl Sprite Sheet Ver.2_11: 3276251227654802929
+      Oil In Bowl Sprite Sheet Ver.2_12: -2316049080925103672
+      Oil In Bowl Sprite Sheet Ver.2_13: -5231763836439076101
+      Oil In Bowl Sprite Sheet Ver.2_14: -9178656714209222928
+      Oil In Bowl Sprite Sheet Ver.2_15: 5782910064504662363
+      Oil In Bowl Sprite Sheet Ver.2_16: -913270633709410533
+      Oil In Bowl Sprite Sheet Ver.2_17: 3120126418693359642
+      Oil In Bowl Sprite Sheet Ver.2_18: -5323978173056389958
+      Oil In Bowl Sprite Sheet Ver.2_19: -6789195244281929644
+      Oil In Bowl Sprite Sheet Ver.2_2: -8950335057903930796
+      Oil In Bowl Sprite Sheet Ver.2_20: 7013110770700028039
+      Oil In Bowl Sprite Sheet Ver.2_21: -5282776119461832809
+      Oil In Bowl Sprite Sheet Ver.2_22: -4098202446373793321
+      Oil In Bowl Sprite Sheet Ver.2_23: -185618715241227378
+      Oil In Bowl Sprite Sheet Ver.2_3: 4647555862945513088
+      Oil In Bowl Sprite Sheet Ver.2_4: -4741410847588067462
+      Oil In Bowl Sprite Sheet Ver.2_5: 6440611504624187092
+      Oil In Bowl Sprite Sheet Ver.2_6: 6535433852109436492
+      Oil In Bowl Sprite Sheet Ver.2_7: -50781991556271552
+      Oil In Bowl Sprite Sheet Ver.2_8: -331864660820573130
+      Oil In Bowl Sprite Sheet Ver.2_9: 5806795522502177876
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

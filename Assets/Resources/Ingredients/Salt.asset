@@ -21,4 +21,33 @@ MonoBehaviour:
   cookingTime: 1
   requiresCutting: 0
   requiresWashing: 0
+  animationFrames:
+  - {fileID: -2305177335306269713, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: -5758774221449654554, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: -4975027708100015074, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: -9054713414664749237, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: -31952524889217931, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: 5856427016075174686, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: 8412023036963879840, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: 7198707005896728573, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: -6108825877488766629, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: 7312277162515892142, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: 8740001164635402841, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: 2209788111730778164, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: 5522897286463793129, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: 6459289139477228682, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: 4903000918110006223, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: 8537585778701557765, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: 5422821748458763626, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: 3441652702146201326, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: 3897150710632172827, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: 2761607004222954863, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: 5053532514786799479, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: -8841018612484913466, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: -7273722367319917528, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  - {fileID: 6668942184540811585, guid: 6bb20ed37e1dc0f4aab742d4780fa1ca, type: 3}
+  bowlVersionSprite: {fileID: 0}
+  usageType: 0
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  cost: 5
+  ingredientRole: 2

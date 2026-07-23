@@ -12,13 +12,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3eef437ae844b4b478bbaf51f966a5dc, type: 3}
   m_Name: Oil
   m_EditorClassIdentifier: Assembly-CSharp::Ingredient
-  ingredientName: 
-  ingredientIcon: {fileID: 0}
-  description: 
+  ingredientName: Oil
+  ingredientIcon: {fileID: 21300000, guid: 3b4abe46140e72843bae683ac956c4dd, type: 3}
+  description: langis
   isStackable: 1
   maxStackSize: 99
-  ingredientType: 0
+  ingredientType: 4
   cookingTime: 1
   requiresCutting: 0
   requiresWashing: 0
+  animationFrames:
+  - {fileID: -8668521263330674647, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: 1472021828684505866, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: -8950335057903930796, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: 4647555862945513088, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: -4741410847588067462, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: 6440611504624187092, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: 6535433852109436492, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: -50781991556271552, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: -331864660820573130, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: 5806795522502177876, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: 3481618586963602878, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: 3276251227654802929, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: -2316049080925103672, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: -5231763836439076101, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: -9178656714209222928, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: 5782910064504662363, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: -913270633709410533, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: 3120126418693359642, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: -5323978173056389958, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: -6789195244281929644, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: 7013110770700028039, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: -5282776119461832809, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: -4098202446373793321, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  - {fileID: -185618715241227378, guid: 089fc25ad12090e4aa40e59a247631cd, type: 3}
+  bowlVersionSprite: {fileID: 0}
+  usageType: 1
   backgroundColor: {r: 1, g: 1, b: 1, a: 1}
+  cost: 10
+  ingredientRole: 1

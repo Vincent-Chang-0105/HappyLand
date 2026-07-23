@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - FryBowl
+  - BoilBowl
+  - OrderSlot
+  - CookStaging
+  - CutBowl
+  - OrderTicket
   layers:
   - Default
   - TransparentFX
@@ -11,9 +17,9 @@ TagManager:
   - 
   - Water
   - UI
-  - Terrain
-  - Bowl
-  - Food
+  - Customer
+  - 
+  - 
   - 
   - 
   - 
@@ -42,23 +48,25 @@ TagManager:
     uniqueID: 0
     locked: 0
   - name: Background
-    uniqueID: 3695897585
+    uniqueID: 870248473
     locked: 0
-  - name: Cookware
-    uniqueID: 3138902581
+  - name: Sink
+    uniqueID: 78340669
+    locked: 0
+  - name: CookStation
+    uniqueID: 2283587883
+    locked: 0
+  - name: Seasoning
+    uniqueID: 1407413647
+    locked: 0
+  - name: Bowl
+    uniqueID: 2106234667
     locked: 0
   - name: Food
-    uniqueID: 3652661603
+    uniqueID: 2951579473
     locked: 0
-  - name: Utensils
-    uniqueID: 2851729733
+  - name: Faucet
+    uniqueID: 221508809
     locked: 0
   m_RenderingLayers:
   - Default
-  - Light Layer 1
-  - Light Layer 2
-  - Light Layer 3
-  - Light Layer 4
-  - Light Layer 5
-  - Light Layer 6
-  - Light Layer 7
